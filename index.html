@@ -5,7 +5,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>NourishBitfe Organics — Thực phẩm sạch, ăn lành mỗi ngày</title>
-<meta name="description" content="Cửa hàng thực phẩm sạch NourishBitfe Organics: món ăn eat clean, đồ ăn nhẹ lành mạnh, thông tin dinh dưỡng rõ ràng, công cụ BMI/TDEE và so sánh dinh dưỡng.">
+  <meta name="description"
+    content="Cửa hàng thực phẩm sạch NourishBitfe Organics: món ăn eat clean, đồ ăn nhẹ lành mạnh, thông tin dinh dưỡng rõ ràng, công cụ BMI/TDEE và so sánh dinh dưỡng.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -1156,7 +1157,7 @@
       finally { NB_AUTH_BUSY = false; }
     }
 
-  
+
 
     // ============================================================================
     // V2-A. TIỆN ÍCH AN TOÀN + LỚP DỮ LIỆU SUPABASE (mọi thao tác ghi đi qua hàm máy chủ nb2_*)
@@ -1429,8 +1430,8 @@
             </div>
             <p class="mt-2 text-[11px] font-medium text-[#557448]">
               ${sample || p.calories_kcal === null
-                ? nbT("Chưa có dữ liệu dinh dưỡng", "Nutrition not supplied")
-                : `${fmtNum(p.calories_kcal)} kcal · ${fmtNum(p.protein_g)} g ${nbT("đạm / khẩu phần", "protein / serving")}`}
+          ? nbT("Chưa có dữ liệu dinh dưỡng", "Nutrition not supplied")
+          : `${fmtNum(p.calories_kcal)} kcal · ${fmtNum(p.protein_g)} g ${nbT("đạm / khẩu phần", "protein / serving")}`}
             </p>
             <label class="mt-2 flex w-fit cursor-pointer items-center gap-1.5 text-[11px] text-[#626b5e]">
               <input type="checkbox" ${cmp ? "checked" : ""} onchange="toggleCompare(${p.id})"> ⚖️ ${nbT("So sánh", "Compare")}
@@ -1503,8 +1504,7 @@
         const known = vals.filter(v => v !== null);
         let target = null;
         if (better && known.length >= 2) target = better === "low" ? Math.min(...known) : Math.max(...known);
-        return `<tr class="border-t border-[#e3e7da]"><th scope="row" class="px-4 py-3 text-left text-xs font-medium text-[#626b5e]">${nbT(vi, en)}</th>${
-          vals.map(v => cell(v === null ? "—" : v, target !== null && v === target && new Set(known).size > 1)).join("")}</tr>`;
+        return `<tr class="border-t border-[#e3e7da]"><th scope="row" class="px-4 py-3 text-left text-xs font-medium text-[#626b5e]">${nbT(vi, en)}</th>${vals.map(v => cell(v === null ? "—" : v, target !== null && v === target && new Set(known).size > 1)).join("")}</tr>`;
       }).join("");
       const head = items.map(p => `<th class="min-w-[180px] px-4 py-4 text-left align-top">
           <img src="${imgSrc(p)}" alt="" class="mb-3 aspect-[4/3] w-full rounded-xl object-cover">
@@ -1807,11 +1807,13 @@
       const avoidTxt = avoid.size ? ` ${tr("Đã loại các món có", "Excluded items containing")}: ${nbAllergenNames(Array.from(avoid))}.` : "";
       const tail = `<br><span class="text-xs opacity-80">${tr("Số liệu lấy từ thông tin người bán đang công bố; chỉ mang tính tham khảo, không thay thế tư vấn y tế.", "Based on seller-supplied data; for reference only, not medical advice.")}</span>`;
       if (!top.length) {
-        return { vi: (filtered ? "Hiện chưa có món nào đang bán khớp tất cả yêu cầu của bạn." : "Hiện chưa có món nào phù hợp để gợi ý.") + (missing ? ` Một số món chưa có dữ liệu dinh dưỡng nên không xét được.` : "") + avoidTxt + " Bạn thử nới điều kiện (calo cao hơn, bỏ lọc giá...) nhé." + tail,
-                 en: (filtered ? "No product in stock matches all of your requirements right now." : "No product available to suggest right now.") + (missing ? " Some items lack nutrition data so they could not be checked." : "") + avoidTxt + " Try relaxing the filters (higher calories, no price limit...)." + tail };
+        return {
+          vi: (filtered ? "Hiện chưa có món nào đang bán khớp tất cả yêu cầu của bạn." : "Hiện chưa có món nào phù hợp để gợi ý.") + (missing ? ` Một số món chưa có dữ liệu dinh dưỡng nên không xét được.` : "") + avoidTxt + " Bạn thử nới điều kiện (calo cao hơn, bỏ lọc giá...) nhé." + tail,
+          en: (filtered ? "No product in stock matches all of your requirements right now." : "No product available to suggest right now.") + (missing ? " Some items lack nutrition data so they could not be checked." : "") + avoidTxt + " Try relaxing the filters (higher calories, no price limit...)." + tail
+        };
       }
       const head = filtered ? ["Các món đang bán khớp yêu cầu của bạn:", "Items in stock that match your request:"]
-                            : ["Gợi ý theo điểm dinh dưỡng cao nhất đang có:", "Top picks by nutrition grade in stock:"];
+        : ["Gợi ý theo điểm dinh dưỡng cao nhất đang có:", "Top picks by nutrition grade in stock:"];
       const body = "<br>" + top.map((p, i) => `${i + 1}. ${line(p)}`).join("<br>");
       return { vi: head[0] + body + avoidTxt + tail, en: head[1] + body + avoidTxt + tail };
     }
@@ -1907,8 +1909,8 @@
               ${payBtn("bank_transfer", nbT("🏦 Chuyển khoản ngân hàng", "🏦 Bank transfer"))}
             </div>
             <p class="text-xs leading-6 text-[#626b5e]">${pm === "cod"
-              ? nbT("Trả tiền mặt cho người giao hàng. Kho được giữ ngay khi bạn đặt; cửa hàng sẽ xác nhận đơn.", "Pay the courier in cash. Stock is reserved as soon as you order; the shop will confirm your order.")
-              : nbT("Sau khi đặt, bạn sẽ thấy số tài khoản và nội dung chuyển khoản trong mục Đơn mua. Cửa hàng xác nhận khi nhận được tiền. Đơn chưa thanh toán có thể bị hủy.", "After ordering you will see the account number and transfer note under Your orders. The shop confirms once the money arrives. Unpaid orders may be cancelled.")}</p>
+          ? nbT("Trả tiền mặt cho người giao hàng. Kho được giữ ngay khi bạn đặt; cửa hàng sẽ xác nhận đơn.", "Pay the courier in cash. Stock is reserved as soon as you order; the shop will confirm your order.")
+          : nbT("Sau khi đặt, bạn sẽ thấy số tài khoản và nội dung chuyển khoản trong mục Đơn mua. Cửa hàng xác nhận khi nhận được tiền. Đơn chưa thanh toán có thể bị hủy.", "After ordering you will see the account number and transfer note under Your orders. The shop confirms once the money arrives. Unpaid orders may be cancelled.")}</p>
             <button id="ck_submit" type="submit" class="mt-6 w-full rounded-full bg-[#234d38] px-5 py-4 text-sm font-semibold text-white hover:bg-[#173a29] disabled:opacity-60">
               ${pm === "cod" ? nbT("Đặt hàng · Trả khi nhận hàng", "Place order · Pay on delivery") : nbT("Đặt hàng · Chuyển khoản", "Place order · Bank transfer")}
             </button>
@@ -2201,7 +2203,7 @@
       <p class="mt-2 mb-6 text-sm text-[#626b5e]">${nbT("Theo dõi đơn, hủy khi còn chờ xác nhận, mua lại, in hóa đơn, đánh giá từng món và nhắn tin với cửa hàng.", "Track orders, cancel while pending, buy again, print invoices, review each item and message the shop.")}</p>
       ${State.orders.length ? nbOrderFilterBar() : ""}
       ${list.length ? `<div class="grid w-full grid-cols-1 items-start gap-6 xl:grid-cols-2">${list.map(o => renderOrderCard(o, false)).join("")}</div>`
-        : `<div class="rounded-3xl border border-[#dce2d4] bg-white px-5 py-16 text-center"><p class="text-[#626b5e]">${State.orders.length ? nbT("Không có đơn nào khớp bộ lọc.", "No orders match the filter.") : nbT("Bạn chưa có đơn hàng nào.", "You have no orders yet.")}</p><button onclick="navigate('shop')" class="mt-5 rounded-full bg-[#234d38] px-6 py-3 text-sm font-semibold text-white">${nbT("Khám phá cửa hàng", "Explore the shop")}</button></div>`}
+          : `<div class="rounded-3xl border border-[#dce2d4] bg-white px-5 py-16 text-center"><p class="text-[#626b5e]">${State.orders.length ? nbT("Không có đơn nào khớp bộ lọc.", "No orders match the filter.") : nbT("Bạn chưa có đơn hàng nào.", "You have no orders yet.")}</p><button onclick="navigate('shop')" class="mt-5 rounded-full bg-[#234d38] px-6 py-3 text-sm font-semibold text-white">${nbT("Khám phá cửa hàng", "Explore the shop")}</button></div>`}
     </section>`;
     }
 
@@ -2227,7 +2229,7 @@
       ${low.length ? `<div class="mb-6 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">⚠️ <b>${nbT("Sắp hết hàng", "Low stock")}:</b> ${low.map(p => `${pname(p)} (${p.stock_quantity})`).join(" · ")} — <a href="#/manage" onclick="navigate('manage')" class="underline">${nbT("cập nhật tồn kho", "update stock")}</a></div>` : ""}
       ${nbOrderFilterBar()}
       ${list.length ? `<div class="grid w-full grid-cols-1 items-start gap-6 xl:grid-cols-2">${list.map(o => renderOrderCard(o, true)).join("")}</div>`
-        : `<div class="rounded-3xl border border-[#dce2d4] bg-white px-5 py-16 text-center text-[#626b5e]">${nbT("Chưa có đơn nào khớp.", "No matching orders.")}</div>`}
+          : `<div class="rounded-3xl border border-[#dce2d4] bg-white px-5 py-16 text-center text-[#626b5e]">${nbT("Chưa có đơn nào khớp.", "No matching orders.")}</div>`}
     </section>`;
     }
 
@@ -2241,12 +2243,14 @@
       e.preventDefault();
       const v = id => (document.getElementById(id).value || "").trim();
       try {
-        await nbRpc("nb2_update_settings", { p: {
-          shipping_fee: v("st_fee"), free_shipping_min: v("st_free"),
-          commission_bps: String(Math.round(Number(v("st_comm") || 0) * 100)),
-          store_phone: v("st_phone"), store_email: v("st_email"), store_address: v("st_addr"),
-          bank_name: v("st_bank"), bank_account_no: v("st_acc"), bank_account_holder: v("st_holder")
-        } });
+        await nbRpc("nb2_update_settings", {
+          p: {
+            shipping_fee: v("st_fee"), free_shipping_min: v("st_free"),
+            commission_bps: String(Math.round(Number(v("st_comm") || 0) * 100)),
+            store_phone: v("st_phone"), store_email: v("st_email"), store_address: v("st_addr"),
+            bank_name: v("st_bank"), bank_account_no: v("st_acc"), bank_account_holder: v("st_holder")
+          }
+        });
         await nbLoadSettings();
         renderAll();
         showNotice("Đã lưu cài đặt cửa hàng.", "Store settings saved.");
@@ -2257,10 +2261,12 @@
       e.preventDefault();
       const v = id => (document.getElementById(id).value || "").trim();
       try {
-        await nbRpc("nb2_save_coupon", { p: {
-          code: v("cpn_code"), kind: v("cpn_kind"), value: v("cpn_value") || "0", min_subtotal: v("cpn_min") || "0",
-          max_uses: v("cpn_max"), first_order_only: document.getElementById("cpn_first").checked, active: true
-        } });
+        await nbRpc("nb2_save_coupon", {
+          p: {
+            code: v("cpn_code"), kind: v("cpn_kind"), value: v("cpn_value") || "0", min_subtotal: v("cpn_min") || "0",
+            max_uses: v("cpn_max"), first_order_only: document.getElementById("cpn_first").checked, active: true
+          }
+        });
         await nbLoadCoupons();
         showNotice("Đã lưu mã giảm giá.", "Coupon saved.");
       } catch (err) { nbFail(err); }
@@ -2404,7 +2410,7 @@
               <button onclick="toggleArchiveProduct(${p.id})" class="rounded-full border border-[#d8dfcf] px-4 py-2 text-xs font-medium text-[#234d38] hover:bg-[#edf2e7]">${p.is_active ? nbT("Ẩn", "Hide") : nbT("Hiện lại", "Show")}</button>
             </div>
           </article>`).join("")
-        : `<div class="rounded-2xl border border-[#dce2d4] bg-white p-8 text-center text-sm text-[#626b5e]">${nbT("Chưa có sản phẩm nào. Bấm “Nạp sản phẩm mẫu ban đầu” hoặc “Thêm sản phẩm mới”.", "No products yet. Use “Import starter products” or “Add new product”.")}</div>`}
+          : `<div class="rounded-2xl border border-[#dce2d4] bg-white p-8 text-center text-sm text-[#626b5e]">${nbT("Chưa có sản phẩm nào. Bấm “Nạp sản phẩm mẫu ban đầu” hoặc “Thêm sản phẩm mới”.", "No products yet. Use “Import starter products” or “Add new product”.")}</div>`}
       </div>
     </div>`;
     }
@@ -2641,7 +2647,7 @@
       ${rows.length ? `<ul class="mt-3 space-y-2">${rows.map(r => `<li class="flex items-center justify-between gap-3 rounded-xl border border-[#dce2d4] bg-white px-4 py-3 text-sm">
           <span><b>${esc(r.name)}</b> × ${Number(r.quantity)} <span class="block text-xs text-[#626b5e]">${Math.round(Number(r.kcal) * Number(r.quantity))} kcal · ${Math.round(Number(r.protein_g) * Number(r.quantity))}g ${nbT("đạm", "protein")}</span></span>
           <button onclick="deleteDiary(${Number(r.id)})" class="text-xs text-red-700">🗑️ ${nbT("Xóa", "Remove")}</button></li>`).join("")}</ul>`
-        : `<p class="mt-3 text-sm text-[#626b5e]">${nbT("Chưa ghi món nào cho ngày này.", "Nothing logged for this day.")}</p>`}
+          : `<p class="mt-3 text-sm text-[#626b5e]">${nbT("Chưa ghi món nào cho ngày này.", "Nothing logged for this day.")}</p>`}
 
       ${recent.length ? `<h2 class="mt-8 text-lg font-semibold text-[#234d38]">🛍️ ${nbT("Từ các đơn đã giao của bạn", "From your delivered orders")}</h2>
         <div class="mt-3 flex flex-wrap gap-2">${recent.slice(0, 12).map(p => `<button onclick="diaryFromProduct(${p.id})" class="rounded-full border border-[#b9c9aa] bg-white px-4 py-2 text-xs font-medium text-[#234d38] hover:bg-[#edf2e7]">+ ${pname(p)} (${fmtNum(p.calories_kcal)} kcal)</button>`).join("")}</div>` : ""}
@@ -2671,18 +2677,18 @@
         `<p>${nbT("Phí giao hàng", "Delivery fee")}: <b>${money(s.shipping_fee)}</b>; ${nbT("miễn phí cho đơn từ", "free for orders from")} <b>${money(s.free_shipping_min)}</b>.</p>
          <p>${nbT("Thời gian và khu vực giao do cửa hàng xác nhận khi xử lý đơn. Với thực phẩm tươi, vui lòng nhận hàng sớm và bảo quản theo hướng dẫn trên nhãn.", "Delivery time and area are confirmed by the shop when processing your order. For fresh food, please collect promptly and store as labelled.")}</p>`)}
       ${sec(nbT("💳 Thanh toán", "💳 Payment"),
-        `<p>${nbT("Chúng tôi nhận thanh toán khi nhận hàng (COD) và chuyển khoản ngân hàng. Với chuyển khoản, đơn được xử lý sau khi cửa hàng xác nhận đã nhận tiền; đơn chưa thanh toán có thể bị hủy.", "We accept pay-on-delivery (COD) and bank transfer. For transfers the order is processed once the shop confirms the payment; unpaid orders may be cancelled.")}</p>`)}
+          `<p>${nbT("Chúng tôi nhận thanh toán khi nhận hàng (COD) và chuyển khoản ngân hàng. Với chuyển khoản, đơn được xử lý sau khi cửa hàng xác nhận đã nhận tiền; đơn chưa thanh toán có thể bị hủy.", "We accept pay-on-delivery (COD) and bank transfer. For transfers the order is processed once the shop confirms the payment; unpaid orders may be cancelled.")}</p>`)}
       ${sec(nbT("↩️ Hủy đơn & đổi trả", "↩️ Cancellation & returns"),
-        `<p>${nbT("Bạn có thể tự hủy đơn khi đơn còn ở trạng thái “Chờ xác nhận” và chưa thanh toán. Sau khi cửa hàng xác nhận, vui lòng nhắn tin trong đơn để được hỗ trợ.", "You can cancel an order yourself while it is “Awaiting confirmation” and unpaid. After the shop confirms it, please message us inside the order.")}</p>
+            `<p>${nbT("Bạn có thể tự hủy đơn khi đơn còn ở trạng thái “Chờ xác nhận” và chưa thanh toán. Sau khi cửa hàng xác nhận, vui lòng nhắn tin trong đơn để được hỗ trợ.", "You can cancel an order yourself while it is “Awaiting confirmation” and unpaid. After the shop confirms it, please message us inside the order.")}</p>
          <p>${nbT("Vì là thực phẩm, cửa hàng không đổi trả theo ý thích. Nếu sản phẩm sai, hư hỏng hoặc không đảm bảo, hãy nhắn tin trong đơn kèm ảnh ngay khi nhận hàng để được hỗ trợ.", "As this is food, we do not accept returns for change of mind. If an item is wrong, damaged or unsafe, message us in the order with photos as soon as you receive it.")}</p>`)}
       ${sec(nbT("🥗 Thông tin dinh dưỡng & dị ứng", "🥗 Nutrition & allergen information"),
-        `<p>${nbT("Thông tin dinh dưỡng, thành phần và chất gây dị ứng do cửa hàng cung cấp. Danh sách dị ứng có ghi “ước tính” chỉ là gợi ý tự động từ thành phần; hãy đọc kỹ nhãn và hỏi cửa hàng nếu bạn có dị ứng nghiêm trọng. Nội dung trên website không thay thế tư vấn y tế.", "Nutrition, ingredient and allergen information is supplied by the shop. Allergen lists marked “estimated” are automatic hints from ingredients; read the label and ask the shop if you have a serious allergy. Website content is not medical advice.")}</p>`)}
+              `<p>${nbT("Thông tin dinh dưỡng, thành phần và chất gây dị ứng do cửa hàng cung cấp. Danh sách dị ứng có ghi “ước tính” chỉ là gợi ý tự động từ thành phần; hãy đọc kỹ nhãn và hỏi cửa hàng nếu bạn có dị ứng nghiêm trọng. Nội dung trên website không thay thế tư vấn y tế.", "Nutrition, ingredient and allergen information is supplied by the shop. Allergen lists marked “estimated” are automatic hints from ingredients; read the label and ask the shop if you have a serious allergy. Website content is not medical advice.")}</p>`)}
       ${sec(nbT("🔒 Quyền riêng tư", "🔒 Privacy"),
-        `<p>${nbT("Chúng tôi lưu tên, email (từ tài khoản Google), số điện thoại, địa chỉ giao hàng, đơn hàng và (nếu bạn chọn lưu) hồ sơ sức khỏe, nhật ký ăn uống của bạn để phục vụ việc giao hàng và cá nhân hóa gợi ý. Dữ liệu sức khỏe chỉ bạn xem được. Bạn có thể yêu cầu xóa dữ liệu bằng cách liên hệ cửa hàng.", "We store your name, email (from your Google account), phone, delivery address, orders and, if you choose to save them, your health profile and food diary, to deliver orders and personalise suggestions. Health data is visible only to you. You can request deletion by contacting the shop.")}</p>`)}
+                `<p>${nbT("Chúng tôi lưu tên, email (từ tài khoản Google), số điện thoại, địa chỉ giao hàng, đơn hàng và (nếu bạn chọn lưu) hồ sơ sức khỏe, nhật ký ăn uống của bạn để phục vụ việc giao hàng và cá nhân hóa gợi ý. Dữ liệu sức khỏe chỉ bạn xem được. Bạn có thể yêu cầu xóa dữ liệu bằng cách liên hệ cửa hàng.", "We store your name, email (from your Google account), phone, delivery address, orders and, if you choose to save them, your health profile and food diary, to deliver orders and personalise suggestions. Health data is visible only to you. You can request deletion by contacting the shop.")}</p>`)}
       ${sec(nbT("☎️ Liên hệ", "☎️ Contact"),
-        (s.store_phone || s.store_email || s.store_address)
-          ? `<p>${s.store_address ? "📍 " + esc(s.store_address) + "<br>" : ""}${s.store_phone ? "☎️ " + esc(s.store_phone) + "<br>" : ""}${s.store_email ? "✉️ " + esc(s.store_email) : ""}</p>`
-          : `<p>${nbT("Thông tin liên hệ đang được cập nhật. Sau khi đặt hàng, bạn có thể nhắn tin trực tiếp cho cửa hàng trong mục Đơn mua.", "Contact details are being updated. After ordering you can message the shop directly under Your orders.")}</p>`)}
+                  (s.store_phone || s.store_email || s.store_address)
+                    ? `<p>${s.store_address ? "📍 " + esc(s.store_address) + "<br>" : ""}${s.store_phone ? "☎️ " + esc(s.store_phone) + "<br>" : ""}${s.store_email ? "✉️ " + esc(s.store_email) : ""}</p>`
+                    : `<p>${nbT("Thông tin liên hệ đang được cập nhật. Sau khi đặt hàng, bạn có thể nhắn tin trực tiếp cho cửa hàng trong mục Đơn mua.", "Contact details are being updated. After ordering you can message the shop directly under Your orders.")}</p>`)}
     </div>`;
     }
 
