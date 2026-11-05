@@ -13,14 +13,26 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
+    html,
     body {
       font-family: 'Inter', sans-serif;
       background-color: #fafaf5;
       color: #30382e;
+      overflow-x: hidden;
+      -webkit-tap-highlight-color: transparent;
     }
 
     ::selection {
       background-color: #dce8d3;
+    }
+
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
     }
   </style>
 </head>
@@ -30,9 +42,9 @@
   <!-- HEADER -->
   <header class="sticky top-0 z-30 w-full border-b border-[#e6e8de] bg-[#fafaf5]/95 backdrop-blur-sm">
     <div
-      class="mx-auto flex w-full max-w-[1440px] flex-wrap items-center justify-between gap-3 px-4 py-4 sm:px-8 lg:px-16">
+      class="mx-auto flex w-full max-w-[1440px] flex-wrap items-center justify-between gap-3 px-4 py-3 sm:py-4 sm:px-8 lg:px-16">
       <a href="#/" onclick="navigate('shop')"
-        class="flex items-center gap-2.5 focus-visible:outline-2 focus-visible:outline-[#234d38]">
+        class="inline-flex min-h-[44px] items-center gap-2.5 focus-visible:outline-2 focus-visible:outline-[#234d38]">
         <span
           class="flex size-10 items-center justify-center rounded-full bg-[#e5edde] text-[#234d38] text-xl">🌱</span>
         <span
@@ -40,23 +52,25 @@
           Organics</span>
       </a>
 
-      <nav id="mainNav" class="ml-auto flex flex-wrap items-center gap-x-5 gap-y-2 sm:ml-0"></nav>
+      <nav id="mainNav"
+        class="w-full sm:w-auto order-3 sm:order-2 flex items-center gap-1 sm:gap-2 overflow-x-auto py-1 no-scrollbar sm:ml-auto">
+      </nav>
 
-      <div class="flex w-full items-center justify-end gap-3 sm:w-auto">
+      <div class="flex items-center justify-end gap-2 sm:gap-3 order-2 sm:order-3">
         <div role="group" aria-label="Language"
           class="flex items-center gap-1 rounded-full border border-[#d9dfd2] bg-[#f0f3e8] p-1">
           <button id="btnLangVi" type="button" onclick="selectLanguage('vi')"
-            class="inline-flex min-h-9 items-center justify-center gap-1.5 rounded-full bg-[#234d38] px-3 text-xs font-semibold text-white">✓
+            class="inline-flex min-h-[44px] items-center justify-center gap-1.5 rounded-full bg-[#234d38] px-3.5 py-2 text-xs font-semibold text-white">✓
             Tiếng Việt</button>
           <button id="btnLangEn" type="button" onclick="selectLanguage('en')"
-            class="inline-flex min-h-9 items-center justify-center gap-1.5 rounded-full bg-transparent px-3 text-xs font-medium text-[#526348] hover:bg-[#e5edde]">English</button>
+            class="inline-flex min-h-[44px] items-center justify-center gap-1.5 rounded-full bg-transparent px-3.5 py-2 text-xs font-medium text-[#526348] hover:bg-[#e5edde]">English</button>
         </div>
         <button id="authButton" type="button" onclick="handleGoogleAuth()"
-          class="rounded-full bg-[#234d38] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#193c2a]">
+          class="inline-flex min-h-[44px] items-center justify-center rounded-full bg-[#234d38] px-3.5 sm:px-4 py-2 text-xs sm:text-sm font-semibold text-white hover:bg-[#193c2a] transition-colors">
           Đăng nhập bằng Google
         </button>
         <button id="headerCartButton" onclick="navigate('cart')"
-          class="flex items-center gap-2 rounded-full border border-[#d9dfd2] bg-white px-3.5 py-2 text-[#234d38] hover:bg-[#edf1e8]">
+          class="inline-flex min-h-[44px] min-w-[44px] items-center justify-center gap-2 rounded-full border border-[#d9dfd2] bg-white px-3.5 py-2 text-[#234d38] hover:bg-[#edf1e8] transition-colors">
           <span>🛍️</span>
           <span id="headerCartCount"
             class="flex size-5 items-center justify-center rounded-full bg-[#234d38] text-[10px] font-bold text-white">0</span>
@@ -506,8 +520,8 @@
     function showNotice(vi, en, isError = false) {
       const box = document.getElementById("globalFeedback");
       box.innerHTML = isError
-        ? `<div role="alert" class="mb-4 flex items-center justify-between gap-3 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-800"><span>⚠️ ${esc(tr(vi, en))}</span><button onclick="this.parentElement.remove()" class="font-bold">✕</button></div>`
-        : `<div role="status" class="mb-4 flex items-center justify-between gap-3 rounded-xl border border-[#d4dfcb] bg-[#edf4e7] p-3.5 text-sm text-[#234d38]"><span>✓ ${esc(tr(vi, en))}</span><div class="flex items-center gap-3"><a href="#/cart" onclick="navigate('cart')" class="font-semibold underline underline-offset-4">${tr("Xem giỏ hàng", "View bag")}</a><button onclick="this.parentElement.parentElement.remove()" class="p-1">✕</button></div></div>`;
+        ? `<div role="alert" class="mb-4 flex items-center justify-between gap-3 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-800"><span>⚠️ ${esc(tr(vi, en))}</span><button onclick="this.parentElement.remove()" class="inline-flex min-h-[44px] min-w-[44px] items-center justify-center font-bold text-lg" aria-label="Close">✕</button></div>`
+        : `<div role="status" class="mb-4 flex items-center justify-between gap-3 rounded-xl border border-[#d4dfcb] bg-[#edf4e7] p-3.5 text-sm text-[#234d38]"><span>✓ ${esc(tr(vi, en))}</span><div class="flex items-center gap-3"><a href="#/cart" onclick="navigate('cart')" class="inline-flex min-h-[44px] items-center font-semibold underline underline-offset-4">${tr("Xem giỏ hàng", "View bag")}</a><button onclick="this.parentElement.parentElement.remove()" class="inline-flex min-h-[44px] min-w-[44px] items-center justify-center p-1 text-base" aria-label="Close">✕</button></div></div>`;
     }
 
     function selectLanguage(lang) {
@@ -542,14 +556,14 @@
       const enBtn = document.getElementById("btnLangEn");
 
       if (isVi()) {
-        viBtn.className = "inline-flex min-h-9 items-center justify-center gap-1.5 rounded-full bg-[#234d38] px-3 text-xs font-semibold text-white";
+        viBtn.className = "inline-flex min-h-[44px] items-center justify-center gap-1.5 rounded-full bg-[#234d38] px-3.5 py-2 text-xs font-semibold text-white";
         viBtn.textContent = "✓ Tiếng Việt";
-        enBtn.className = "inline-flex min-h-9 items-center justify-center gap-1.5 rounded-full bg-transparent px-3 text-xs font-medium text-[#526348] hover:bg-[#e5edde]";
+        enBtn.className = "inline-flex min-h-[44px] items-center justify-center gap-1.5 rounded-full bg-transparent px-3.5 py-2 text-xs font-medium text-[#526348] hover:bg-[#e5edde]";
         enBtn.textContent = "English";
       } else {
-        enBtn.className = "inline-flex min-h-9 items-center justify-center gap-1.5 rounded-full bg-[#234d38] px-3 text-xs font-semibold text-white";
+        enBtn.className = "inline-flex min-h-[44px] items-center justify-center gap-1.5 rounded-full bg-[#234d38] px-3.5 py-2 text-xs font-semibold text-white";
         enBtn.textContent = "✓ English";
-        viBtn.className = "inline-flex min-h-9 items-center justify-center gap-1.5 rounded-full bg-transparent px-3 text-xs font-medium text-[#526348] hover:bg-[#e5edde]";
+        viBtn.className = "inline-flex min-h-[44px] items-center justify-center gap-1.5 rounded-full bg-transparent px-3.5 py-2 text-xs font-medium text-[#526348] hover:bg-[#e5edde]";
         viBtn.textContent = "Tiếng Việt";
       }
 
@@ -561,21 +575,25 @@
       const isSeller = isLoggedIn && NB_AUTH_ROLE === "seller";
 
       const nav = document.getElementById("mainNav");
-      const shopLink = `<a href="#/" onclick="navigate('shop')" class="text-sm font-medium text-[#234d38]">${tr("Cửa hàng", "The shop")}</a>`;
+      const navItem = (route, vi, en) => `
+        <a href="#/${route === 'shop' ? '' : route}" onclick="navigate('${route}')" class="inline-flex min-h-[44px] items-center rounded-full px-3.5 py-2 text-xs sm:text-sm font-medium whitespace-nowrap transition-colors ${State.route === route ? 'bg-[#234d38] text-white' : 'text-[#234d38] hover:bg-[#e5edde]'}">${tr(vi, en)}</a>
+      `;
+
+      const shopLink = navItem('shop', "Cửa hàng", "The shop");
 
       const buyerLinks = `
-        <a href="#/health" onclick="navigate('health')" class="text-sm font-medium text-[#234d38]">${tr("Tính BMI & TDEE", "Health tools")}</a>
-        <a href="#/advice" onclick="navigate('advice')" class="text-sm font-medium text-[#234d38]">${tr("Trợ lý dinh dưỡng", "Nutrition assistant")}</a>
-        <a href="#/diary" onclick="navigate('diary')" class="text-sm font-medium text-[#234d38]">${tr("Nhật ký ăn", "Food diary")}</a>
-        <a href="#/orders" onclick="navigate('orders')" class="text-sm font-medium text-[#234d38]">${tr("Đơn mua", "Your orders")}</a>
-        <a href="#/account" onclick="navigate('account')" class="text-sm font-medium text-[#234d38]">${tr("Tài khoản", "Account")}</a>
+        ${navItem('health', "Tính BMI & TDEE", "Health tools")}
+        ${navItem('advice', "Trợ lý dinh dưỡng", "Nutrition assistant")}
+        ${navItem('diary', "Nhật ký ăn", "Food diary")}
+        ${navItem('orders', "Đơn mua", "Your orders")}
+        ${navItem('account', "Tài khoản", "Account")}
       `;
 
       const sellerLinks = `
-        <a href="#/manage" onclick="navigate('manage')" class="text-sm font-medium text-[#234d38]">${tr("Quản lý sản phẩm", "Manage products")}</a>
-        <a href="#/seller_orders" onclick="navigate('seller_orders')" class="text-sm font-medium text-[#234d38]">${tr("Đơn & doanh thu", "Orders & revenue")}</a>
-        <a href="#/seller_settings" onclick="navigate('seller_settings')" class="text-sm font-medium text-[#234d38]">${tr("Cài đặt", "Settings")}</a>
-        <a href="#/account" onclick="navigate('account')" class="text-sm font-medium text-[#234d38]">${tr("Tài khoản", "Account")}</a>
+        ${navItem('manage', "Quản lý sản phẩm", "Manage products")}
+        ${navItem('seller_orders', "Đơn & doanh thu", "Orders & revenue")}
+        ${navItem('seller_settings', "Cài đặt", "Settings")}
+        ${navItem('account', "Tài khoản", "Account")}
       `;
 
       if (nav) {
@@ -607,6 +625,32 @@
     // ============================================================================
     // 6. SHOP
     // ============================================================================
+    function renderSkeletonCards(count = 6) {
+      return Array.from({ length: count }, () => `
+        <article class="min-w-0 overflow-hidden rounded-[20px] border border-[#e3e7db] bg-white flex flex-col animate-pulse" aria-hidden="true">
+          <div class="aspect-[4/3] w-full bg-[#e5edde]"></div>
+          <div class="p-5 flex-1 flex flex-col space-y-3">
+            <div class="h-3 w-20 rounded-full bg-[#dbe5d4]"></div>
+            <div class="h-5 w-3/4 rounded-md bg-[#cddbc5]"></div>
+            <div class="h-3 w-28 rounded-full bg-[#dbe5d4]"></div>
+            <div class="space-y-1.5">
+              <div class="h-3 w-full rounded-full bg-[#edf2e7]"></div>
+              <div class="h-3 w-4/5 rounded-full bg-[#edf2e7]"></div>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="h-6 w-6 rounded-full bg-[#dbe5d4]"></div>
+              <div class="h-3 w-24 rounded-full bg-[#edf2e7]"></div>
+              <div class="ml-auto h-6 w-6 rounded-full bg-[#edf2e7]"></div>
+            </div>
+            <div class="mt-auto pt-4 flex items-center justify-between gap-2 border-t border-[#f0f3e8]">
+              <div class="h-5 w-20 rounded-md bg-[#cddbc5]"></div>
+              <div class="h-11 w-20 rounded-full bg-[#e5edde]"></div>
+            </div>
+          </div>
+        </article>
+      `).join("");
+    }
+
     function getFilteredProducts() {
       const q = State.search.trim().toLowerCase();
       const vit = State.vitaminQuery.trim().toLowerCase();
@@ -655,10 +699,10 @@
       )}
           </p>
           <div class="mt-8 flex flex-wrap items-center gap-5">
-            <a href="#catalog" class="inline-flex items-center justify-center gap-3 rounded-full bg-[#234d38] px-6 py-3.5 text-sm font-semibold text-white hover:bg-[#173a29] transition-colors">
+            <a href="#catalog" class="inline-flex min-h-[48px] items-center justify-center gap-3 rounded-full bg-[#234d38] px-6 py-3.5 text-sm font-semibold text-white hover:bg-[#173a29] transition-colors">
               ${tr("Khám phá cửa hàng", "Explore the shop")} ↗
             </a>
-            <button onclick="navigate('health')" class="rounded-full border border-[#dce2d4] bg-white px-5 py-3.5 text-sm font-medium text-[#234d38] hover:bg-[#eef2e8]">
+            <button onclick="navigate('health')" class="inline-flex min-h-[48px] items-center justify-center rounded-full border border-[#dce2d4] bg-white px-5 py-3.5 text-sm font-medium text-[#234d38] hover:bg-[#eef2e8] transition-colors">
               📏 ${tr("Tính BMI & TDEE", "BMI & TDEE Calculator")}
             </button>
           </div>
@@ -700,28 +744,28 @@
         <div class="grid w-full grid-cols-1 gap-3 sm:grid-cols-2 lg:max-w-xl">
           <div class="sm:col-span-2">
             <label for="product-search" class="mb-1.5 block text-xs font-medium text-[#434f3d]">${tr("Tìm tên, thành phần hoặc dinh dưỡng", "Search names, ingredients or nutrition")}</label>
-            <input id="product-search" type="search" value="${State.search}" oninput="State.search=this.value;renderAll()" placeholder="${tr("Ví dụ: quinoa, cá hồi, yến mạch, ức gà...", "e.g. quinoa, salmon, oats, chicken...")}" class="w-full rounded-full border border-[#dce2d4] bg-white py-3 px-5 text-sm text-[#30382e] focus:outline-2 focus:outline-[#648358]">
+            <input id="product-search" type="search" value="${esc(State.search)}" oninput="State.search=this.value;renderAll()" placeholder="${tr("Ví dụ: quinoa, cá hồi, yến mạch, ức gà...", "e.g. quinoa, salmon, oats, chicken...")}" class="min-h-[44px] w-full rounded-full border border-[#dce2d4] bg-white py-3 px-5 text-sm text-[#30382e] focus:outline-2 focus:outline-[#648358]">
           </div>
           <div>
             <label for="vitamin-query" class="mb-1.5 block text-xs font-medium text-[#434f3d]">${tr("Vitamin cần tìm", "Vitamin statement query")}</label>
-            <input id="vitamin-query" type="search" value="${State.vitaminQuery}" oninput="State.vitaminQuery=this.value;renderAll()" placeholder="Vitamin C / Vitamin B12 / Omega-3" class="w-full rounded-xl border border-[#dce2d4] bg-white px-4 py-2.5 text-sm text-[#30382e]">
+            <input id="vitamin-query" type="search" value="${esc(State.vitaminQuery)}" oninput="State.vitaminQuery=this.value;renderAll()" placeholder="Vitamin C / Vitamin B12 / Omega-3" class="min-h-[44px] w-full rounded-xl border border-[#dce2d4] bg-white px-4 py-2.5 text-sm text-[#30382e]">
           </div>
           <div>
             <label for="max-calories" class="mb-1.5 block text-xs font-medium text-[#434f3d]">${tr("Kcal tối đa / khẩu phần", "Maximum kcal / serving")}</label>
-            <input id="max-calories" type="number" min="0" value="${State.maxCalories}" oninput="State.maxCalories=this.value;renderAll()" placeholder="${tr("Không giới hạn (VD: 260)", "No limit (e.g. 260)")}" class="w-full rounded-xl border border-[#dce2d4] bg-white px-4 py-2.5 text-sm text-[#30382e]">
+            <input id="max-calories" type="number" min="0" value="${esc(State.maxCalories)}" oninput="State.maxCalories=this.value;renderAll()" placeholder="${tr("Không giới hạn (VD: 260)", "No limit (e.g. 260)")}" class="min-h-[44px] w-full rounded-xl border border-[#dce2d4] bg-white px-4 py-2.5 text-sm text-[#30382e]">
           </div>
           <p class="text-xs leading-5 text-[#626b5e] sm:col-span-2">
             ${tr("Chỉ khớp dữ liệu do người bán cung cấp. Thiếu kcal hoặc vitamin sẽ không khớp.", "Matches seller-supplied data only. Missing kcal or vitamin facts cannot satisfy those filters.")}
           </p>
-          ${hasNutrientFilter ? `<button type="button" onclick="State.search='';State.vitaminQuery='';State.maxCalories='';renderAll()" class="w-fit rounded-full border border-[#dce2d4] bg-white px-4 py-2 text-xs font-medium text-[#234d38] hover:bg-[#eef2e8]">${tr("Xóa bộ lọc", "Clear all filters")}</button>` : ''}
+          ${hasNutrientFilter ? `<button type="button" onclick="State.search='';State.vitaminQuery='';State.maxCalories='';renderAll()" class="inline-flex min-h-[44px] items-center justify-center w-fit rounded-full border border-[#dce2d4] bg-white px-4 py-2 text-xs font-medium text-[#234d38] hover:bg-[#eef2e8] transition-colors">${tr("Xóa bộ lọc", "Clear all filters")}</button>` : ''}
         </div>
       </div>
 
       <div class="mb-6 mt-8 flex flex-wrap gap-2">
         ${["all", "meals", "snacks", "supplements", "ingredients"].map(cat => `
           <button onclick="State.category='${cat}';renderAll()" class="${State.category === cat
-          ? 'whitespace-nowrap rounded-full border border-[#234d38] bg-[#234d38] px-5 py-2.5 text-xs font-medium text-white'
-          : 'whitespace-nowrap rounded-full border border-[#dce2d4] bg-white px-5 py-2.5 text-xs font-medium text-[#626b5e] hover:border-[#648358] hover:text-[#234d38]'}">
+          ? 'inline-flex min-h-[44px] items-center whitespace-nowrap rounded-full border border-[#234d38] bg-[#234d38] px-4 sm:px-5 py-2 text-xs font-medium text-white transition-colors'
+          : 'inline-flex min-h-[44px] items-center whitespace-nowrap rounded-full border border-[#dce2d4] bg-white px-4 sm:px-5 py-2 text-xs font-medium text-[#626b5e] hover:border-[#648358] hover:text-[#234d38] transition-colors'}">
             ${categoryName(cat)}
           </button>
         `).join("")}
@@ -756,16 +800,24 @@
         </section>
       ` : ''}
 
-      ${filtered.length ? `
+      ${State.loading ? `
+        <div class="mb-4 flex items-center gap-2 text-sm text-[#557448]">
+          <span class="inline-block size-4 animate-spin rounded-full border-2 border-[#234d38] border-t-transparent"></span>
+          <span>${nbT("Đang tải danh sách sản phẩm...", "Loading product catalog...")}</span>
+        </div>
+        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          ${renderSkeletonCards(6)}
+        </div>
+      ` : (filtered.length ? `
         <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           ${filtered.map(renderProductCard).join("")}
         </div>
       ` : `
         <div class="rounded-2xl border border-[#dce2d4] bg-white px-6 py-16 text-center">
           <h3 class="text-lg font-medium text-[#234d38]">${tr("Không tìm thấy sản phẩm", "No products found")}</h3>
-          <button onclick="State.search='';State.vitaminQuery='';State.maxCalories='';State.category='all';renderAll()" class="mt-4 rounded-full bg-[#234d38] px-5 py-2.5 text-sm text-white">${tr("Xóa bộ lọc / thử lại", "Clear filters / retry")}</button>
+          <button onclick="State.search='';State.vitaminQuery='';State.maxCalories='';State.category='all';renderAll()" class="mt-4 inline-flex min-h-[44px] items-center justify-center rounded-full bg-[#234d38] px-5 py-2.5 text-sm text-white hover:bg-[#173a29] transition-colors">${tr("Xóa bộ lọc / thử lại", "Clear filters / retry")}</button>
         </div>
-      `}
+      `)}
     </section>
   `;
     }
@@ -781,7 +833,7 @@
 
       return `
     <div class="mx-auto w-full max-w-[1440px] px-5 py-10 sm:px-8 lg:px-16">
-      <a href="#/" onclick="navigate('shop')" class="mb-7 inline-flex items-center gap-2 text-sm text-[#557448] hover:underline">
+      <a href="#/" onclick="navigate('shop')" class="mb-7 inline-flex min-h-[44px] items-center gap-2 text-sm text-[#557448] hover:underline">
         ← ${tr("Quay lại cửa hàng", "Back to the shop")}
       </a>
       <div class="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-14">
@@ -799,16 +851,16 @@
           <p class="mt-5 text-sm leading-7 text-[#626b5e]">${esc(trf(p.description_vi, p.description_en))}</p>
           ${nbDetailExtras(p)}
 
-          <div class="mt-7 flex items-center gap-5">
-            <span class="text-sm text-[#626b5e]">${tr("Số lượng", "Quantity")}</span>
+          <div class="mt-7 flex items-center gap-4 sm:gap-5">
+            <span class="text-sm font-medium text-[#626b5e]">${tr("Số lượng", "Quantity")}</span>
             <div class="flex items-center rounded-full border border-[#dce2d4] bg-white">
-              <button onclick="State.detailQuantity=Math.max(1,State.detailQuantity-1);renderAll()" class="rounded-full px-4 py-2 text-[#234d38] hover:bg-[#edf2e7]">−</button>
-              <span class="w-8 text-center text-sm text-[#234d38]">${State.detailQuantity}</span>
-              <button onclick="State.detailQuantity=Math.min(${p.stock_quantity || 1},State.detailQuantity+1);renderAll()" class="rounded-full px-4 py-2 text-[#234d38] hover:bg-[#edf2e7]">+</button>
+              <button onclick="State.detailQuantity=Math.max(1,State.detailQuantity-1);renderAll()" class="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full text-lg text-[#234d38] hover:bg-[#edf2e7] transition-colors" aria-label="decrease">−</button>
+              <span class="w-10 text-center text-sm font-semibold text-[#234d38]">${State.detailQuantity}</span>
+              <button onclick="State.detailQuantity=Math.min(${p.stock_quantity || 1},State.detailQuantity+1);renderAll()" class="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full text-lg text-[#234d38] hover:bg-[#edf2e7] transition-colors" aria-label="increase">+</button>
             </div>
           </div>
 
-          <button onclick="addToCart(${p.id}, State.detailQuantity)" ${(p.stock_quantity <= 0 || sample) ? 'disabled' : ''} class="mt-5 flex w-full items-center justify-center gap-3 rounded-full bg-[#234d38] px-6 py-4 text-sm font-semibold text-white hover:bg-[#173a29] disabled:opacity-40">
+          <button onclick="addToCart(${p.id}, State.detailQuantity)" ${(p.stock_quantity <= 0 || sample) ? 'disabled' : ''} class="mt-5 inline-flex min-h-[48px] w-full items-center justify-center gap-3 rounded-full bg-[#234d38] px-6 py-3.5 text-sm font-semibold text-white hover:bg-[#173a29] transition-colors disabled:opacity-40">
             🛍️ ${tr("Thêm vào giỏ hàng", "Add to bag")}
           </button>
 
@@ -877,27 +929,27 @@
       ${items.length ? `
         <div class="grid w-full grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_360px]">
           <div class="min-w-0 rounded-2xl border border-[#dce2d4] bg-white px-5 pb-6 sm:px-7">
-            <button onclick="toggleAllCart(${!allSelected})" class="mt-5 flex min-h-11 items-center gap-3 rounded-full border border-[#dce2d4] bg-[#eef2e8] px-4 py-2 text-sm text-[#234d38] hover:bg-[#e5edde]">
+            <button onclick="toggleAllCart(${!allSelected})" class="mt-5 inline-flex min-h-[44px] items-center gap-3 rounded-full border border-[#dce2d4] bg-[#eef2e8] px-4 py-2 text-sm text-[#234d38] hover:bg-[#e5edde] transition-colors">
               <span>${allSelected ? '☑️' : '⬜'}</span> ${tr("Chọn / bỏ chọn tất cả", "Select / deselect all")}
             </button>
             <p class="mt-3 text-xs text-[#626b5e]">${tr("Mục chưa chọn vẫn ở trong giỏ hàng; chỉ mục đã chọn được thanh toán.", "Unselected items stay in your bag; only selected items go to checkout.")}</p>
             ${items.map(item => `
-              <article class="flex flex-wrap items-start gap-4 border-b border-[#e3e7da] py-6 last:border-b-0 sm:flex-nowrap">
-                <button onclick="State.cartSelection[${item.id}]=!${item.selected};saveStorage();renderAll()" class="rounded-lg bg-white p-2 text-lg text-[#234d38]">${item.selected ? '☑️' : '⬜'}</button>
+              <article class="flex flex-wrap items-start gap-3 sm:gap-4 border-b border-[#e3e7da] py-5 sm:py-6 last:border-b-0 sm:flex-nowrap">
+                <button onclick="State.cartSelection[${item.id}]=!${item.selected};saveStorage();renderAll()" class="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg bg-white p-2 text-lg text-[#234d38]" aria-label="select">${item.selected ? '☑️' : '⬜'}</button>
                 <img src="${imgSrc(item)}" alt="${pname(item)}" class="size-20 rounded-xl object-cover sm:size-24">
                 <div class="min-w-0 flex-1">
                   <a href="#/products/${item.id}" onclick="navigate('detail', ${item.id})" class="text-base font-semibold text-[#234d38] hover:underline">${pname(item)}</a>
                   <p class="mt-1 text-xs text-[#626b5e]">${money(item.price_vnd)} · 🔥 ${item.calories_kcal || 0} kcal</p>
-                  <div class="mt-3 flex items-center gap-3">
+                  <div class="mt-3 flex flex-wrap items-center gap-3">
                     <div class="flex items-center rounded-full border border-[#dce2d4] bg-white">
-                      <button onclick="updateCartQty(${item.id}, -1)" class="px-3 py-1">−</button>
-                      <span class="min-w-6 text-center text-xs">${item.quantity}</span>
-                      <button onclick="updateCartQty(${item.id}, 1)" class="px-3 py-1">+</button>
+                      <button onclick="updateCartQty(${item.id}, -1)" class="inline-flex min-h-[44px] min-w-[44px] items-center justify-center text-base font-medium" aria-label="decrease">−</button>
+                      <span class="min-w-8 text-center text-sm font-semibold">${item.quantity}</span>
+                      <button onclick="updateCartQty(${item.id}, 1)" class="inline-flex min-h-[44px] min-w-[44px] items-center justify-center text-base font-medium" aria-label="increase">+</button>
                     </div>
-                    <button onclick="delete State.cart[${item.id}];saveStorage();renderAll()" class="text-xs text-[#626b5e] hover:text-red-700">🗑️ ${tr("Xóa", "Remove")}</button>
+                    <button onclick="delete State.cart[${item.id}];saveStorage();renderAll()" class="inline-flex min-h-[44px] items-center px-3 text-xs text-[#626b5e] hover:text-red-700 transition-colors">🗑️ ${tr("Xóa", "Remove")}</button>
                   </div>
                 </div>
-                <div class="text-sm font-semibold text-[#234d38]">${money(item.price_vnd * item.quantity)}</div>
+                <div class="w-full sm:w-auto text-right sm:text-left text-sm font-semibold text-[#234d38] pt-1 sm:pt-0">${money(item.price_vnd * item.quantity)}</div>
               </article>
             `).join("")}
           </div>
@@ -913,7 +965,7 @@
             </div>
             ${nbCartNutrition(selected)}
             <p class="mt-3 text-xs leading-5 text-[#626b5e]">🚚 ${nbT("Phí giao hàng " + money(State.settings.shipping_fee) + "; miễn phí từ " + money(State.settings.free_shipping_min) + ".", money(State.settings.shipping_fee) + " delivery; free over " + money(State.settings.free_shipping_min) + ".")}</p>
-            <button onclick="navigate('checkout')" ${selected.length === 0 ? 'disabled' : ''} class="mt-6 w-full rounded-full bg-[#234d38] px-6 py-3.5 text-sm font-semibold text-white hover:bg-[#173a29] disabled:opacity-40">
+            <button onclick="navigate('checkout')" ${selected.length === 0 ? 'disabled' : ''} class="mt-6 inline-flex min-h-[48px] w-full items-center justify-center rounded-full bg-[#234d38] px-6 py-3.5 text-sm font-semibold text-white hover:bg-[#173a29] transition-colors disabled:opacity-40">
               ${tr("Tiến hành thanh toán", "Continue to checkout")}
             </button>
           </aside>
@@ -977,9 +1029,9 @@
           <div class="rounded-2xl border border-[#dce2d4] bg-[#eef2e8] p-5">
             <h2 class="text-base font-semibold text-[#234d38]">${tr("Gợi ý câu hỏi nhanh", "Suggested prompts")}</h2>
             <div class="mt-3 flex flex-col gap-2">
-              <button onclick="sendQuickAdvice('Gợi ý thực đơn giàu Protein tăng cơ trên 25g đạm')" class="rounded-xl bg-white p-3 text-left text-xs font-medium text-[#234d38] hover:bg-[#dce8d3]">💪 ${tr("Thực đơn giàu Protein tăng cơ (≥ 25g đạm)", "High-protein muscle building meals (≥ 25g protein)")}</button>
-              <button onclick="sendQuickAdvice('Gợi ý bữa ăn nhẹ nhàng dưới 260 kcal giàu chất xơ')" class="rounded-xl bg-white p-3 text-left text-xs font-medium text-[#234d38] hover:bg-[#dce8d3]">🥗 ${tr("Bữa ăn nhẹ dưới 260 kcal giàu chất xơ", "Light meals under 260 kcal rich in fiber")}</button>
-              <button onclick="sendQuickAdvice('Món ăn thuần chay Vegan bổ sung sắt và vitamin C')" class="rounded-xl bg-white p-3 text-left text-xs font-medium text-[#234d38] hover:bg-[#dce8d3]">🌱 ${tr("Món thuần thực vật (Vegan) giàu Vitamin C & Sắt", "Vegan options with Vitamin C & Iron")}</button>
+              <button onclick="sendQuickAdvice('Gợi ý thực đơn giàu Protein tăng cơ trên 25g đạm')" class="min-h-[44px] flex items-center rounded-xl bg-white p-3 text-left text-xs font-medium text-[#234d38] hover:bg-[#dce8d3] transition-colors">💪 ${tr("Thực đơn giàu Protein tăng cơ (≥ 25g đạm)", "High-protein muscle building meals (≥ 25g protein)")}</button>
+              <button onclick="sendQuickAdvice('Gợi ý bữa ăn nhẹ nhàng dưới 260 kcal giàu chất xơ')" class="min-h-[44px] flex items-center rounded-xl bg-white p-3 text-left text-xs font-medium text-[#234d38] hover:bg-[#dce8d3] transition-colors">🥗 ${tr("Bữa ăn nhẹ dưới 260 kcal giàu chất xơ", "Light meals under 260 kcal rich in fiber")}</button>
+              <button onclick="sendQuickAdvice('Món ăn thuần chay Vegan bổ sung sắt và vitamin C')" class="min-h-[44px] flex items-center rounded-xl bg-white p-3 text-left text-xs font-medium text-[#234d38] hover:bg-[#dce8d3] transition-colors">🌱 ${tr("Món thuần thực vật (Vegan) giàu Vitamin C & Sắt", "Vegan options with Vitamin C & Iron")}</button>
             </div>
           </div>
           <p class="rounded-xl border border-[#dce2d4] bg-white p-4 text-xs leading-5 text-[#626b5e]">
@@ -998,8 +1050,8 @@
             `).join("")}
           </div>
           <form onsubmit="submitAdviceChat(event)" class="mt-4 flex gap-3 border-t border-[#dce2d4] pt-4">
-            <input id="adviceInput" required placeholder="${tr("Nhập mục tiêu dinh dưỡng hoặc câu hỏi của bạn...", "Ask about meals, calories, protein, or exercise...")}" class="flex-1 rounded-full border border-[#dce2d4] px-5 py-3 text-sm">
-            <button type="submit" class="rounded-full bg-[#234d38] px-6 py-3 text-sm font-semibold text-white hover:bg-[#173a29]">${tr("Gửi", "Send")}</button>
+            <input id="adviceInput" required placeholder="${tr("Nhập mục tiêu dinh dưỡng hoặc câu hỏi của bạn...", "Ask about meals, calories, protein, or exercise...")}" class="min-h-[44px] flex-1 rounded-full border border-[#dce2d4] px-5 py-3 text-sm">
+            <button type="submit" class="inline-flex min-h-[44px] items-center justify-center rounded-full bg-[#234d38] px-6 py-3 text-sm font-semibold text-white hover:bg-[#173a29] transition-colors">${tr("Gửi", "Send")}</button>
           </form>
         </div>
       </div>
@@ -1032,24 +1084,24 @@
         <h2 class="text-xl font-semibold text-[#234d38]">${tr("Hồ sơ & địa chỉ", "Profile & address")}</h2>
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div><label class="mb-1 block text-xs font-medium">${tr("Họ và tên *", "Full name *")}</label>
-            <input id="pf_name" required value="${esc(p.display_name || '')}" class="w-full rounded-xl border border-[#d8dfcf] px-4 py-3 text-sm"></div>
+            <input id="pf_name" required value="${esc(p.display_name || '')}" class="min-h-[44px] w-full rounded-xl border border-[#d8dfcf] px-4 py-2.5 text-sm"></div>
           <div><label class="mb-1 block text-xs font-medium">${tr("Điện thoại", "Phone")}</label>
-            <input id="pf_phone" value="${esc(p.phone || '')}" class="w-full rounded-xl border border-[#d8dfcf] px-4 py-3 text-sm"></div>
+            <input id="pf_phone" value="${esc(p.phone || '')}" class="min-h-[44px] w-full rounded-xl border border-[#d8dfcf] px-4 py-2.5 text-sm"></div>
           <div class="sm:col-span-2"><label class="mb-1 block text-xs font-medium">${tr("Địa chỉ (số nhà, đường)", "Street address")}</label>
-            <input id="pf_addr1" value="${esc(p.shipping_address_line1 || '')}" class="w-full rounded-xl border border-[#d8dfcf] px-4 py-3 text-sm"></div>
+            <input id="pf_addr1" value="${esc(p.shipping_address_line1 || '')}" class="min-h-[44px] w-full rounded-xl border border-[#d8dfcf] px-4 py-2.5 text-sm"></div>
           <div><label class="mb-1 block text-xs font-medium">${tr("Phường / xã", "Ward")}</label>
-            <input id="pf_ward" value="${esc(p.shipping_ward || '')}" class="w-full rounded-xl border border-[#d8dfcf] px-4 py-3 text-sm"></div>
+            <input id="pf_ward" value="${esc(p.shipping_ward || '')}" class="min-h-[44px] w-full rounded-xl border border-[#d8dfcf] px-4 py-2.5 text-sm"></div>
           <div><label class="mb-1 block text-xs font-medium">${tr("Quận / huyện", "District")}</label>
-            <input id="pf_dist" value="${esc(p.shipping_district || '')}" class="w-full rounded-xl border border-[#d8dfcf] px-4 py-3 text-sm"></div>
+            <input id="pf_dist" value="${esc(p.shipping_district || '')}" class="min-h-[44px] w-full rounded-xl border border-[#d8dfcf] px-4 py-2.5 text-sm"></div>
           <div><label class="mb-1 block text-xs font-medium">${tr("Tỉnh / thành phố", "City")}</label>
-            <input id="pf_city" value="${esc(p.shipping_city || '')}" class="w-full rounded-xl border border-[#d8dfcf] px-4 py-3 text-sm"></div>
+            <input id="pf_city" value="${esc(p.shipping_city || '')}" class="min-h-[44px] w-full rounded-xl border border-[#d8dfcf] px-4 py-2.5 text-sm"></div>
           <div><label class="mb-1 block text-xs font-medium">${tr("Mã bưu chính", "Postal code")}</label>
-            <input id="pf_postal" value="${esc(p.shipping_postal_code || '')}" class="w-full rounded-xl border border-[#d8dfcf] px-4 py-3 text-sm"></div>
+            <input id="pf_postal" value="${esc(p.shipping_postal_code || '')}" class="min-h-[44px] w-full rounded-xl border border-[#d8dfcf] px-4 py-2.5 text-sm"></div>
         </div>
 
         ${isSeller ? nbSellerAccountNote() : nbHealthSummary()}
 
-        <button type="submit" id="pf_save_btn" class="rounded-full bg-[#234d38] px-7 py-3 text-sm font-semibold text-white hover:bg-[#173a29]">
+        <button type="submit" id="pf_save_btn" class="inline-flex min-h-[48px] items-center justify-center rounded-full bg-[#234d38] px-7 py-3 text-sm font-semibold text-white hover:bg-[#173a29] transition-colors">
           ${tr("Lưu hồ sơ", "Save profile")}
         </button>
       </form>
@@ -1110,13 +1162,13 @@
       return 0;
     }
     function renderHealthyFilters() {
-      const chip = (on, act, label) => `<button onclick="${act}" class="rounded-full border px-3.5 py-1.5 text-xs font-medium ${on ? "border-[#234d38] bg-[#234d38] text-white" : "border-[#dce2d4] bg-white text-[#626b5e] hover:border-[#648358]"}">${label}</button>`;
+      const chip = (on, act, label) => `<button onclick="${act}" class="inline-flex min-h-[44px] items-center rounded-full border px-3.5 sm:px-4 py-2 text-xs font-medium transition-colors ${on ? "border-[#234d38] bg-[#234d38] text-white" : "border-[#dce2d4] bg-white text-[#626b5e] hover:border-[#648358]"}">${label}</button>`;
       const sorts = [["default", "Mặc định", "Default"], ["price_asc", "Giá thấp → cao", "Price low → high"], ["price_desc", "Giá cao → thấp", "Price high → low"], ["kcal_asc", "Ít calo nhất", "Lowest calories"], ["protein_desc", "Nhiều đạm nhất", "Highest protein"]];
       return `<div class="mb-6 space-y-3 rounded-2xl border border-[#dce2d4] bg-white p-4">
         <div class="flex flex-wrap items-center gap-2"><span class="text-xs font-semibold text-[#234d38]">🥗 ${tr("Chế độ ăn", "Diet")}:</span>${Object.entries(NB_DIETS).map(([k, d]) => chip(State.diet.includes(k), `nbToggle('diet','${k}')`, tr(d.vi, d.en))).join("")}</div>
         <div class="flex flex-wrap items-center gap-2"><span class="text-xs font-semibold text-[#234d38]">⚠️ ${tr("Tránh dị ứng", "Avoid allergens")}:</span>${Object.entries(NB_ALLERGENS).map(([k, a]) => chip(State.avoid.includes(k), `nbToggle('avoid','${k}')`, tr(a.vi, a.en))).join("")}</div>
         <div class="flex flex-wrap items-center gap-2">${chip(State.inStock, "State.inStock=!State.inStock;renderAll()", tr("Còn hàng", "In stock"))}${chip(State.onlyWish, "State.onlyWish=!State.onlyWish;renderAll()", `♥ ${tr("Yêu thích", "Wishlist")} (${State.wishlist.length})`)}
-          <label class="ml-auto flex items-center gap-2 text-xs text-[#626b5e]">${tr("Sắp xếp", "Sort")}<select onchange="State.sort=this.value;renderAll()" class="rounded-full border border-[#dce2d4] bg-white px-3 py-1.5 text-xs">${sorts.map(o => `<option value="${o[0]}" ${State.sort === o[0] ? "selected" : ""}>${tr(o[1], o[2])}</option>`).join("")}</select></label></div>
+          <label class="w-full sm:w-auto sm:ml-auto flex items-center gap-2 text-xs text-[#626b5e] pt-1 sm:pt-0">${tr("Sắp xếp", "Sort")}<select onchange="State.sort=this.value;renderAll()" class="min-h-[44px] rounded-full border border-[#dce2d4] bg-white px-3.5 py-2 text-xs">${sorts.map(o => `<option value="${o[0]}" ${State.sort === o[0] ? "selected" : ""}>${tr(o[1], o[2])}</option>`).join("")}</select></label></div>
         <p class="text-[11px] leading-5 text-[#626b5e]">${tr("Nhãn chế độ ăn và dị ứng được ước tính tự động từ dữ liệu dinh dưỡng/thành phần của người bán; luôn đọc kỹ thành phần trước khi mua.", "Diet and allergen labels are estimated automatically from seller-supplied data; always read the ingredients before buying.")}</p></div>`;
     }
     function nbCartNutrition(selected) {
@@ -1426,22 +1478,22 @@
             <p class="mt-1.5 text-xs text-[#626b5e] line-clamp-2">${esc(trf(p.description_vi, p.description_en))}</p>
             <div class="mt-2 flex flex-wrap items-center gap-2 text-[11px] text-[#6b5320]">
               ${nbNutriBadge(p)}${al.length ? `<span>⚠️ ${nbAllergenNames(al)}</span>` : ""}${nbFitBadge(p)}
-              <button onclick="toggleWish(${p.id})" class="ml-auto text-lg leading-none text-[#c0392b]" aria-label="wishlist">${State.wishlist.includes(p.id) ? "♥" : "♡"}</button>
+              <button onclick="toggleWish(${p.id})" class="ml-auto inline-flex min-h-[44px] min-w-[44px] items-center justify-center text-xl leading-none text-[#c0392b] hover:scale-110 transition-transform" aria-label="wishlist">${State.wishlist.includes(p.id) ? "♥" : "♡"}</button>
             </div>
             <p class="mt-2 text-[11px] font-medium text-[#557448]">
               ${sample || p.calories_kcal === null
           ? nbT("Chưa có dữ liệu dinh dưỡng", "Nutrition not supplied")
           : `${fmtNum(p.calories_kcal)} kcal · ${fmtNum(p.protein_g)} g ${nbT("đạm / khẩu phần", "protein / serving")}`}
             </p>
-            <label class="mt-2 flex w-fit cursor-pointer items-center gap-1.5 text-[11px] text-[#626b5e]">
-              <input type="checkbox" ${cmp ? "checked" : ""} onchange="toggleCompare(${p.id})"> ⚖️ ${nbT("So sánh", "Compare")}
+            <label class="mt-2 inline-flex min-h-[44px] w-fit cursor-pointer items-center gap-2 text-[11px] text-[#626b5e]">
+              <input type="checkbox" ${cmp ? "checked" : ""} onchange="toggleCompare(${p.id})" class="size-4"> ⚖️ ${nbT("So sánh", "Compare")}
             </label>
-            <div class="mt-auto pt-4 flex items-center justify-between gap-2">
+            <div class="mt-auto pt-4 flex items-center justify-between gap-2 border-t border-[#f0f3e8]">
               <div class="text-base font-semibold text-[#234d38]">
                 ${hasOrig ? `<s class="block text-xs font-normal text-[#626b5e]">${money(p.original_price_vnd)}</s>` : ''}
                 <span>${money(p.price_vnd)}</span>
               </div>
-              <button onclick="addToCart(${p.id}, 1)" ${unavailable ? 'disabled' : ''} class="flex items-center gap-1.5 rounded-full bg-[#edf2e7] px-3.5 py-2 text-xs font-medium text-[#234d38] transition-colors hover:bg-[#dce8d3] disabled:cursor-not-allowed disabled:opacity-40">
+              <button onclick="addToCart(${p.id}, 1)" ${unavailable ? 'disabled' : ''} class="inline-flex min-h-[44px] items-center justify-center gap-1.5 rounded-full bg-[#edf2e7] px-4 py-2 text-xs font-semibold text-[#234d38] transition-colors hover:bg-[#dce8d3] disabled:cursor-not-allowed disabled:opacity-40">
                 + ${nbT("Thêm", "Add")}
               </button>
             </div>
@@ -1466,11 +1518,15 @@
       const items = State.compare.map(id => State.products.find(p => p.id === id)).filter(Boolean);
       box.innerHTML = `
         <div class="fixed inset-x-0 bottom-0 z-40 border-t border-[#dce2d4] bg-white/95 px-4 py-3 shadow-[0_-8px_24px_rgba(0,0,0,.08)] backdrop-blur-sm">
-          <div class="mx-auto flex max-w-[1440px] flex-wrap items-center gap-3">
-            <span class="text-sm font-semibold text-[#234d38]">⚖️ ${nbT("So sánh", "Compare")} (${items.length}/3):</span>
-            ${items.map(p => `<span class="rounded-full bg-[#edf2e7] px-3 py-1 text-xs">${pname(p)} <button onclick="toggleCompare(${p.id})" aria-label="remove" class="ml-1">✕</button></span>`).join("")}
-            <button onclick="navigate('compare')" ${items.length < 2 ? "disabled" : ""} class="ml-auto rounded-full bg-[#234d38] px-5 py-2 text-xs font-semibold text-white disabled:opacity-40">${nbT("Xem so sánh", "Compare now")}</button>
-            <button onclick="State.compare=[];renderAll()" class="text-xs text-[#626b5e]">${nbT("Xóa", "Clear")}</button>
+          <div class="mx-auto flex max-w-[1440px] flex-wrap items-center justify-between gap-2 sm:gap-3">
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="text-xs sm:text-sm font-semibold text-[#234d38]">⚖️ ${nbT("So sánh", "Compare")} (${items.length}/3):</span>
+              ${items.map(p => `<span class="inline-flex items-center rounded-full bg-[#edf2e7] pl-3 pr-1 py-0.5 text-xs">${pname(p)} <button onclick="toggleCompare(${p.id})" aria-label="remove" class="inline-flex min-h-[44px] min-w-[36px] items-center justify-center text-sm ml-1 text-[#626b5e] hover:text-red-700">✕</button></span>`).join("")}
+            </div>
+            <div class="flex items-center gap-2 ml-auto">
+              <button onclick="navigate('compare')" ${items.length < 2 ? "disabled" : ""} class="inline-flex min-h-[44px] items-center justify-center rounded-full bg-[#234d38] px-4 sm:px-5 py-2 text-xs font-semibold text-white disabled:opacity-40">${nbT("Xem so sánh", "Compare now")}</button>
+              <button onclick="State.compare=[];renderAll()" class="inline-flex min-h-[44px] items-center justify-center px-3 text-xs text-[#626b5e] hover:text-red-700">${nbT("Xóa", "Clear")}</button>
+            </div>
           </div>
         </div>`;
     }
@@ -1513,23 +1569,23 @@
       const extra = (vi, en, fn) => `<tr class="border-t border-[#e3e7da]"><th scope="row" class="px-4 py-3 text-left text-xs font-medium text-[#626b5e]">${nbT(vi, en)}</th>${items.map(p => `<td class="px-4 py-3 text-sm">${fn(p)}</td>`).join("")}</tr>`;
       return `
         <div class="mx-auto w-full max-w-[1100px] px-5 py-10 sm:px-8">
-          <a href="#/" onclick="navigate('shop')" class="mb-5 inline-block text-sm text-[#557448] hover:underline">← ${nbT("Quay lại cửa hàng", "Back to the shop")}</a>
+          <a href="#/" onclick="navigate('shop')" class="mb-5 inline-flex min-h-[44px] items-center text-sm text-[#557448] hover:underline">← ${nbT("Quay lại cửa hàng", "Back to the shop")}</a>
           <h1 class="text-3xl font-medium text-[#234d38]">⚖️ ${nbT("So sánh dinh dưỡng", "Nutrition comparison")}</h1>
           <div class="mt-4 flex flex-wrap items-center gap-2 text-xs">
-            <button onclick="State.compareMode='serving';renderAll()" class="rounded-full border px-4 py-1.5 font-medium ${!per100 ? "border-[#234d38] bg-[#234d38] text-white" : "border-[#dce2d4] bg-white text-[#234d38]"}">${nbT("Mỗi khẩu phần", "Per serving")}</button>
-            <button onclick="State.compareMode='100g';renderAll()" class="rounded-full border px-4 py-1.5 font-medium ${per100 ? "border-[#234d38] bg-[#234d38] text-white" : "border-[#dce2d4] bg-white text-[#234d38]"}">${nbT("Mỗi 100 g", "Per 100 g")}</button>
-            <span class="text-[#626b5e]">${nbT("Ô xanh là giá trị tốt hơn (ít calo/đường/natri, nhiều đạm/xơ).", "Green cells mark the better value (lower kcal/sugar/sodium, higher protein/fiber).")}</span>
+            <button onclick="State.compareMode='serving';renderAll()" class="inline-flex min-h-[44px] items-center rounded-full border px-4 py-2 font-medium transition-colors ${!per100 ? "border-[#234d38] bg-[#234d38] text-white" : "border-[#dce2d4] bg-white text-[#234d38]"}">${nbT("Mỗi khẩu phần", "Per serving")}</button>
+            <button onclick="State.compareMode='100g';renderAll()" class="inline-flex min-h-[44px] items-center rounded-full border px-4 py-2 font-medium transition-colors ${per100 ? "border-[#234d38] bg-[#234d38] text-white" : "border-[#dce2d4] bg-white text-[#234d38]"}">${nbT("Mỗi 100 g", "Per 100 g")}</button>
+            <span class="text-[#626b5e] w-full sm:w-auto pt-1 sm:pt-0">${nbT("Ô xanh là giá trị tốt hơn (ít calo/đường/natri, nhiều đạm/xơ).", "Green cells mark the better value (lower kcal/sugar/sodium, higher protein/fiber).")}</span>
           </div>
-          <div class="mt-5 overflow-x-auto rounded-2xl border border-[#dce2d4] bg-white">
-            <table class="w-full border-collapse">
-              <thead><tr><th class="w-40 px-4 py-4"></th>${head}</tr></thead>
+          <div class="mt-5 max-w-full overflow-x-auto rounded-2xl border border-[#dce2d4] bg-white no-scrollbar">
+            <table class="w-full border-collapse min-w-[500px]">
+              <thead><tr><th class="w-32 sm:w-40 px-3 sm:px-4 py-4"></th>${head}</tr></thead>
               <tbody>
                 ${extra("Khẩu phần (g)", "Serving (g)", p => p.serving_size_g === null ? "—" : fmtNum(p.serving_size_g))}
                 ${nutriRows}
                 ${extra("Điểm dinh dưỡng", "Nutrition grade", p => nbNutriBadge(p) || "—")}
                 ${extra("Đánh giá", "Rating", p => nbRatingHtml(p))}
                 ${extra("Dị ứng", "Allergens", p => nbAllergens(p).length ? "⚠️ " + nbAllergenNames(nbAllergens(p)) : nbT("Không ghi nhận", "None listed"))}
-                ${extra("", "", p => `<button onclick="addToCart(${p.id}, 1)" ${(p.stock_quantity <= 0 || isSample(p) || State.demo) ? "disabled" : ""} class="rounded-full bg-[#234d38] px-4 py-2 text-xs font-semibold text-white disabled:opacity-40">+ ${nbT("Thêm vào giỏ", "Add to bag")}</button>`)}
+                ${extra("", "", p => `<button onclick="addToCart(${p.id}, 1)" ${(p.stock_quantity <= 0 || isSample(p) || State.demo) ? "disabled" : ""} class="inline-flex min-h-[44px] items-center justify-center rounded-full bg-[#234d38] px-4 py-2 text-xs font-semibold text-white disabled:opacity-40 transition-colors">+ ${nbT("Thêm vào giỏ", "Add to bag")}</button>`)}
               </tbody>
             </table>
           </div>
@@ -1544,10 +1600,10 @@
       const alt = !g ? [] : State.products.filter(q => q.id !== p.id && q.is_active && !isSample(q) && q.category === p.category && Number(q.calories_kcal) > 0 && Number(q.calories_kcal) < Number(p.calories_kcal) && (Number(q.protein_g) || 0) >= (Number(p.protein_g) || 0) * 0.8).slice(0, 2);
       return `
         <div class="mt-3">${nbRatingHtml(p)}</div>
-        <div class="mt-4 flex flex-wrap items-center gap-3 text-xs text-[#434f3d]">
+        <div class="mt-4 flex flex-wrap items-center gap-2 sm:gap-3 text-xs text-[#434f3d]">
           ${g ? `<span class="inline-flex items-center gap-2">${nbNutriBadge(p)} ${nbT("Điểm dinh dưỡng ước tính", "Estimated nutrition grade")}</span>` : ""}
-          <button onclick="toggleWish(${p.id})" class="rounded-full border border-[#dce2d4] bg-white px-3.5 py-1.5 font-medium text-[#234d38]">${State.wishlist.includes(p.id) ? "♥" : "♡"} ${nbT("Yêu thích", "Wishlist")}</button>
-          <button onclick="toggleCompare(${p.id})" class="rounded-full border border-[#dce2d4] bg-white px-3.5 py-1.5 font-medium text-[#234d38]">⚖️ ${State.compare.includes(p.id) ? nbT("Bỏ khỏi so sánh", "Remove from compare") : nbT("So sánh", "Compare")}</button>
+          <button onclick="toggleWish(${p.id})" class="inline-flex min-h-[44px] items-center rounded-full border border-[#dce2d4] bg-white px-4 py-2 font-medium text-[#234d38] hover:bg-[#edf2e7] transition-colors">${State.wishlist.includes(p.id) ? "♥" : "♡"} ${nbT("Yêu thích", "Wishlist")}</button>
+          <button onclick="toggleCompare(${p.id})" class="inline-flex min-h-[44px] items-center rounded-full border border-[#dce2d4] bg-white px-4 py-2 font-medium text-[#234d38] hover:bg-[#edf2e7] transition-colors">⚖️ ${State.compare.includes(p.id) ? nbT("Bỏ khỏi so sánh", "Remove from compare") : nbT("So sánh", "Compare")}</button>
         </div>
         ${mine.length ? `<p class="mt-3 rounded-xl border border-red-200 bg-red-50 p-3 text-xs font-semibold text-red-800">⛔ ${nbT("Cảnh báo: sản phẩm này có chất bạn đã khai báo dị ứng", "Warning: this product contains an allergen you listed")}: ${nbAllergenNames(mine)}</p>` : ""}
         ${al.length ? `<p class="mt-3 rounded-xl border border-[#ecd9b0] bg-[#fbf5e4] p-3 text-xs text-[#6b5320]">⚠️ ${nbT("Có thể chứa", "May contain")}: ${nbAllergenNames(al)} (${declared ? nbT("do người bán xác nhận", "confirmed by the seller") : nbT("ước tính tự động từ thành phần, hãy đọc kỹ nhãn", "auto-estimated from ingredients, read the label")})</p>`
@@ -1643,13 +1699,13 @@
       return `<div class="${box}"><h3 class="text-base font-semibold text-[#234d38]">🍽️ ${nbT("Thực đơn gợi ý 1 ngày", "Suggested 1-day menu")} · ${esc(goalName)}</h3>
         <p class="mt-1 text-xs text-[#626b5e]">${nbT(`Mục tiêu ${res.target} kcal/ngày · thực đơn ≈ ${plan.kcal} kcal, ${plan.pro.toFixed(0)}g đạm · ${money(cost)}`, `Target ${res.target} kcal/day · menu ≈ ${plan.kcal} kcal, ${plan.pro.toFixed(0)}g protein · ${money(cost)}`)}</p>
         <div class="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">${plan.set.map(p => `<div class="flex items-center justify-between rounded-xl border border-[#dce2d4] bg-white p-3.5"><div><a href="#/products/${p.id}" onclick="navigate('detail', ${p.id})" class="text-sm font-semibold text-[#234d38] hover:underline">${pname(p)}</a><p class="text-xs text-[#626b5e]">${fmtNum(p.calories_kcal)} kcal · ${fmtNum(p.protein_g)}g ${nbT("đạm", "protein")}</p></div><span class="text-xs font-semibold text-[#234d38]">${money(p.price_vnd)}</span></div>`).join("")}</div>
-        <button onclick="nbAddPlan(${JSON.stringify(plan.set.map(p => p.id))})" class="mt-4 rounded-full bg-[#234d38] px-5 py-2.5 text-xs font-semibold text-white">+ ${nbT("Thêm cả thực đơn vào giỏ", "Add the whole menu to bag")}</button>
+        <button onclick="nbAddPlan(${JSON.stringify(plan.set.map(p => p.id))})" class="mt-4 inline-flex min-h-[44px] items-center justify-center rounded-full bg-[#234d38] px-5 py-2.5 text-xs font-semibold text-white hover:bg-[#173a29] transition-colors">+ ${nbT("Thêm cả thực đơn vào giỏ", "Add the whole menu to bag")}</button>
         ${week && week.days.length ? `
         <details class="mt-6 rounded-xl border border-[#dce2d4] bg-white p-4">
           <summary class="cursor-pointer text-sm font-semibold text-[#234d38]">📅 ${nbT("Thực đơn 7 ngày (đa dạng món, không trùng liên tục)", "7-day menu (varied, avoids repeats)")}</summary>
           <ol class="mt-3 space-y-3 text-xs text-[#434f3d]">${week.days.map((d, i) => `<li><b class="text-[#234d38]">${nbT("Ngày", "Day")} ${i + 1}</b> · ${d.kcal} kcal · ${d.pro.toFixed(0)}g ${nbT("đạm", "protein")}<br>${d.set.map(p => pname(p)).join(" · ")}</li>`).join("")}</ol>
           <p class="mt-3 text-xs text-[#626b5e]">${nbT("Tổng chi phí ước tính", "Estimated total")}: <b>${money(weekCost)}</b></p>
-          <button onclick="nbAddWeek()" class="mt-3 rounded-full border border-[#234d38] px-5 py-2 text-xs font-semibold text-[#234d38] hover:bg-[#edf2e7]">+ ${nbT("Thêm cả tuần vào giỏ (theo tồn kho)", "Add the whole week to bag (stock permitting)")}</button>
+          <button onclick="nbAddWeek()" class="mt-3 inline-flex min-h-[44px] items-center justify-center rounded-full border border-[#234d38] px-5 py-2 text-xs font-semibold text-[#234d38] hover:bg-[#edf2e7] transition-colors">+ ${nbT("Thêm cả tuần vào giỏ (theo tồn kho)", "Add the whole week to bag (stock permitting)")}</button>
         </details>` : ""}
         <p class="mt-3 text-[11px] leading-5 text-[#626b5e]">${nbT("Chỉ mang tính tham khảo, không thay thế tư vấn của bác sĩ hoặc chuyên gia dinh dưỡng.", "For reference only; not a substitute for advice from a doctor or dietitian.")}</p></div>`;
     }
@@ -1668,14 +1724,14 @@
       <div class="grid grid-cols-1 gap-8 lg:grid-cols-12">
         <form onsubmit="calculateHealthMetrics(event)" class="lg:col-span-5 rounded-2xl border border-[#dce2d4] bg-white p-6 space-y-4">
           <div class="grid grid-cols-2 gap-4">
-            <div><label class="block text-xs font-medium mb-1">${nbT("Tuổi", "Age")}</label><input id="h_age" type="number" min="18" max="100" value="${Number(age)}" required class="w-full rounded-xl border border-[#d8dfcf] px-3 py-2.5 text-sm"></div>
-            <div><label class="block text-xs font-medium mb-1">${nbT("Giới tính", "Sex")}</label><select id="h_sex" class="w-full rounded-xl border border-[#d8dfcf] px-3 py-2.5 text-sm">${opt("female", sex, tr("Nữ", "Female"))}${opt("male", sex, tr("Nam", "Male"))}</select></div>
-            <div><label class="block text-xs font-medium mb-1">${nbT("Chiều cao (cm)", "Height (cm)")}</label><input id="h_height" type="number" min="120" max="230" value="${Number(height)}" required class="w-full rounded-xl border border-[#d8dfcf] px-3 py-2.5 text-sm"></div>
-            <div><label class="block text-xs font-medium mb-1">${nbT("Cân nặng (kg)", "Weight (kg)")}</label><input id="h_weight" type="number" min="30" max="220" step="0.1" value="${Number(weight)}" required class="w-full rounded-xl border border-[#d8dfcf] px-3 py-2.5 text-sm"></div>
+            <div><label class="block text-xs font-medium mb-1">${nbT("Tuổi", "Age")}</label><input id="h_age" type="number" min="18" max="100" value="${Number(age)}" required class="min-h-[44px] w-full rounded-xl border border-[#d8dfcf] px-3 py-2.5 text-sm"></div>
+            <div><label class="block text-xs font-medium mb-1">${nbT("Giới tính", "Sex")}</label><select id="h_sex" class="min-h-[44px] w-full rounded-xl border border-[#d8dfcf] px-3 py-2.5 text-sm">${opt("female", sex, tr("Nữ", "Female"))}${opt("male", sex, tr("Nam", "Male"))}</select></div>
+            <div><label class="block text-xs font-medium mb-1">${nbT("Chiều cao (cm)", "Height (cm)")}</label><input id="h_height" type="number" min="120" max="230" value="${Number(height)}" required class="min-h-[44px] w-full rounded-xl border border-[#d8dfcf] px-3 py-2.5 text-sm"></div>
+            <div><label class="block text-xs font-medium mb-1">${nbT("Cân nặng (kg)", "Weight (kg)")}</label><input id="h_weight" type="number" min="30" max="220" step="0.1" value="${Number(weight)}" required class="min-h-[44px] w-full rounded-xl border border-[#d8dfcf] px-3 py-2.5 text-sm"></div>
           </div>
           <div>
             <label class="block text-xs font-medium mb-1">${nbT("Mức độ vận động", "Activity level")}</label>
-            <select id="h_act" class="w-full rounded-xl border border-[#d8dfcf] px-3 py-2.5 text-sm">
+            <select id="h_act" class="min-h-[44px] w-full rounded-xl border border-[#d8dfcf] px-3 py-2.5 text-sm">
               ${opt("1.2", act, tr("Ít vận động (Làm việc văn phòng)", "Sedentary (Office job)"))}
               ${opt("1.375", act, tr("Vận động nhẹ (Tập 1–3 ngày/tuần)", "Lightly active (1–3 days/week)"))}
               ${opt("1.55", act, tr("Vận động vừa (Tập 3–5 ngày/tuần)", "Moderately active (3–5 days/week)"))}
@@ -1683,12 +1739,12 @@
             </select>
           </div>
           <div><label class="block text-xs font-medium mb-1">${nbT("Mục tiêu", "Goal")}</label>
-            <select id="h_goal" class="w-full rounded-xl border border-[#d8dfcf] px-3 py-2.5 text-sm">${opt("lose", goal, tr("Giảm cân nhẹ", "Gentle fat loss"))}${opt("keep", goal, tr("Giữ cân", "Maintain"))}${opt("gain", goal, tr("Tăng cơ", "Build muscle"))}</select></div>
+            <select id="h_goal" class="min-h-[44px] w-full rounded-xl border border-[#d8dfcf] px-3 py-2.5 text-sm">${opt("lose", goal, tr("Giảm cân nhẹ", "Gentle fat loss"))}${opt("keep", goal, tr("Giữ cân", "Maintain"))}${opt("gain", goal, tr("Tăng cơ", "Build muscle"))}</select></div>
           <fieldset>
             <legend class="mb-2 block text-xs font-medium">⚠️ ${nbT("Tôi dị ứng / cần tránh", "I am allergic to / avoid")}</legend>
-            <div class="flex flex-wrap gap-2">${Object.entries(NB_ALLERGENS).map(([k, a]) => `<label class="flex cursor-pointer items-center gap-1.5 rounded-full border border-[#dce2d4] bg-[#f6f8f1] px-3 py-1.5 text-xs"><input type="checkbox" class="h_allergen" value="${k}" ${mine.includes(k) ? "checked" : ""}> ${esc(tr(a.vi, a.en))}</label>`).join("")}</div>
+            <div class="flex flex-wrap gap-2">${Object.entries(NB_ALLERGENS).map(([k, a]) => `<label class="inline-flex min-h-[44px] cursor-pointer items-center gap-2 rounded-full border border-[#dce2d4] bg-[#f6f8f1] px-3.5 py-2 text-xs"><input type="checkbox" class="h_allergen size-4" value="${k}" ${mine.includes(k) ? "checked" : ""}> ${esc(tr(a.vi, a.en))}</label>`).join("")}</div>
           </fieldset>
-          <button type="submit" class="w-full rounded-full bg-[#234d38] py-3.5 text-sm font-semibold text-white hover:bg-[#173a29]">${nbT("Tính chỉ số sức khỏe", "Calculate estimates")}</button>
+          <button type="submit" class="inline-flex min-h-[48px] w-full items-center justify-center rounded-full bg-[#234d38] py-3.5 text-sm font-semibold text-white hover:bg-[#173a29] transition-colors">${nbT("Tính chỉ số sức khỏe", "Calculate estimates")}</button>
           <p class="text-[11px] leading-5 text-[#626b5e]">${nbT("Công thức Mifflin–St Jeor; BMI theo ngưỡng người châu Á. Dành cho người trưởng thành khỏe mạnh, không thay thế tư vấn y tế (đặc biệt nếu bạn mang thai, có bệnh nền hoặc rối loạn ăn uống).", "Mifflin–St Jeor equation; Asian BMI cut-offs. For healthy adults, not medical advice (especially if pregnant, with a medical condition, or an eating disorder).")}</p>
         </form>
 
@@ -1705,7 +1761,7 @@
               <div class="rounded-2xl border border-[#dce2d4] bg-white p-5"><p class="text-xs text-[#626b5e]">💪 ${nbT("Đạm gợi ý / ngày", "Protein / day")}</p><p class="mt-2 text-xl font-semibold text-[#234d38]">${res.proLow}–${res.proHigh} g</p></div>
               <div class="rounded-2xl border border-[#dce2d4] bg-white p-5"><p class="text-xs text-[#626b5e]">💧 ${nbT("Nước gợi ý / ngày", "Water / day")}</p><p class="mt-2 text-xl font-semibold text-[#234d38]">${res.waterL} L</p></div>
             </div>
-            ${NB_AUTH_USER && NB_AUTH_ROLE !== "seller" ? `<button onclick="saveHealthProfile()" class="mt-4 rounded-full border border-[#234d38] bg-white px-5 py-2.5 text-xs font-semibold text-[#234d38] hover:bg-[#edf2e7]">💾 ${nbT("Lưu vào hồ sơ (dùng để cảnh báo dị ứng & gợi ý món)", "Save to profile (used for allergen warnings & suggestions)")}</button>` : ""}
+            ${NB_AUTH_USER && NB_AUTH_ROLE !== "seller" ? `<button onclick="saveHealthProfile()" class="mt-4 inline-flex min-h-[44px] items-center justify-center rounded-full border border-[#234d38] bg-white px-5 py-2.5 text-xs font-semibold text-[#234d38] hover:bg-[#edf2e7] transition-colors">💾 ${nbT("Lưu vào hồ sơ (dùng để cảnh báo dị ứng & gợi ý món)", "Save to profile (used for allergen warnings & suggestions)")}</button>` : ""}
             ${nbMealPlanHtml(res)}
           ` : `<div class="rounded-2xl border border-[#dce2d4] bg-white p-10 text-center text-sm text-[#626b5e]">${nbT("Bấm 'Tính chỉ số sức khỏe' để xem ước tính BMI, BMR, TDEE và thực đơn gợi ý.", "Press 'Calculate estimates' to see BMI, BMR, TDEE and a suggested menu.")}</div>`}
         </div>
@@ -1874,11 +1930,11 @@
       const pr = nbPricing(selected);
       const prof = State.profile;
       const pm = State.paymentMethod === "bank_transfer" ? "bank_transfer" : "cod";
-      const field = (id, label, val, extra = "") => `<div><label class="mb-1 block text-xs font-medium">${label}</label><input id="${id}" ${extra} value="${esc(val || "")}" class="w-full rounded-xl border border-[#d8dfcf] px-4 py-3 text-sm"></div>`;
-      const payBtn = (key, label) => `<button type="button" onclick="State.paymentMethod='${key}';renderAll()" class="rounded-xl border px-5 py-3 text-sm ${pm === key ? "border-[#234d38] bg-[#234d38] text-white" : "border-[#d8dfcf] bg-white text-[#234d38]"}">${label}</button>`;
+      const field = (id, label, val, extra = "") => `<div><label class="mb-1 block text-xs font-medium">${label}</label><input id="${id}" ${extra} value="${esc(val || "")}" class="min-h-[44px] w-full rounded-xl border border-[#d8dfcf] px-4 py-2.5 text-sm"></div>`;
+      const payBtn = (key, label) => `<button type="button" onclick="State.paymentMethod='${key}';renderAll()" class="inline-flex min-h-[48px] flex-1 sm:flex-none items-center justify-center rounded-xl border px-4 sm:px-5 py-3 text-xs sm:text-sm font-medium transition-colors ${pm === key ? "border-[#234d38] bg-[#234d38] text-white" : "border-[#d8dfcf] bg-white text-[#234d38]"}">${label}</button>`;
       return `
     <div class="mx-auto w-full max-w-[1440px] px-5 py-10 sm:px-8 lg:px-16">
-      <a href="#/cart" onclick="navigate('cart')" class="mb-6 inline-flex items-center gap-2 text-sm text-[#557448] hover:underline">← ${nbT("Quay lại giỏ hàng", "Back to your bag")}</a>
+      <a href="#/cart" onclick="navigate('cart')" class="mb-6 inline-flex min-h-[44px] items-center gap-2 text-sm text-[#557448] hover:underline">← ${nbT("Quay lại giỏ hàng", "Back to your bag")}</a>
       <h1 class="mb-3 text-3xl font-medium tracking-tight text-[#234d38]">${nbT("Một bước nữa tới bữa lành", "One step closer to goodness")}</h1>
       <div class="grid w-full grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_380px] mt-6">
         <form onsubmit="submitCheckout(event)" class="space-y-6">
@@ -1899,7 +1955,7 @@
               ${field("ck_city", nbT("Tỉnh / thành phố *", "Province / city *"), prof.shipping_city, "required maxlength=100")}
               ${field("ck_postal", nbT("Mã bưu chính", "Postal code"), prof.shipping_postal_code, "maxlength=10")}
               <div class="sm:col-span-2">${field("ck_notes", nbT("Ghi chú giao hàng", "Delivery notes"), "", "maxlength=500")}</div>
-              <label class="sm:col-span-2 flex cursor-pointer items-center gap-2 text-xs text-[#434f3d]"><input id="ck_save" type="checkbox" ${prof.shipping_address_line1 ? "" : "checked"}> ${nbT("Lưu thông tin này vào hồ sơ cho lần sau", "Save these details to my profile for next time")}</label>
+              <label class="sm:col-span-2 inline-flex min-h-[44px] cursor-pointer items-center gap-2 text-xs text-[#434f3d]"><input id="ck_save" type="checkbox" class="size-4" ${prof.shipping_address_line1 ? "" : "checked"}> ${nbT("Lưu thông tin này vào hồ sơ cho lần sau", "Save these details to my profile for next time")}</label>
             </div>
           </section>
           <section class="rounded-2xl border border-[#dce2d4] bg-white p-6">
@@ -1911,7 +1967,7 @@
             <p class="text-xs leading-6 text-[#626b5e]">${pm === "cod"
           ? nbT("Trả tiền mặt cho người giao hàng. Kho được giữ ngay khi bạn đặt; cửa hàng sẽ xác nhận đơn.", "Pay the courier in cash. Stock is reserved as soon as you order; the shop will confirm your order.")
           : nbT("Sau khi đặt, bạn sẽ thấy số tài khoản và nội dung chuyển khoản trong mục Đơn mua. Cửa hàng xác nhận khi nhận được tiền. Đơn chưa thanh toán có thể bị hủy.", "After ordering you will see the account number and transfer note under Your orders. The shop confirms once the money arrives. Unpaid orders may be cancelled.")}</p>
-            <button id="ck_submit" type="submit" class="mt-6 w-full rounded-full bg-[#234d38] px-5 py-4 text-sm font-semibold text-white hover:bg-[#173a29] disabled:opacity-60">
+            <button id="ck_submit" type="submit" class="mt-6 inline-flex min-h-[48px] w-full items-center justify-center rounded-full bg-[#234d38] px-5 py-3.5 text-sm font-semibold text-white hover:bg-[#173a29] transition-colors disabled:opacity-60">
               ${pm === "cod" ? nbT("Đặt hàng · Trả khi nhận hàng", "Place order · Pay on delivery") : nbT("Đặt hàng · Chuyển khoản", "Place order · Bank transfer")}
             </button>
           </section>
@@ -1933,7 +1989,7 @@
             ${pr.discount ? `<div class="flex justify-between text-[#2f7d4f]"><span>${nbT("Giảm giá", "Discount")} (${esc(State.coupon)})</span><span>− ${money(pr.discount)}</span></div>` : ""}
             ${State.coupon && State.couponInfo && State.couponInfo.kind === "freeship" ? `<p class="text-[#2f7d4f]">${nbT("Miễn phí giao hàng", "Free delivery")} (${esc(State.coupon)})</p>` : ""}
           </div>
-          <div class="mt-4 flex gap-2"><input id="cp_code" value="${esc(State.coupon || "")}" placeholder="${nbT("Mã giảm giá", "Coupon code")}" class="min-w-0 flex-1 rounded-full border border-[#d8dfcf] bg-white px-4 py-2 text-sm uppercase"><button type="button" onclick="applyCoupon()" class="rounded-full bg-[#234d38] px-4 py-2 text-xs font-semibold text-white">${nbT("Áp dụng", "Apply")}</button></div>
+          <div class="mt-4 flex gap-2"><input id="cp_code" value="${esc(State.coupon || "")}" placeholder="${nbT("Mã giảm giá", "Coupon code")}" class="min-h-[44px] min-w-0 flex-1 rounded-full border border-[#d8dfcf] bg-white px-4 py-2 text-sm uppercase"><button type="button" onclick="applyCoupon()" class="inline-flex min-h-[44px] items-center justify-center rounded-full bg-[#234d38] px-4 sm:px-5 py-2 text-xs font-semibold text-white hover:bg-[#173a29] transition-colors">${nbT("Áp dụng", "Apply")}</button></div>
           <div class="mt-4 flex justify-between border-t border-[#dce2d4] pt-4 text-lg font-semibold text-[#234d38]">
             <span>${nbT("Tổng cộng", "Total")}</span><span>${money(pr.total)}</span>
           </div>
@@ -2086,18 +2142,83 @@
       } catch (err) { nbFail(err); }
     }
 
+    function nbNormalizeBankId(name) {
+      if (!name) return "";
+      const s = String(name).trim();
+      const clean = s.replace(/[^a-zA-Z0-9]/g, "");
+      const map = {
+        "vietcombank": "VCB", "vcb": "VCB",
+        "vietinbank": "ICB", "icb": "ICB",
+        "mbbank": "MB", "mb": "MB", "quandoi": "MB",
+        "techcombank": "TCB", "tcb": "TCB",
+        "bidv": "BIDV",
+        "acb": "ACB",
+        "vpbank": "VPB", "vpb": "VPB",
+        "tpbank": "TPB", "tpb": "TPB", "tienphong": "TPB",
+        "sacombank": "STB", "stb": "STB",
+        "hdbank": "HDB", "hdb": "HDB",
+        "vib": "VIB",
+        "shb": "SHB",
+        "eximbank": "EIB", "eib": "EIB",
+        "msb": "MSB",
+        "ocb": "OCB",
+        "agribank": "VBA", "vba": "VBA",
+        "seabank": "SEAB", "seab": "SEAB",
+        "lpbank": "LPB", "lpb": "LPB",
+        "pvcombank": "PVCB", "pvcb": "PVCB",
+        "abbank": "ABB", "abb": "ABB",
+        "namabank": "NAB", "nab": "NAB",
+        "vietabank": "VAB", "vab": "VAB",
+        "bacabank": "BAB", "bab": "BAB",
+        "baovietbank": "BVB", "bvb": "BVB",
+        "timo": "TIMO", "cake": "CAKE"
+      };
+      const key = s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]/g, "");
+      return map[key] || clean || s;
+    }
+
+    function nbVietQRUrl(bankId, accountNo, amount, memo, holderName) {
+      const bId = nbNormalizeBankId(bankId);
+      const acc = String(accountNo || "").replace(/[^a-zA-Z0-9]/g, "");
+      if (!bId || !acc) return null;
+      const amt = Math.max(0, Math.round(Number(amount) || 0));
+      const desc = encodeURIComponent(String(memo || "").trim());
+      const name = holderName ? encodeURIComponent(String(holderName).trim()) : "";
+      return `https://img.vietqr.io/image/${bId}-${acc}-compact2.png?amount=${amt}&addInfo=${desc}${name ? `&accountName=${name}` : ""}`;
+    }
     function nbBankBox(o) {
       const b = State.payInfo || {};
       const has = b.bank_name || b.bank_account_no;
+      const qrUrl = (b.bank_name && b.bank_account_no)
+        ? nbVietQRUrl(b.bank_name, b.bank_account_no, o.total, o.number, b.bank_account_holder)
+        : null;
       return `<div class="mt-4 rounded-xl border border-[#d9c58a] bg-[#fdf8e7] p-4 text-xs leading-6 text-[#5c4a14]">
-        <p class="font-semibold">🏦 ${nbT("Chuyển khoản để hoàn tất đơn", "Transfer to complete your order")}</p>
-        ${has ? `<p>${nbT("Ngân hàng", "Bank")}: <b>${esc(b.bank_name)}</b><br>${nbT("Số tài khoản", "Account no.")}: <b>${esc(b.bank_account_no)}</b><br>${nbT("Chủ tài khoản", "Account holder")}: <b>${esc(b.bank_account_holder)}</b><br>${nbT("Số tiền", "Amount")}: <b>${money(o.total)}</b><br>${nbT("Nội dung chuyển khoản", "Transfer note")}: <b>${esc(o.number)}</b></p>`
-          : `<p>${nbT("Cửa hàng chưa cập nhật số tài khoản. Vui lòng nhắn tin cho cửa hàng trong đơn này để nhận hướng dẫn.", "The shop has not published bank details yet. Please message the shop in this order.")}</p>`}</div>`;
+        <p class="font-semibold text-sm text-[#463608]">🏦 ${nbT("Chuyển khoản để hoàn tất đơn", "Transfer to complete your order")}</p>
+        ${has ? `
+          <div class="mt-3 flex flex-col items-center sm:flex-row sm:items-start gap-4">
+            <div class="flex-1 space-y-1">
+              <p>${nbT("Ngân hàng", "Bank")}: <b>${esc(b.bank_name)}</b></p>
+              <p>${nbT("Số tài khoản", "Account no.")}: <b>${esc(b.bank_account_no)}</b></p>
+              ${b.bank_account_holder ? `<p>${nbT("Chủ tài khoản", "Account holder")}: <b>${esc(b.bank_account_holder)}</b></p>` : ""}
+              <p>${nbT("Số tiền", "Amount")}: <b class="text-sm font-bold text-[#234d38]">${money(o.total)}</b></p>
+              <p>${nbT("Nội dung chuyển khoản", "Transfer note")}: <b class="rounded bg-[#f5eac2] px-2 py-0.5 font-mono text-sm font-bold text-[#234d38]">${esc(o.number)}</b></p>
+              <p class="mt-2 text-[11px] text-[#7a6428]">${nbT("💡 Quét mã VietQR hoặc chuyển khoản đúng số tiền và nội dung. Cửa hàng sẽ xác nhận khi nhận được tiền.", "Scan the VietQR code or transfer the exact amount and note. The shop will confirm once the money arrives.")}</p>
+            </div>
+            ${qrUrl ? `
+              <div class="flex flex-col items-center rounded-xl border border-[#e5d5a3] bg-white p-3 shadow-sm">
+                <img src="${esc(qrUrl)}" alt="VietQR" class="w-48 sm:w-52 max-w-full rounded-lg object-contain" loading="lazy">
+                <p class="mt-1.5 text-center text-[11px] font-semibold text-[#234d38]">📱 ${nbT("Mã VietQR thanh toán", "Scan VietQR to pay")}</p>
+                <p class="text-[10px] text-[#7a6428]">${nbT("Tự động điền số tiền & mã đơn", "Auto-fills amount & memo")}</p>
+              </div>
+            ` : ""}
+          </div>
+        ` : `<p class="mt-1">${nbT("Cửa hàng chưa cập nhật số tài khoản. Vui lòng nhắn tin cho cửa hàng trong đơn này để nhận hướng dẫn.", "The shop has not published bank details yet. Please message the shop in this order.")}</p>`}
+      </div>`;
     }
 
     function nbBtn(label, onclick, style) {
       const base = style === "danger" ? "border-red-300 bg-red-50 text-red-700 hover:bg-red-100" : style === "solid" ? "border-[#234d38] bg-[#234d38] text-white hover:bg-[#173a29]" : "border-[#b9c9aa] bg-white text-[#234d38] hover:bg-[#edf2e7]";
-      return `<button onclick="${onclick}" class="rounded-full border px-4 py-2 text-xs font-semibold ${base}">${label}</button>`;
+      return `<button onclick="${onclick}" class="inline-flex min-h-[44px] items-center justify-center rounded-full border px-4 py-2 text-xs font-semibold transition-colors ${base}">${label}</button>`;
     }
 
     function renderOrderCard(o, sellerView = false) {
@@ -2113,10 +2234,10 @@
         if (sellerView || o.status !== "delivered") return "";
         return `<form onsubmit="submitProductReview(event, ${o.id}, ${pid})" class="mt-2 flex flex-wrap items-center gap-2">
           <span class="w-full text-xs font-semibold text-[#234d38]">${esc(trf(i.name_vi, i.name_en))}</span>
-          <select id="rv_star_${o.id}_${pid}" class="rounded-xl border border-[#dce2d4] bg-white px-3 py-2 text-xs font-semibold text-[#234d38]">
+          <select id="rv_star_${o.id}_${pid}" class="min-h-[44px] rounded-xl border border-[#dce2d4] bg-white px-3 py-2 text-xs font-semibold text-[#234d38]">
             <option value="5">★★★★★ (5)</option><option value="4">★★★★☆ (4)</option><option value="3">★★★☆☆ (3)</option><option value="2">★★☆☆☆ (2)</option><option value="1">★☆☆☆☆ (1)</option></select>
-          <input id="rv_text_${o.id}_${pid}" maxlength="500" placeholder="${nbT("Cảm nhận về món này...", "Your thoughts on this item...")}" class="min-w-0 flex-1 rounded-xl border border-[#dce2d4] px-3 py-2 text-xs">
-          <button class="rounded-full bg-[#234d38] px-4 py-2 text-xs font-semibold text-white">${nbT("Gửi", "Send")}</button></form>`;
+          <input id="rv_text_${o.id}_${pid}" maxlength="500" placeholder="${nbT("Cảm nhận về món này...", "Your thoughts on this item...")}" class="min-h-[44px] min-w-0 flex-1 rounded-xl border border-[#dce2d4] px-3 py-2 text-xs">
+          <button class="inline-flex min-h-[44px] items-center justify-center rounded-full bg-[#234d38] px-4 py-2 text-xs font-semibold text-white hover:bg-[#173a29] transition-colors">${nbT("Gửi", "Send")}</button></form>`;
       }).join("");
       const role = sellerView ? "seller" : "buyer";
       return `
@@ -2175,8 +2296,8 @@
           ${(o.messages || []).map(m => `<div class="flex ${m.sender_role === role ? "justify-end" : "justify-start"}"><div class="max-w-[85%] rounded-2xl px-3.5 py-2 text-xs ${m.sender_role === role ? "bg-[#234d38] text-white" : "bg-[#f0f3e8] text-[#30382e]"}"><div class="mb-0.5 text-[10px] opacity-70">${m.sender_role === "seller" ? nbT("Cửa hàng", "Shop") : nbT("Khách", "Buyer")} · ${esc(m.created_at)}</div>${esc(m.body)}</div></div>`).join("")}
         </div>
         <form onsubmit="sendOrderMessage(event, ${o.id}, '${role}')" class="mt-3 flex gap-2">
-          <input id="msg_${role === "seller" ? "s" : "b"}_${o.id}" maxlength="500" placeholder="${nbT("Nhắn tin...", "Write a message...")}" class="min-w-0 flex-1 rounded-full border border-[#dce2d4] px-4 py-2 text-xs">
-          <button class="rounded-full bg-[#234d38] px-4 py-2 text-xs font-semibold text-white">${nbT("Gửi", "Send")}</button>
+          <input id="msg_${role === "seller" ? "s" : "b"}_${o.id}" maxlength="500" placeholder="${nbT("Nhắn tin...", "Write a message...")}" class="min-h-[44px] min-w-0 flex-1 rounded-full border border-[#dce2d4] px-4 py-2 text-xs">
+          <button class="inline-flex min-h-[44px] items-center justify-center rounded-full bg-[#234d38] px-4 sm:px-5 py-2 text-xs font-semibold text-white hover:bg-[#173a29] transition-colors">${nbT("Gửi", "Send")}</button>
         </form>
       </div>
     </article>`;
@@ -2185,9 +2306,11 @@
     function nbOrderFilterBar() {
       const chips = [["all", "Tất cả", "All"], ["pending", "Chờ xác nhận", "Pending"], ["confirmed", "Đã xác nhận", "Confirmed"], ["shipped", "Đang giao", "In transit"], ["delivered", "Đã giao", "Delivered"], ["cancelled", "Đã hủy", "Cancelled"]];
       return `<div class="mb-5 flex flex-wrap items-center gap-2">
-        ${chips.map(([k, vi, en]) => `<button onclick="State.orderFilter='${k}';renderAll()" class="rounded-full border px-3.5 py-1.5 text-xs font-medium ${State.orderFilter === k ? "border-[#234d38] bg-[#234d38] text-white" : "border-[#dce2d4] bg-white text-[#234d38]"}">${nbT(vi, en)}</button>`).join("")}
-        <input id="orderSearchInput" value="${esc(State.orderSearch)}" oninput="State.orderSearch=this.value" onkeydown="if(event.key==='Enter'){renderAll()}" placeholder="${nbT("Tìm theo mã đơn / địa chỉ", "Search order no. / address")}" class="ml-auto min-w-[200px] rounded-full border border-[#dce2d4] px-4 py-1.5 text-xs">
-        <button onclick="renderAll()" class="rounded-full bg-[#edf2e7] px-3 py-1.5 text-xs" aria-label="search">🔍</button></div>`;
+        ${chips.map(([k, vi, en]) => `<button onclick="State.orderFilter='${k}';renderAll()" class="inline-flex min-h-[44px] items-center rounded-full border px-3.5 py-2 text-xs font-medium transition-colors ${State.orderFilter === k ? "border-[#234d38] bg-[#234d38] text-white" : "border-[#dce2d4] bg-white text-[#234d38]"}">${nbT(vi, en)}</button>`).join("")}
+        <div class="w-full sm:w-auto sm:ml-auto flex items-center gap-1.5 pt-1 sm:pt-0">
+          <input id="orderSearchInput" value="${esc(State.orderSearch)}" oninput="State.orderSearch=this.value" onkeydown="if(event.key==='Enter'){renderAll()}" placeholder="${nbT("Tìm theo mã đơn / địa chỉ", "Search order no. / address")}" class="min-h-[44px] min-w-0 flex-1 sm:w-56 rounded-full border border-[#dce2d4] px-4 py-2 text-xs">
+          <button onclick="renderAll()" class="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full bg-[#edf2e7] text-sm hover:bg-[#dce8d3] transition-colors" aria-label="search">🔍</button>
+        </div></div>`;
     }
     function nbFilteredOrders() {
       const q = State.orderSearch.trim().toLowerCase();
@@ -2219,7 +2342,7 @@
       return `
     <section class="mx-auto w-full max-w-[1440px] px-5 py-10 sm:px-8 lg:px-16">
       <h1 class="text-3xl font-medium text-[#234d38] mb-6">${nbT("Đơn hàng & doanh thu", "Orders & revenue")}</h1>
-      <div class="mb-5 grid w-full grid-cols-2 gap-4 lg:grid-cols-5">
+      <div class="mb-5 grid w-full grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
         ${card(nbT("Đơn chờ xác nhận", "Pending orders"), pending)}
         ${card(nbT("Chờ nhận chuyển khoản", "Awaiting transfer"), awaitingMoney)}
         ${card(nbT("Doanh thu đã giao + đã thu", "Delivered + paid gross"), money(gross))}
@@ -2283,7 +2406,7 @@
 
     function renderSellerSettings() {
       const s = State.settings, b = State.payInfo || {};
-      const inp = (id, label, val, extra = "") => `<div><label class="mb-1 block text-xs font-medium">${label}</label><input id="${id}" value="${esc(val ?? "")}" ${extra} class="w-full rounded-xl border border-[#d8dfcf] px-4 py-2.5 text-sm"></div>`;
+      const inp = (id, label, val, extra = "") => `<div><label class="mb-1 block text-xs font-medium">${label}</label><input id="${id}" value="${esc(val ?? "")}" ${extra} class="min-h-[44px] w-full rounded-xl border border-[#d8dfcf] px-4 py-2.5 text-sm"></div>`;
       const kindName = k => ({ percent: tr("Giảm %", "Percent off"), fixed: tr("Giảm tiền", "Fixed amount"), freeship: tr("Miễn phí giao hàng", "Free delivery") }[k] || k);
       return `
     <section class="mx-auto w-full max-w-5xl px-5 py-10 sm:px-8">
@@ -2303,22 +2426,22 @@
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
           ${inp("st_bank", nbT("Ngân hàng", "Bank"), b.bank_name)}${inp("st_acc", nbT("Số tài khoản", "Account no."), b.bank_account_no)}${inp("st_holder", nbT("Chủ tài khoản", "Account holder"), b.bank_account_holder)}
         </div>
-        <button class="rounded-full bg-[#234d38] px-7 py-3 text-sm font-semibold text-white hover:bg-[#173a29]">${nbT("Lưu cài đặt", "Save settings")}</button>
+        <button class="inline-flex min-h-[48px] items-center justify-center rounded-full bg-[#234d38] px-7 py-3 text-sm font-semibold text-white hover:bg-[#173a29] transition-colors">${nbT("Lưu cài đặt", "Save settings")}</button>
       </form>
 
       <div class="mt-8 rounded-2xl border border-[#dce2d4] bg-white p-6 sm:p-8">
         <h2 class="text-lg font-semibold text-[#234d38]">🏷️ ${nbT("Mã giảm giá", "Coupons")}</h2>
-        <div class="mt-4 overflow-x-auto"><table class="w-full text-left text-xs">
+        <div class="mt-4 max-w-full overflow-x-auto no-scrollbar"><table class="w-full text-left text-xs min-w-[500px]">
           <thead class="text-[#626b5e]"><tr><th class="py-2">${nbT("Mã", "Code")}</th><th>${nbT("Loại", "Type")}</th><th>${nbT("Giá trị", "Value")}</th><th>${nbT("Đơn tối thiểu", "Min order")}</th><th>${nbT("Đã dùng", "Used")}</th><th>${nbT("Chỉ đơn đầu", "First order")}</th><th></th></tr></thead>
-          <tbody>${State.coupons.map(c => `<tr class="border-t border-[#e3e7da]"><td class="py-2 font-semibold">${esc(c.code)}</td><td>${esc(kindName(c.kind))}</td><td>${c.kind === "percent" ? Number(c.value) + "%" : c.kind === "fixed" ? money(c.value) : "—"}</td><td>${money(c.min_subtotal)}</td><td>${Number(c.used_count)}${c.max_uses !== null ? " / " + Number(c.max_uses) : ""}</td><td>${c.first_order_only ? "✓" : "—"}</td><td><button onclick="toggleCoupon('${esc(c.code)}')" class="rounded-full border px-3 py-1 ${c.active ? "border-[#234d38] text-[#234d38]" : "border-red-300 text-red-700"}">${c.active ? nbT("Đang bật", "On") : nbT("Đã tắt", "Off")}</button></td></tr>`).join("")}</tbody></table></div>
+          <tbody>${State.coupons.map(c => `<tr class="border-t border-[#e3e7da]"><td class="py-2 font-semibold">${esc(c.code)}</td><td>${esc(kindName(c.kind))}</td><td>${c.kind === "percent" ? Number(c.value) + "%" : c.kind === "fixed" ? money(c.value) : "—"}</td><td>${money(c.min_subtotal)}</td><td>${Number(c.used_count)}${c.max_uses !== null ? " / " + Number(c.max_uses) : ""}</td><td>${c.first_order_only ? "✓" : "—"}</td><td><button onclick="toggleCoupon('${esc(c.code)}')" class="inline-flex min-h-[44px] items-center justify-center rounded-full border px-3.5 py-1.5 transition-colors ${c.active ? "border-[#234d38] text-[#234d38] hover:bg-[#edf2e7]" : "border-red-300 text-red-700 hover:bg-red-50"}">${c.active ? nbT("Đang bật", "On") : nbT("Đã tắt", "Off")}</button></td></tr>`).join("")}</tbody></table></div>
         <form onsubmit="saveCoupon(event)" class="mt-5 grid grid-cols-2 items-end gap-3 sm:grid-cols-6">
-          <div><label class="mb-1 block text-xs font-medium">${nbT("Mã", "Code")}</label><input id="cpn_code" required maxlength="30" class="w-full rounded-xl border border-[#d8dfcf] px-3 py-2 text-sm uppercase"></div>
-          <div><label class="mb-1 block text-xs font-medium">${nbT("Loại", "Type")}</label><select id="cpn_kind" class="w-full rounded-xl border border-[#d8dfcf] px-3 py-2 text-sm"><option value="percent">${nbT("Giảm %", "Percent off")}</option><option value="fixed">${nbT("Giảm tiền", "Fixed amount")}</option><option value="freeship">${nbT("Miễn phí giao", "Free delivery")}</option></select></div>
-          <div><label class="mb-1 block text-xs font-medium">${nbT("Giá trị", "Value")}</label><input id="cpn_value" type="number" min="0" class="w-full rounded-xl border border-[#d8dfcf] px-3 py-2 text-sm"></div>
-          <div><label class="mb-1 block text-xs font-medium">${nbT("Đơn tối thiểu", "Min order")}</label><input id="cpn_min" type="number" min="0" class="w-full rounded-xl border border-[#d8dfcf] px-3 py-2 text-sm"></div>
-          <div><label class="mb-1 block text-xs font-medium">${nbT("Số lượt tối đa", "Max uses")}</label><input id="cpn_max" type="number" min="0" class="w-full rounded-xl border border-[#d8dfcf] px-3 py-2 text-sm"></div>
-          <label class="flex items-center gap-2 pb-2 text-xs"><input id="cpn_first" type="checkbox"> ${nbT("Chỉ đơn đầu", "First order only")}</label>
-          <button class="col-span-2 rounded-full bg-[#234d38] px-5 py-2.5 text-xs font-semibold text-white sm:col-span-6 sm:w-fit">${nbT("Lưu mã", "Save coupon")}</button>
+          <div><label class="mb-1 block text-xs font-medium">${nbT("Mã", "Code")}</label><input id="cpn_code" required maxlength="30" class="min-h-[44px] w-full rounded-xl border border-[#d8dfcf] px-3 py-2 text-sm uppercase"></div>
+          <div><label class="mb-1 block text-xs font-medium">${nbT("Loại", "Type")}</label><select id="cpn_kind" class="min-h-[44px] w-full rounded-xl border border-[#d8dfcf] px-3 py-2 text-sm"><option value="percent">${nbT("Giảm %", "Percent off")}</option><option value="fixed">${nbT("Giảm tiền", "Fixed amount")}</option><option value="freeship">${nbT("Miễn phí giao", "Free delivery")}</option></select></div>
+          <div><label class="mb-1 block text-xs font-medium">${nbT("Giá trị", "Value")}</label><input id="cpn_value" type="number" min="0" class="min-h-[44px] w-full rounded-xl border border-[#d8dfcf] px-3 py-2 text-sm"></div>
+          <div><label class="mb-1 block text-xs font-medium">${nbT("Đơn tối thiểu", "Min order")}</label><input id="cpn_min" type="number" min="0" class="min-h-[44px] w-full rounded-xl border border-[#d8dfcf] px-3 py-2 text-sm"></div>
+          <div><label class="mb-1 block text-xs font-medium">${nbT("Số lượt tối đa", "Max uses")}</label><input id="cpn_max" type="number" min="0" class="min-h-[44px] w-full rounded-xl border border-[#d8dfcf] px-3 py-2 text-sm"></div>
+          <label class="inline-flex min-h-[44px] items-center gap-2 text-xs cursor-pointer"><input id="cpn_first" type="checkbox" class="size-4"> ${nbT("Chỉ đơn đầu", "First order only")}</label>
+          <button class="col-span-2 inline-flex min-h-[44px] items-center justify-center rounded-full bg-[#234d38] px-5 py-2.5 text-xs font-semibold text-white sm:col-span-6 sm:w-fit hover:bg-[#173a29] transition-colors">${nbT("Lưu mã", "Save coupon")}</button>
         </form>
       </div>
     </section>`;
@@ -2328,7 +2451,7 @@
     function renderManage() {
       const blank = { id: 0, name_vi: "", name_en: "", category: "meals", image_url: "", price_vnd: "", original_price_vnd: null, stock_quantity: 0, is_active: true, allergens_declared: null };
       const e = State.editorId ? (State.products.find(x => x.id === State.editorId) || blank) : blank;
-      const text = (id, label, val, extra = "", span = "") => `<div class="${span}"><label class="mb-1 block text-xs font-medium">${label}</label><input id="${id}" value="${esc(val ?? "")}" ${extra} class="w-full rounded-xl border border-[#d8dfcf] px-3 py-2 text-sm"></div>`;
+      const text = (id, label, val, extra = "", span = "") => `<div class="${span}"><label class="mb-1 block text-xs font-medium">${label}</label><input id="${id}" value="${esc(val ?? "")}" ${extra} class="min-h-[44px] w-full rounded-xl border border-[#d8dfcf] px-3 py-2 text-sm"></div>`;
       const num = (id, label, val, step = "any") => text(id, label, val === null || val === undefined ? "" : val, `type="number" step="${step}" min="0"`);
       const area = (id, label, val) => `<div class="sm:col-span-3"><label class="mb-1 block text-xs font-medium">${label}</label><textarea id="${id}" rows="2" class="w-full rounded-xl border border-[#d8dfcf] px-3 py-2 text-sm">${esc(val ?? "")}</textarea></div>`;
       const declared = Array.isArray(e.allergens_declared);
@@ -2337,8 +2460,8 @@
       <div class="flex flex-wrap items-center justify-between gap-4">
         <h1 class="text-3xl font-medium text-[#234d38]">${nbT("Quản lý sản phẩm", "Manage products")}</h1>
         <div class="flex flex-wrap gap-2">
-          ${State.products.length === 0 ? `<button onclick="importSampleProducts()" class="rounded-full border border-[#234d38] bg-white px-5 py-2.5 text-sm font-semibold text-[#234d38]">${nbT("Nạp sản phẩm mẫu ban đầu", "Import starter products")}</button>` : ""}
-          <button onclick="State.editorOpen=true;State.editorId=0;renderAll()" class="rounded-full bg-[#234d38] px-5 py-2.5 text-sm font-semibold text-white">+ ${nbT("Thêm sản phẩm mới", "Add new product")}</button>
+          ${State.products.length === 0 ? `<button onclick="importSampleProducts()" class="inline-flex min-h-[44px] items-center justify-center rounded-full border border-[#234d38] bg-white px-5 py-2.5 text-sm font-semibold text-[#234d38] hover:bg-[#edf2e7] transition-colors">${nbT("Nạp sản phẩm mẫu ban đầu", "Import starter products")}</button>` : ""}
+          <button onclick="State.editorOpen=true;State.editorId=0;renderAll()" class="inline-flex min-h-[44px] items-center justify-center rounded-full bg-[#234d38] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#173a29] transition-colors">+ ${nbT("Thêm sản phẩm mới", "Add new product")}</button>>+ ${nbT("Thêm sản phẩm mới", "Add new product")}</button>
         </div>
       </div>
 
@@ -2346,7 +2469,7 @@
         <form onsubmit="saveManagedProduct(event)" class="my-8 space-y-5 rounded-2xl border border-[#dce2d4] bg-white p-6">
           <div class="flex items-center justify-between">
             <h2 class="text-xl font-semibold text-[#234d38]">${State.editorId === 0 ? nbT("Thêm sản phẩm mới", "Add product") : nbT("Chỉnh sửa sản phẩm", "Edit product")}</h2>
-            <button type="button" onclick="State.editorOpen=false;renderAll()" class="text-sm text-[#626b5e]">✕ ${nbT("Đóng", "Close")}</button>
+            <button type="button" onclick="State.editorOpen=false;renderAll()" class="inline-flex min-h-[44px] items-center text-sm text-[#626b5e] hover:text-[#234d38]">✕ ${nbT("Đóng", "Close")}</button>
           </div>
           <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
             ${text("ed_name_vi", nbT("Tên tiếng Việt *", "Vietnamese name *"), e.name_vi, "required maxlength=200")}
@@ -2383,11 +2506,11 @@
           </div>
           <fieldset class="rounded-xl border border-[#ecd9b0] bg-[#fbf5e4] p-4">
             <legend class="px-2 text-sm font-semibold text-[#6b5320]">⚠️ ${nbT("Chất gây dị ứng", "Allergens")}</legend>
-            <label class="mb-3 flex cursor-pointer items-start gap-2 text-xs text-[#6b5320]"><input id="ed_al_declared" type="checkbox" ${declared ? "checked" : ""} class="mt-0.5"> ${nbT("Tôi đã kiểm tra thành phần và XÁC NHẬN danh sách bên dưới (không tick: hệ thống chỉ đoán tự động từ chữ trong thành phần, có thể sai)", "I checked the recipe and CONFIRM the list below (unchecked: the system only guesses from the ingredient text and may be wrong)")}</label>
-            <div class="flex flex-wrap gap-2">${Object.entries(NB_ALLERGENS).map(([k, a]) => `<label class="flex cursor-pointer items-center gap-1.5 rounded-full border border-[#dccb97] bg-white px-3 py-1.5 text-xs"><input type="checkbox" class="ed_allergen" value="${k}" ${(declared ? e.allergens_declared : nbAllergens(e)).includes(k) ? "checked" : ""}> ${esc(tr(a.vi, a.en))}</label>`).join("")}</div>
+            <label class="mb-3 inline-flex min-h-[44px] cursor-pointer items-center gap-2 text-xs text-[#6b5320]"><input id="ed_al_declared" type="checkbox" ${declared ? "checked" : ""} class="size-4"> ${nbT("Tôi đã kiểm tra thành phần và XÁC NHẬN danh sách bên dưới (không tick: hệ thống chỉ đoán tự động từ chữ trong thành phần, có thể sai)", "I checked the recipe and CONFIRM the list below (unchecked: the system only guesses from the ingredient text and may be wrong)")}</label>
+            <div class="flex flex-wrap gap-2">${Object.entries(NB_ALLERGENS).map(([k, a]) => `<label class="inline-flex min-h-[44px] cursor-pointer items-center gap-1.5 rounded-full border border-[#dccb97] bg-white px-3.5 py-2 text-xs"><input type="checkbox" class="ed_allergen size-4" value="${k}" ${(declared ? e.allergens_declared : nbAllergens(e)).includes(k) ? "checked" : ""}> ${esc(tr(a.vi, a.en))}</label>`).join("")}</div>
           </fieldset>
-          <label class="flex cursor-pointer items-center gap-2 text-sm"><input id="ed_active" type="checkbox" ${e.is_active !== false ? "checked" : ""}> ${nbT("Đang bán (hiện trên cửa hàng)", "Active (visible in the shop)")}</label>
-          <button type="submit" class="rounded-full bg-[#234d38] px-6 py-3 text-sm font-semibold text-white">${nbT("Lưu sản phẩm", "Save product")}</button>
+          <label class="inline-flex min-h-[44px] cursor-pointer items-center gap-2 text-sm"><input id="ed_active" type="checkbox" class="size-4" ${e.is_active !== false ? "checked" : ""}> ${nbT("Đang bán (hiện trên cửa hàng)", "Active (visible in the shop)")}</label>
+          <button type="submit" class="inline-flex min-h-[48px] items-center justify-center rounded-full bg-[#234d38] px-6 py-3 text-sm font-semibold text-white hover:bg-[#173a29] transition-colors">${nbT("Lưu sản phẩm", "Save product")}</button>
         </form>` : ""}
 
       <div class="mt-6 space-y-4">
@@ -2406,8 +2529,8 @@
               </div>
             </div>
             <div class="flex gap-2">
-              <button onclick="State.editorId=${p.id};State.editorOpen=true;renderAll();window.scrollTo({top:0,behavior:'smooth'})" class="rounded-full border border-[#d8dfcf] px-4 py-2 text-xs font-medium text-[#234d38] hover:bg-[#edf2e7]">${nbT("Chỉnh sửa", "Edit")}</button>
-              <button onclick="toggleArchiveProduct(${p.id})" class="rounded-full border border-[#d8dfcf] px-4 py-2 text-xs font-medium text-[#234d38] hover:bg-[#edf2e7]">${p.is_active ? nbT("Ẩn", "Hide") : nbT("Hiện lại", "Show")}</button>
+              <button onclick="State.editorId=${p.id};State.editorOpen=true;renderAll();window.scrollTo({top:0,behavior:'smooth'})" class="inline-flex min-h-[44px] items-center justify-center rounded-full border border-[#d8dfcf] px-4 py-2 text-xs font-medium text-[#234d38] hover:bg-[#edf2e7] transition-colors">${nbT("Chỉnh sửa", "Edit")}</button>
+              <button onclick="toggleArchiveProduct(${p.id})" class="inline-flex min-h-[44px] items-center justify-center rounded-full border border-[#d8dfcf] px-4 py-2 text-xs font-medium text-[#234d38] hover:bg-[#edf2e7] transition-colors">${p.is_active ? nbT("Ẩn", "Hide") : nbT("Hiện lại", "Show")}</button>
             </div>
           </article>`).join("")
           : `<div class="rounded-2xl border border-[#dce2d4] bg-white p-8 text-center text-sm text-[#626b5e]">${nbT("Chưa có sản phẩm nào. Bấm “Nạp sản phẩm mẫu ban đầu” hoặc “Thêm sản phẩm mới”.", "No products yet. Use “Import starter products” or “Add new product”.")}</div>`}
@@ -2625,15 +2748,15 @@
         const p = State.products.find(x => x.id === Number(i.id));
         if (p && !seen.has(p.id) && p.calories_kcal !== null) { seen.add(p.id); recent.push(p); }
       }));
-      const inp = (id, label, extra = "") => `<div><label class="mb-1 block text-[11px] font-medium">${label}</label><input id="${id}" ${extra} class="w-full rounded-xl border border-[#d8dfcf] px-3 py-2 text-sm"></div>`;
+      const inp = (id, label, extra = "") => `<div><label class="mb-1 block text-[11px] font-medium">${label}</label><input id="${id}" ${extra} class="min-h-[44px] w-full rounded-xl border border-[#d8dfcf] px-3 py-2 text-sm"></div>`;
       return `
     <section class="mx-auto w-full max-w-4xl px-5 py-10 sm:px-8">
       <h1 class="text-3xl font-medium text-[#234d38]">📒 ${nbT("Nhật ký ăn uống", "Food diary")}</h1>
       <p class="mt-2 text-sm text-[#626b5e]">${nbT("Ghi lại bữa ăn trong ngày và so với mục tiêu bạn đã lưu ở trang BMI/TDEE.", "Log what you eat and compare it to the goal saved in the BMI/TDEE tool.")}</p>
       <div class="mt-5 flex flex-wrap items-center gap-2">
-        <button onclick="shiftDiaryDate(-1)" class="rounded-full border border-[#dce2d4] bg-white px-4 py-2 text-sm" aria-label="prev">←</button>
-        <input type="date" value="${esc(State.diaryDate)}" max="${nbTodayVN()}" onchange="setDiaryDate(this.value)" class="rounded-full border border-[#dce2d4] bg-white px-4 py-2 text-sm">
-        <button onclick="shiftDiaryDate(1)" class="rounded-full border border-[#dce2d4] bg-white px-4 py-2 text-sm" aria-label="next">→</button>
+        <button onclick="shiftDiaryDate(-1)" class="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full border border-[#dce2d4] bg-white px-4 py-2 text-sm hover:bg-[#edf2e7] transition-colors" aria-label="prev">←</button>
+        <input type="date" value="${esc(State.diaryDate)}" max="${nbTodayVN()}" onchange="setDiaryDate(this.value)" class="min-h-[44px] rounded-full border border-[#dce2d4] bg-white px-4 py-2 text-sm">
+        <button onclick="shiftDiaryDate(1)" class="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full border border-[#dce2d4] bg-white px-4 py-2 text-sm hover:bg-[#edf2e7] transition-colors" aria-label="next">→</button>
       </div>
       <div class="mt-5 grid grid-cols-1 gap-4 rounded-2xl border border-[#dce2d4] bg-white p-6 sm:grid-cols-2">
         ${bar(nbT("Năng lượng", "Energy"), tot.kcal, target, "kcal")}
@@ -2646,11 +2769,11 @@
       <h2 class="mt-8 text-lg font-semibold text-[#234d38]">${nbT("Đã ăn hôm nay", "Eaten")}</h2>
       ${rows.length ? `<ul class="mt-3 space-y-2">${rows.map(r => `<li class="flex items-center justify-between gap-3 rounded-xl border border-[#dce2d4] bg-white px-4 py-3 text-sm">
           <span><b>${esc(r.name)}</b> × ${Number(r.quantity)} <span class="block text-xs text-[#626b5e]">${Math.round(Number(r.kcal) * Number(r.quantity))} kcal · ${Math.round(Number(r.protein_g) * Number(r.quantity))}g ${nbT("đạm", "protein")}</span></span>
-          <button onclick="deleteDiary(${Number(r.id)})" class="text-xs text-red-700">🗑️ ${nbT("Xóa", "Remove")}</button></li>`).join("")}</ul>`
+          <button onclick="deleteDiary(${Number(r.id)})" class="inline-flex min-h-[44px] items-center px-3 text-xs text-red-700 hover:underline">🗑️ ${nbT("Xóa", "Remove")}</button></li>`).join("")}</ul>`
           : `<p class="mt-3 text-sm text-[#626b5e]">${nbT("Chưa ghi món nào cho ngày này.", "Nothing logged for this day.")}</p>`}
 
       ${recent.length ? `<h2 class="mt-8 text-lg font-semibold text-[#234d38]">🛍️ ${nbT("Từ các đơn đã giao của bạn", "From your delivered orders")}</h2>
-        <div class="mt-3 flex flex-wrap gap-2">${recent.slice(0, 12).map(p => `<button onclick="diaryFromProduct(${p.id})" class="rounded-full border border-[#b9c9aa] bg-white px-4 py-2 text-xs font-medium text-[#234d38] hover:bg-[#edf2e7]">+ ${pname(p)} (${fmtNum(p.calories_kcal)} kcal)</button>`).join("")}</div>` : ""}
+        <div class="mt-3 flex flex-wrap gap-2">${recent.slice(0, 12).map(p => `<button onclick="diaryFromProduct(${p.id})" class="inline-flex min-h-[44px] items-center rounded-full border border-[#b9c9aa] bg-white px-4 py-2 text-xs font-medium text-[#234d38] hover:bg-[#edf2e7] transition-colors">+ ${pname(p)} (${fmtNum(p.calories_kcal)} kcal)</button>`).join("")}</div>` : ""}
 
       <h2 class="mt-8 text-lg font-semibold text-[#234d38]">${nbT("Thêm món khác", "Add something else")}</h2>
       <form onsubmit="diaryCustom(event)" class="mt-3 grid grid-cols-2 items-end gap-3 rounded-2xl border border-[#dce2d4] bg-white p-5 sm:grid-cols-6">
@@ -2660,7 +2783,7 @@
         ${inp("dy_pro", nbT("Đạm (g)", "Protein (g)"), 'type="number" min="0" max="1000" step="any"')}
         ${inp("dy_carb", nbT("Tinh bột (g)", "Carbs (g)"), 'type="number" min="0" max="1000" step="any"')}
         ${inp("dy_fat", nbT("Béo (g)", "Fat (g)"), 'type="number" min="0" max="1000" step="any"')}
-        <button class="col-span-2 rounded-full bg-[#234d38] px-5 py-2.5 text-xs font-semibold text-white sm:col-span-1">${nbT("Thêm", "Add")}</button>
+        <button class="col-span-2 inline-flex min-h-[44px] items-center justify-center rounded-full bg-[#234d38] px-5 py-2.5 text-xs font-semibold text-white sm:col-span-1 hover:bg-[#173a29] transition-colors">${nbT("Thêm", "Add")}</button>
       </form>
       <p class="mt-4 text-xs leading-5 text-[#626b5e]">${nbT("Nhật ký chỉ mang tính tham khảo cá nhân, không thay thế tư vấn của bác sĩ hoặc chuyên gia dinh dưỡng.", "The diary is for personal reference only and is not a substitute for medical or dietitian advice.")}</p>
     </section>`;
@@ -2671,7 +2794,7 @@
       const s = State.settings;
       const sec = (title, body) => `<section class="mt-8"><h2 class="text-xl font-semibold text-[#234d38]">${title}</h2><div class="mt-2 space-y-2 text-sm leading-7 text-[#434f3d]">${body}</div></section>`;
       return `
-    <div class="mx-auto w-full max-w-3xl px-5 py-10 sm:px-8">
+    <div class="mx-auto w-full max-w-3xl px-5 py-10 sm:px-8 break-words">
       <h1 class="text-3xl font-medium text-[#234d38]">${nbT("Chính sách & liên hệ", "Policies & contact")}</h1>
       ${sec(nbT("🚚 Giao hàng", "🚚 Delivery"),
         `<p>${nbT("Phí giao hàng", "Delivery fee")}: <b>${money(s.shipping_fee)}</b>; ${nbT("miễn phí cho đơn từ", "free for orders from")} <b>${money(s.free_shipping_min)}</b>.</p>
@@ -2701,7 +2824,7 @@
       return `<div class="border-t border-[#dce2d4] pt-5 text-sm text-[#434f3d]"><h3 class="text-lg font-semibold text-[#234d38]">🩺 ${nbT("Hồ sơ sức khỏe đã lưu", "Saved health profile")}</h3>
         <p class="mt-2">${nbT("Mục tiêu", "Goal")}: <b>${esc(goal)}</b> · ${nbT("Năng lượng", "Calorie target")}: <b>${Number(h.target)} kcal</b> · BMI: <b>${Number(h.bmi) || "—"}</b></p>
         <p class="mt-1">${nbT("Dị ứng / cần tránh", "Allergies / avoid")}: <b>${al.length ? nbAllergenNames(al) : nbT("không khai báo", "none listed")}</b></p>
-        <a href="#/health" onclick="navigate('health')" class="mt-2 inline-block text-xs font-semibold text-[#234d38] underline">${nbT("Cập nhật", "Update")}</a></div>`;
+        <a href="#/health" onclick="navigate('health')" class="mt-2 inline-flex min-h-[44px] items-center text-xs font-semibold text-[#234d38] underline">${nbT("Cập nhật", "Update")}</a></div>`;
     }
     function nbSellerAccountNote() {
       return `<div class="border-t border-[#dce2d4] pt-5 text-sm text-[#434f3d]">🏦 ${nbT("Số tài khoản nhận chuyển khoản, phí giao hàng, hoa hồng và mã giảm giá được quản lý ở", "Bank details, delivery fee, commission and coupons are managed in")} <a href="#/seller_settings" onclick="navigate('seller_settings')" class="font-semibold underline">${nbT("Cài đặt cửa hàng", "Store settings")}</a>.</div>`;
@@ -2743,7 +2866,19 @@
       nbRefreshFooter();
       const root = document.getElementById("appRoot");
       if (State.loading) {
-        root.innerHTML = `<div class="mx-auto max-w-xl px-5 py-24 text-center text-sm text-[#626b5e]">🌱 ${nbT("Đang tải cửa hàng...", "Loading the shop...")}</div>`;
+        if (State.route === "shop") {
+          root.innerHTML = renderShop();
+        } else {
+          root.innerHTML = `
+            <div class="mx-auto max-w-xl px-5 py-24 text-center">
+              <div class="inline-flex size-12 items-center justify-center rounded-full bg-[#e5edde] text-[#234d38] text-2xl animate-bounce mb-4">🌱</div>
+              <p class="text-base font-medium text-[#234d38]">${nbT("Đang tải dữ liệu...", "Loading data...")}</p>
+              <div class="mt-6 mx-auto max-w-xs space-y-3">
+                <div class="h-3 w-full rounded-full bg-[#e5edde] animate-pulse"></div>
+                <div class="h-3 w-4/5 mx-auto rounded-full bg-[#eef2e8] animate-pulse"></div>
+              </div>
+            </div>`;
+        }
         renderCompareBar();
         return;
       }
