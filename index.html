@@ -9,10 +9,15 @@
     content="Cửa hàng thực phẩm sạch NourishBitfe Organics: món ăn eat clean, đồ ăn nhẹ lành mạnh, thông tin dinh dưỡng rõ ràng, công cụ BMI/TDEE và so sánh dinh dưỡng.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,500;0,600;0,700;0,800;1,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
+    h1, h2, h3, h4, h5, h6, .font-heading {
+      font-family: 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, sans-serif !important;
+      letter-spacing: -0.02em;
+    }
+
     html,
     body {
       font-family: 'Inter', sans-serif;
@@ -74,31 +79,31 @@
 
   <!-- HEADER -->
   <header
-    class="sticky top-0 z-30 w-full relative overflow-hidden border-b border-[#e6e8de] bg-[#fafaf5]/95 backdrop-blur-sm">
-    <!-- Họa tiết lá và hoa SVG mờ ở góc header -->
-    <svg class="pointer-events-none select-none absolute -left-6 -top-6 size-28 text-[#234d38] opacity-[0.07]"
-      viewBox="0 0 120 120" fill="currentColor" aria-hidden="true">
-      <path d="M20 100 C20 45, 65 15, 105 15 C105 55, 75 100, 20 100 Z" />
-      <path d="M20 100 L85 35" stroke="#fafaf5" stroke-width="3" stroke-linecap="round" />
+    class="sticky top-0 z-30 w-full relative overflow-hidden border-b border-[#e6e8de] bg-[#fafaf5]/95 backdrop-blur-md">
+    <!-- Họa tiết lá xanh nhạt tinh tế, không che chữ -->
+    <svg class="pointer-events-none select-none absolute -left-5 -top-5 size-24 text-[#88b394] opacity-25"
+      viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+      <path d="M20 100 C20 45, 65 15, 105 15 C105 55, 75 100, 20 100 Z" fill="#e8f5e9" />
+      <path d="M20 100 L85 35" stroke="#88b394" stroke-width="2" stroke-linecap="round" />
+      <path d="M45 75 C60 70, 75 60, 85 45" stroke="#88b394" stroke-width="1.5" stroke-linecap="round" />
     </svg>
-    <svg class="pointer-events-none select-none absolute -right-4 -bottom-6 size-28 text-[#f0925a] opacity-[0.09]"
-      viewBox="0 0 120 120" fill="currentColor" aria-hidden="true">
-      <circle cx="60" cy="30" r="16" />
-      <circle cx="90" cy="60" r="16" />
-      <circle cx="60" cy="90" r="16" />
-      <circle cx="30" cy="60" r="16" />
-      <circle cx="60" cy="60" r="12" fill="#f6cf63" />
+    <svg class="pointer-events-none select-none absolute -right-4 -bottom-5 size-24 text-[#88b394] opacity-20"
+      viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+      <path d="M100 20 C100 75, 55 105, 15 105 C15 65, 45 20, 100 20 Z" fill="#e8f5e9" />
+      <path d="M100 20 L35 85" stroke="#88b394" stroke-width="2" stroke-linecap="round" />
     </svg>
 
     <div
       class="relative z-10 mx-auto flex w-full max-w-[1440px] flex-wrap items-center justify-between gap-2.5 px-4 py-2.5 sm:py-3.5 sm:px-8 lg:px-16">
       <a href="#/" onclick="navigate('shop')"
         class="order-1 inline-flex min-h-[44px] items-center gap-2.5 focus-visible:outline-2 focus-visible:outline-[#234d38]">
-        <span
-          class="flex size-10 items-center justify-center rounded-full bg-[#cfe8d5] text-[#234d38] text-xl">🌱</span>
-        <span
-          class="text-base font-semibold tracking-[-0.5px] text-[#234d38] sm:text-xl sm:tracking-[-1px]">NourishBitfe
-          Organics</span>
+        <span class="flex size-10 items-center justify-center rounded-2xl bg-[#e8f5e9] text-[#234d38] shadow-xs">
+          <svg class="size-6 text-[#234d38]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/>
+            <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
+          </svg>
+        </span>
+        <span class="font-heading text-lg font-bold tracking-tight text-[#234d38] sm:text-xl">NourishBitfe <span class="font-normal text-[#4d6342]">Organics</span></span>
       </a>
 
       <!-- Ô tìm kiếm trên Header (giữa logo và cụm nút ngôn ngữ/giỏ hàng, xuống dòng riêng rộng 100% trên điện thoại) -->
@@ -119,20 +124,23 @@
         <div role="group" aria-label="Language"
           class="flex items-center gap-1 rounded-full border border-[#d9dfd2] bg-[#f0f3e8] p-1">
           <button id="btnLangVi" type="button" onclick="selectLanguage('vi')"
-            class="inline-flex min-h-[40px] items-center justify-center gap-1.5 rounded-full bg-[#234d38] px-3 py-1.5 text-xs font-semibold text-white">✓
-            Tiếng Việt</button>
+            class="inline-flex min-h-[38px] items-center justify-center gap-1 rounded-full bg-[#234d38] px-2.5 sm:px-3 py-1 text-xs font-semibold text-white transition-colors">✓ Tiếng Việt</button>
           <button id="btnLangEn" type="button" onclick="selectLanguage('en')"
-            class="inline-flex min-h-[40px] items-center justify-center gap-1.5 rounded-full bg-transparent px-3 py-1.5 text-xs font-medium text-[#526348] hover:bg-[#e5edde]">English</button>
+            class="inline-flex min-h-[38px] items-center justify-center gap-1 rounded-full bg-transparent px-2.5 sm:px-3 py-1 text-xs font-medium text-[#526348] hover:bg-[#e5edde] transition-colors">English</button>
+          <button id="btnLangZh" type="button" onclick="selectLanguage('zh')"
+            class="inline-flex min-h-[38px] items-center justify-center gap-1 rounded-full bg-transparent px-2.5 sm:px-3 py-1 text-xs font-medium text-[#526348] hover:bg-[#e5edde] transition-colors">简体中文</button>
         </div>
         <button id="authButton" type="button" onclick="handleGoogleAuth()"
           class="inline-flex min-h-[42px] items-center justify-center rounded-full bg-[#234d38] px-3.5 sm:px-4 py-2 text-xs sm:text-sm font-semibold text-white hover:bg-[#193c2a] transition-colors">
           Đăng nhập bằng Google
         </button>
         <button id="headerCartButton" onclick="navigate('cart')"
-          class="inline-flex min-h-[42px] min-w-[42px] items-center justify-center gap-2 rounded-full border border-[#d9dfd2] bg-white px-3.5 py-2 text-[#234d38] hover:bg-[#edf1e8] transition-colors">
-          <span>🛍️</span>
+          class="inline-flex min-h-[42px] min-w-[42px] items-center justify-center gap-2 rounded-full border border-[#d9dfd2] bg-white px-3 sm:px-3.5 py-2 text-[#234d38] hover:bg-[#e8f5e9] transition-all" aria-label="Shopping Cart">
+          <svg class="size-5 text-[#234d38]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/>
+          </svg>
           <span id="headerCartCount"
-            class="flex size-5 items-center justify-center rounded-full bg-[#f0925a] text-[10px] font-bold text-[#2b1608]">0</span>
+            class="flex size-5 items-center justify-center rounded-full bg-[#ea580c] text-[10px] font-bold text-white shadow-xs">0</span>
         </button>
       </div>
 
@@ -147,50 +155,107 @@
   <main id="appRoot" class="w-full flex-1"></main>
   <div id="compareBar"></div>
   <div id="nbPrintArea" class="hidden"></div>
+  <div id="nbQuickViewModal" class="hidden"></div>
+  <div id="nbToastContainer" class="fixed bottom-6 right-6 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
   <footer
-    class="relative overflow-hidden border-t border-[#cfe8d5] bg-gradient-to-br from-[#fafaf5] via-[#cfe8d5]/40 to-[#f0925a]/15 px-6 py-12 sm:px-8 lg:px-16 mt-12">
-    <!-- Họa tiết lá và hoa SVG mờ ở góc footer -->
-    <svg class="pointer-events-none select-none absolute -left-8 -bottom-8 size-44 text-[#234d38] opacity-[0.07]"
-      viewBox="0 0 160 160" fill="currentColor" aria-hidden="true">
-      <path d="M20 140 C20 60, 80 20, 140 20 C140 80, 100 140, 20 140 Z" />
-      <path d="M25 135 C65 95, 95 65, 130 30" stroke="#fafaf5" stroke-width="4" stroke-linecap="round" />
+    class="relative overflow-hidden border-t border-[#dce2d4] bg-gradient-to-br from-[#fafaf5] via-[#e8f5e9]/40 to-[#fff3e0]/30 px-6 py-12 sm:px-8 lg:px-16 mt-16">
+    <!-- Họa tiết lá xanh nhạt nền footer -->
+    <svg class="pointer-events-none select-none absolute -left-8 -bottom-8 size-44 text-[#88b394] opacity-20"
+      viewBox="0 0 160 160" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+      <path d="M20 140 C20 60, 80 20, 140 20 C140 80, 100 140, 20 140 Z" fill="#e8f5e9" />
+      <path d="M25 135 C65 95, 95 65, 130 30" stroke="#88b394" stroke-width="2" stroke-linecap="round" />
     </svg>
-    <svg class="pointer-events-none select-none absolute -right-6 -top-6 size-40 text-[#e27d8a] opacity-[0.09]"
-      viewBox="0 0 140 140" fill="currentColor" aria-hidden="true">
-      <circle cx="70" cy="34" r="20" />
-      <circle cx="106" cy="70" r="20" />
-      <circle cx="70" cy="106" r="20" />
-      <circle cx="34" cy="70" r="20" />
-      <circle cx="70" cy="70" r="15" fill="#f6cf63" />
+    <svg class="pointer-events-none select-none absolute -right-6 -top-6 size-40 text-[#88b394] opacity-20"
+      viewBox="0 0 140 140" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+      <path d="M120 20 C120 80, 70 120, 20 120 C20 60, 70 20, 120 20 Z" fill="#e8f5e9" />
     </svg>
     <div class="relative z-10 mx-auto max-w-[1440px]">
-      <div class="flex flex-col justify-between gap-8 md:flex-row md:items-center">
-        <div>
-          <div class="flex items-center gap-2 text-xl font-semibold text-[#234d38]">🌱 NourishBitfe Organics</div>
-          <p id="footerSlogan" class="mt-3 text-sm text-[#626b5e]">Ăn lành. Sống nhẹ. Mỗi ngày.</p>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 pb-10 border-b border-[#dce2d4]">
+        <!-- Brand & Slogan -->
+        <div class="space-y-3">
+          <div class="flex items-center gap-2 text-xl font-bold font-heading text-[#234d38]">
+            <span class="flex size-8 items-center justify-center rounded-xl bg-[#e8f5e9] text-[#234d38]">
+              <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>
+            </span>
+            NourishBitfe Organics
+          </div>
+          <p id="footerSlogan" class="text-sm text-[#526348] leading-relaxed" data-vi="Ăn lành. Sống nhẹ. Mỗi ngày." data-en="Good food. Light living. Every day." data-zh="安心轻食，活力每一天。">Ăn lành. Sống nhẹ. Mỗi ngày.</p>
+          <div class="pt-2 text-xs text-[#626b5e] space-y-1.5">
+            <p class="flex items-center gap-2">
+              <svg class="size-4 text-[#234d38] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              <span data-vi="Giờ mở cửa: 08:00 - 21:00 hàng ngày" data-en="Hours: 08:00 - 21:00 daily" data-zh="营业时间：每日 08:00 - 21:00">Giờ mở cửa: 08:00 - 21:00 hàng ngày</span>
+            </p>
+            <p class="flex items-center gap-2">
+              <svg class="size-4 text-[#234d38] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+              <span>123 Đường Hữu Cơ, Bến Nghé, Quận 1, TP. HCM</span>
+            </p>
+          </div>
         </div>
-        <div class="flex flex-wrap gap-6 text-sm text-[#234d38]">
-          <a href="#/" onclick="navigate('shop')" class="hover:underline" data-vi="Khám phá cửa hàng"
-            data-en="Explore the shop">Khám phá cửa hàng</a>
-          <a href="#/cart" onclick="navigate('cart')" class="hover:underline" data-vi="Giỏ hàng của bạn"
-            data-en="Your shopping bag">Giỏ hàng của bạn</a>
-          <a href="#/checkout" onclick="navigate('checkout')" class="hover:underline" data-vi="Thanh toán"
-            data-en="Checkout">Thanh toán</a>
-          <a href="#/health" onclick="navigate('health')" class="hover:underline" data-vi="Công cụ BMI & TDEE"
-            data-en="Health calculator">Công cụ BMI & TDEE</a>
-          <a href="#/advice" onclick="navigate('advice')" class="hover:underline" data-vi="Trợ lý dinh dưỡng"
-            data-en="Nutrition assistant">Trợ lý dinh dưỡng</a>
-          <a href="#/policy" onclick="navigate('policy')" class="hover:underline" data-vi="Chính sách & liên hệ"
-            data-en="Policies & contact">Chính sách & liên hệ</a>
+
+        <!-- Liên hệ & Mạng xã hội -->
+        <div>
+          <h3 class="text-sm font-bold uppercase tracking-wider text-[#234d38] font-heading mb-3" data-vi="Kết nối & Hỗ trợ" data-en="Connect & Support" data-zh="联系与客服">Kết nối & Hỗ trợ</h3>
+          <ul class="space-y-2.5 text-xs text-[#526348]">
+            <li>
+              <a href="https://zalo.me" target="_blank" rel="noopener" class="inline-flex items-center gap-2 hover:text-[#234d38] hover:underline">
+                <span class="flex size-6 items-center justify-center rounded-full bg-[#e8f5e9] text-[#234d38] font-bold text-[10px]">Z</span>
+                <span>Zalo: <strong>0987.654.321</strong> (Chat 24/7)</span>
+              </a>
+            </li>
+            <li>
+              <a href="https://facebook.com" target="_blank" rel="noopener" class="inline-flex items-center gap-2 hover:text-[#234d38] hover:underline">
+                <span class="flex size-6 items-center justify-center rounded-full bg-[#e8f5e9] text-[#234d38] font-bold text-[10px]">f</span>
+                <span>Facebook: fb.com/nourishbitfe.organics</span>
+              </a>
+            </li>
+            <li class="flex items-center gap-2">
+              <svg class="size-4 text-[#234d38]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              <span>Hotline: 1900 6868 (Miễn phí)</span>
+            </li>
+            <li class="flex items-center gap-2">
+              <svg class="size-4 text-[#234d38]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+              <span>Email: organics@nourishbitfe.vn</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Khám phá cửa hàng -->
+        <div>
+          <h3 class="text-sm font-bold uppercase tracking-wider text-[#234d38] font-heading mb-3" data-vi="Khám phá" data-en="Explore" data-zh="探索商城">Khám phá</h3>
+          <ul class="space-y-2 text-xs text-[#526348]">
+            <li><a href="#/" onclick="navigate('shop')" class="hover:underline hover:text-[#234d38]" data-vi="Khám phá thực đơn" data-en="Explore menu" data-zh="精选菜单">Khám phá thực đơn</a></li>
+            <li><a href="#/cart" onclick="navigate('cart')" class="hover:underline hover:text-[#234d38]" data-vi="Giỏ hàng của bạn" data-en="Your shopping bag" data-zh="购物车">Giỏ hàng của bạn</a></li>
+            <li><a href="#/health" onclick="navigate('health')" class="hover:underline hover:text-[#234d38]" data-vi="Công cụ tính BMI & TDEE" data-en="BMI & TDEE Tools" data-zh="BMI 与热量工具">Công cụ tính BMI & TDEE</a></li>
+            <li><a href="#/advice" onclick="navigate('advice')" class="hover:underline hover:text-[#234d38]" data-vi="Trợ lý dinh dưỡng AI" data-en="AI Nutrition assistant" data-zh="AI 营养咨询">Trợ lý dinh dưỡng AI</a></li>
+            <li><a href="#/diary" onclick="navigate('diary')" class="hover:underline hover:text-[#234d38]" data-vi="Nhật ký ăn uống" data-en="Food diary" data-zh="饮食日记">Nhật ký ăn uống</a></li>
+          </ul>
+        </div>
+
+        <!-- Cam kết chất lượng -->
+        <div>
+          <h3 class="text-sm font-bold uppercase tracking-wider text-[#234d38] font-heading mb-3" data-vi="Cam kết chất lượng" data-en="Our Promise" data-zh="品质承诺">Cam kết chất lượng</h3>
+          <div class="space-y-2 text-xs text-[#526348]">
+            <p class="flex items-start gap-2">
+              <svg class="size-4 text-[#234d38] shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <span data-vi="100% Nguyên liệu sạch có nguồn gốc rõ ràng" data-en="100% Traceable clean organic ingredients" data-zh="100% 源头可溯有机健康食材">100% Nguyên liệu sạch có nguồn gốc rõ ràng</span>
+            </p>
+            <p class="flex items-start gap-2">
+              <svg class="size-4 text-[#234d38] shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <span data-vi="Đổi trả trong 24h nếu chất lượng không ưng ý" data-en="24-hour return guarantee if unsatisfied" data-zh="24小时内不满意品质包退换">Đổi trả trong 24h nếu chất lượng không ưng ý</span>
+            </p>
+            <p class="flex items-start gap-2">
+              <svg class="size-4 text-[#234d38] shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <span data-vi="Giao nhanh 2 giờ giữ ấm nóng tươi ngon" data-en="Fast 2-hour delivery keeping food fresh" data-zh="2小时同城极速达，鲜温直达">Giao nhanh 2 giờ giữ ấm nóng tươi ngon</span>
+            </p>
+          </div>
         </div>
       </div>
+
       <div
-        class="mt-9 flex flex-col justify-between gap-3 border-t border-[#dce2d4] pt-5 text-xs text-[#626b5e] sm:flex-row">
-        <p id="footerDisclaimer">Các sản phẩm đánh dấu MẪU chỉ minh họa. Xác nhận tình trạng hàng và giao hàng với cửa
-          hàng.</p>
-        <p id="footerContact" class="sm:text-right"></p>
-        <p>© 2026 NourishBitfe Organics</p>
+        class="mt-6 flex flex-col justify-between items-center gap-3 pt-4 text-xs text-[#626b5e] sm:flex-row">
+        <p id="footerDisclaimer" data-vi="Các sản phẩm đánh dấu MẪU chỉ minh họa danh mục. Xác nhận tình trạng hàng và giao hàng với cửa hàng." data-en="Items marked SAMPLE illustrate categories only. Confirm availability with store." data-zh="标注为样品的商品仅用于分类示意。请以下单确认信息为准。">Các sản phẩm đánh dấu MẪU chỉ minh họa danh mục. Xác nhận tình trạng hàng và giao hàng với cửa hàng.</p>
+        <p>© 2026 NourishBitfe Organics. All rights reserved.</p>
       </div>
     </div>
   </footer>
@@ -211,6 +276,14 @@
         price_vnd: 75000,
         original_price_vnd: 89000,
         stock_quantity: 15,
+        name_zh: "藜麦时蔬能量碗",
+        description_zh: "精选优质藜麦配搭成熟牛油果、西兰花与时令鲜蔬，清爽可口，提供240-270大卡均衡活力营养。",
+        ingredients_zh: "有机三色藜麦、成熟牛油果、西兰花、红黄彩椒、甜玉米、特级初榨橄榄油油醋汁",
+        vitamins_zh: "富含维生素C、铁、镁与丰富膳食纤维",
+        nutrition_notes_zh: "低GI优质复合碳水，适合减脂期作营养均衡主食。",
+        origin_zh: "林同省大叻市生态有机蔬菜农场",
+        storage_zh: "冷藏2-5°C保鲜，建议当天食用风味最佳",
+        tag_badge: "bestseller",
         is_active: true,
         serving_size_g: 350,
         calories_kcal: 255,
@@ -238,6 +311,14 @@
         price_vnd: 59000,
         original_price_vnd: 69000,
         stock_quantity: 12,
+        name_zh: "香煎时蔬配牛油果",
+        description_zh: "节瓜、彩椒与嫩芦笋用橄榄油轻煎，佐以厚切熟软牛油果，补充健康不饱和脂肪酸与抗氧化能量。",
+        ingredients_zh: "绿节瓜、红黄甜椒、嫩芦笋、成熟牛油果、初榨橄榄油、喜马拉雅粉盐、现磨黑胡椒",
+        vitamins_zh: "富含维生素E、类胡萝卜素及单不饱和健康脂肪酸",
+        nutrition_notes_zh: "有益心血管与脑部健康的天然优质油脂来源。",
+        origin_zh: "林同省大叻市绿色认证蔬菜合作社",
+        storage_zh: "保鲜冷藏，食用前可微波低火加热1分钟",
+        tag_badge: "near_expiry",
         is_active: true,
         serving_size_g: 200,
         calories_kcal: 140,
@@ -265,6 +346,14 @@
         price_vnd: 129000,
         original_price_vnd: 149000,
         stock_quantity: 10,
+        name_zh: "糙米香煎三文鱼碗",
+        description_zh: "挪威深海三文鱼柳外焦里嫩，搭配红糙米、鲜甜毛豆仁与焙煎芝麻，高蛋白低脂健康典范。",
+        ingredients_zh: "挪威三文鱼柳、优质红糙米、鲜毛豆仁、胡萝卜细丝、低盐日式生抽、焙煎白芝麻",
+        vitamins_zh: "超高深海Omega-3脂肪酸、维生素D、B12与优质动物蛋白",
+        nutrition_notes_zh: "单份富含32g优质动物蛋白质，增肌期与高消耗人群的绝佳能量补给。",
+        origin_zh: "挪威深海空运三文鱼，得乐省有机红糙米",
+        storage_zh: "冷藏2-4°C，请于24小时内食用",
+        tag_badge: "bestseller",
         is_active: true,
         serving_size_g: 420,
         calories_kcal: 515,
@@ -292,6 +381,14 @@
         price_vnd: 89000,
         original_price_vnd: 109000,
         stock_quantity: 25,
+        name_zh: "坚果燕麦格兰诺拉",
+        description_zh: "整粒燕麦搭配大粒扁桃仁、腰果与南瓜籽，天然野生蜂蜜与肉桂低温慢烤，酥脆微甜无添加糖。",
+        ingredients_zh: "纯整粒压头燕麦、扁桃仁、熟腰果、生南瓜籽、野生花蜜、冷榨椰子油、天然肉桂粉",
+        vitamins_zh: "富含水溶性膳食纤维、锌、镁及维生素E",
+        nutrition_notes_zh: "饱腹感强，不含精制白砂糖与反式脂肪酸，健康早餐加餐优选。",
+        origin_zh: "澳洲进口有机燕麦，平福省特级出口腰果",
+        storage_zh: "密封保存于阴凉干燥处，开封后建议30天内食用完毕",
+        tag_badge: "new",
         is_active: true,
         serving_size_g: 50,
         calories_kcal: 220,
@@ -319,6 +416,14 @@
         price_vnd: 75000,
         original_price_vnd: 89000,
         stock_quantity: 30,
+        name_zh: "原味轻焙扁桃仁",
+        description_zh: "精选加州整粒扁桃仁，无盐无油原味轻度慢火烘焙，保留坚果原生脆香与丰富微量元素。",
+        ingredients_zh: "100%精选天然扁桃仁（无任何盐、糖或化学添加剂）",
+        vitamins_zh: "富含天然维生素E、钙、镁、锌与植物不饱和脂肪酸",
+        nutrition_notes_zh: "每把坚果提供充足植物蛋白，助力抗氧化与脑部年轻活力。",
+        origin_zh: "美国加利福尼亚州优质坚果农庄",
+        storage_zh: "常温阴凉避光密封，防潮保存",
+        tag_badge: "discount",
         is_active: true,
         serving_size_g: 30,
         calories_kcal: 165,
@@ -346,6 +451,14 @@
         price_vnd: 49000,
         original_price_vnd: 59000,
         stock_quantity: 18,
+        name_zh: "热带羽衣甘蓝绿果昔",
+        description_zh: "大叻晨采新鲜羽衣甘蓝配搭甜熟香蕉、甜凤梨与纯鲜椰子水鲜榨，清爽微甘无草腥味，排毒润燥。",
+        ingredients_zh: "新鲜有机羽衣甘蓝、成熟香蕉、甜凤梨、槟椥纯天然椰子水、奇亚籽",
+        vitamins_zh: "超高维生素C、维生素K与天然高活性叶绿素",
+        nutrition_notes_zh: "天然植物酶促进肠道畅通与新陈代谢，无添加蔗糖与浓缩果汁。",
+        origin_zh: "大叻有机蔬菜基地，槟椥省鲜椰子",
+        storage_zh: "冷藏2-5°C，现榨建议在12小时内饮用最佳",
+        tag_badge: "new",
         is_active: true,
         serving_size_g: 350,
         calories_kcal: 200,
@@ -373,6 +486,14 @@
         price_vnd: 25000,
         original_price_vnd: 30000,
         stock_quantity: 20,
+        name_zh: "有机复合新鲜香草包",
+        description_zh: "每日清晨采摘罗勒、平叶欧芹、迷迭香与百里香，天然香气浓郁，西式轻食与煎烤调味神器。",
+        ingredients_zh: "有机甜罗勒、意大利平叶欧芹、新鲜迷迭香枝、百里香",
+        vitamins_zh: "富含天然植物多酚抗氧化芳香精油",
+        nutrition_notes_zh: "天然提香，减少料理中盐与浓油的依赖，低钠饮食好伴侣。",
+        origin_zh: "大叻高科技水培温室香草农庄",
+        storage_zh: "用厨房纸巾轻裹后冷藏保鲜，防湿可保存5-7天",
+        tag_badge: "discount",
         is_active: true,
         serving_size_g: 40,
         calories_kcal: 20,
@@ -400,6 +521,14 @@
         price_vnd: 69000,
         original_price_vnd: 79000,
         stock_quantity: 16,
+        name_zh: "羽衣甘蓝鸡胸肉沙拉",
+        description_zh: "低温慢煮软嫩鸡胸肉丝配细切羽衣甘蓝、红小番茄与烤杏仁片，佐日式焙煎芝麻汁，健身减脂标配。",
+        ingredients_zh: "无抗生素鸡胸肉、有机羽衣甘蓝、红小番茄、扁桃仁薄脆片、低卡焙煎芝麻酱",
+        vitamins_zh: "极高纯蛋白质、维生素A、维生素C及钙质",
+        nutrition_notes_zh: "一份提供28g优质纯蛋白质，热量不足300kcal，抗饿无负担。",
+        origin_zh: "CP认证无公害鸡肉，大叻绿色蔬菜基地",
+        storage_zh: "冷藏2-5°C，建议食用前再拌入酱汁",
+        tag_badge: "bestseller",
         is_active: true,
         serving_size_g: 350,
         calories_kcal: 250,
@@ -427,6 +556,14 @@
         price_vnd: 95000,
         original_price_vnd: 110000,
         stock_quantity: 14,
+        name_zh: "蒜香欧芹香煎大虾",
+        description_zh: "精选金瓯黑虎虾仁，以微量草饲黄油与大蒜快火翻煎，撒上新鲜欧芹碎与黑胡椒，鲜嫩爽弹。",
+        ingredients_zh: "金瓯新鲜黑虎虾仁、天然纯草饲黄油、紫皮大蒜、新鲜欧芹碎、海盐、黑胡椒粒",
+        vitamins_zh: "富含天然虾青素、高优质蛋白、锌与维生素B12",
+        nutrition_notes_zh: "虾青素抗氧化极强，纯高蛋白且胆固醇脂肪负担轻微。",
+        origin_zh: "金瓯省天然红树林生态海虾养殖基地",
+        storage_zh: "冷藏2-4°C，微波中火翻热1分钟即刻食用",
+        tag_badge: "new",
         is_active: true,
         serving_size_g: 150,
         calories_kcal: 145,
@@ -454,6 +591,14 @@
         price_vnd: 189000,
         original_price_vnd: 219000,
         stock_quantity: 20,
+        name_zh: "有机复合植物蛋白粉",
+        description_zh: "有机分离豌豆蛋白、发芽糙米蛋白与奇亚籽粉科学拼配，不含麸质大豆乳糖，口感细腻丝滑。",
+        ingredients_zh: "有机分离豌豆蛋白、有机发芽糙米蛋白、有机奇亚籽粉、天然马达加斯加香草粉",
+        vitamins_zh: "每份含24g完整9种必需氨基酸，富含铁与B族维生素",
+        nutrition_notes_zh: "纯素无乳糖配方（Vegan），好吸收不胀气，健身与素食者每日蛋白质补充佳品。",
+        origin_zh: "欧洲USDA有机认证进口优质原料",
+        storage_zh: "密封置于阴凉干燥避光处，开封后建议90天内用完",
+        tag_badge: "bestseller",
         is_active: true,
         serving_size_g: 46,
         calories_kcal: 150,
@@ -481,6 +626,14 @@
         price_vnd: 95000,
         original_price_vnd: null,
         stock_quantity: 0,
+        name_zh: "赤藓糖醇甜菊代糖（样品展示）",
+        description_zh: "天然玉米发酵赤藓糖醇复配甜菊糖苷，0卡路里、0升糖指数，口感清甜无苦味，烘焙饮品首选。",
+        ingredients_zh: "天然赤藓糖醇（玉米发酵提取）、甜菊糖苷纯提取物",
+        vitamins_zh: "0卡路里，0净碳水化合物，不引起血糖波动",
+        nutrition_notes_zh: "控糖减重及糖尿病人群安全优选代糖。",
+        origin_zh: "食品级高纯度植物提取工坊",
+        storage_zh: "常温避潮密封保存",
+        tag_badge: "sample",
         is_active: true,
         serving_size_g: null,
         calories_kcal: null,
@@ -508,6 +661,14 @@
         price_vnd: 135000,
         original_price_vnd: null,
         stock_quantity: 0,
+        name_zh: "特级初榨橄榄油喷雾（样品展示）",
+        description_zh: "西班牙冷榨特级初榨橄榄油创新压力喷雾，每次精准喷出1-2ml微量油雾，空气炸锅轻食控油神器。",
+        ingredients_zh: "100%西班牙特级初榨冷压橄榄油",
+        vitamins_zh: "富含天然橄榄多酚抗氧化物与单不饱和油酸",
+        nutrition_notes_zh: "精准控油控卡，相比传统倾倒用油减少80%多余油脂摄入。",
+        origin_zh: "西班牙安达卢西亚有机橄榄庄园",
+        storage_zh: "避光干燥处常温存放，严禁靠近火源",
+        tag_badge: "sample",
         is_active: true,
         serving_size_g: null,
         calories_kcal: null,
@@ -585,7 +746,10 @@
       ingredients: [], ingEditorOpen: false, ingEditId: 0,
       recipeOpen: false, recipeProductId: 0, recipeRows: [],
       productCosts: {},
-      healthResult: null,
+      stockLogs: [], stockFilterProd: "", stockFilterFrom: "", stockFilterTo: "", stockModalProdId: 0,
+      replyEditId: 0,
+      sellerOrdersTab: "orders", customers: [], custMinOrders: 3, custSearch: "", custLoading: false,
+      staffList: [],
       wishlist: JSON.parse(localStorage.getItem("nb_wish") || "[]"),
       diet: [], avoid: [], sort: "default", onlyWish: false, inStock: false, coupon: null,
       adviceMessages: [
@@ -593,13 +757,58 @@
       ]
     };
 
-    const isVi = () => State.language === "vi";
-    const tr = (vi, en) => isVi() ? vi : en;
+    const isVi = () => (State.language || "vi") === "vi";
+    const tr = (vi, en, zh) => {
+      const l = State.language || "vi";
+      if (l === "zh") return (zh !== undefined && zh !== "") ? zh : (en || vi);
+      if (l === "en") return (en !== undefined && en !== "") ? en : vi;
+      return vi;
+    };
+    const trf = (vi, en, zh) => {
+      const l = State.language || "vi";
+      if (l === "zh") return zh || en || vi || "";
+      if (l === "en") return en || vi || "";
+      return vi || "";
+    };
     const money = n => Number(n || 0).toLocaleString("vi-VN") + " ₫";
     const isSample = p => (p.nutrition_notes_en || "").includes("SAMPLE INVENTORY");
     const fmtNum = v => v === null || v === undefined || v === "" ? "—" : Number(v);
     // Làm sạch chữ do người dùng nhập trước khi đưa vào HTML (chống chèn mã độc / XSS)
     const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+    const nbT = (vi, en, zh) => esc(tr(vi, en, zh));
+const NB_PLACEHOLDER_IMG = "data:image/svg+xml;utf8," + encodeURIComponent(
+      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"><rect width="400" height="300" fill="#e5edde"/><text x="200" y="170" font-size="72" text-anchor="middle">🌱</text></svg>'
+    );
+    const safeUrl = u => { const s = String(u || "").trim(); return /^https:\/\//i.test(s) ? s : NB_PLACEHOLDER_IMG; };
+    const imgSrc = p => esc(safeUrl(p && p.image_url));
+    const pname = p => esc(trf(p && p.name_vi, p && p.name_en, p && p.name_zh));
+
+    // Toast Notification System
+    function showToast(message, type = "success") {
+      const container = document.getElementById("nbToastContainer");
+      if (!container) return;
+      const toast = document.createElement("div");
+      toast.className = `pointer-events-auto flex items-center gap-2.5 rounded-2xl border px-4 py-3 text-xs sm:text-sm font-semibold shadow-xl transition-all duration-300 transform translate-y-3 opacity-0 ${
+        type === "success" 
+          ? "border-[#234d38]/30 bg-[#234d38] text-white" 
+          : "border-red-300 bg-red-600 text-white"
+      }`;
+      toast.innerHTML = `
+        <svg class="size-4 shrink-0 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+        <span>${esc(message)}</span>
+      `;
+      container.appendChild(toast);
+      requestAnimationFrame(() => {
+        toast.classList.remove("translate-y-3", "opacity-0");
+        toast.classList.add("translate-y-0", "opacity-100");
+      });
+      setTimeout(() => {
+        toast.classList.add("opacity-0", "translate-y-2");
+        setTimeout(() => toast.remove(), 300);
+      }, 2500);
+    }
 
     function showNotice(vi, en, isError = false) {
       const box = document.getElementById("globalFeedback");
@@ -623,11 +832,11 @@
 
     function categoryName(cat) {
       const map = {
-        all: tr("Tất cả sản phẩm", "All products"),
-        meals: tr("Món nấu chín ăn ngay", "Freshly cooked, ready to eat"),
-        snacks: tr("Đồ ăn nhẹ lành mạnh", "Healthy snacks"),
-        supplements: tr("Thực phẩm bổ sung", "Supplements"),
-        ingredients: tr("Gia vị & nguyên liệu lành mạnh", "Clean-cooking seasonings & ingredients")
+        all: tr("Tất cả sản phẩm", "All products", "全部商品"),
+        meals: tr("Món nấu chín", "Ready meals", "熟食便当"),
+        snacks: tr("Đồ ăn nhẹ", "Healthy snacks", "健康零食"),
+        supplements: tr("Thực phẩm bổ sung", "Supplements", "营养补充"),
+        ingredients: tr("Gia vị & nguyên liệu", "Pantry & spices", "原料与调味")
       };
       return map[cat] || cat;
     }
@@ -687,27 +896,34 @@
     function renderHeader() {
       const viBtn = document.getElementById("btnLangVi");
       const enBtn = document.getElementById("btnLangEn");
+      const zhBtn = document.getElementById("btnLangZh");
 
       const searchInput = document.getElementById("headerSearch");
       if (searchInput) {
         searchInput.placeholder = tr(
-          "Tìm tên món, thành phần, dinh dưỡng (quinoa, cá hồi...)",
-          "Search meals, ingredients, nutrition (quinoa, salmon...)"
+          "Tìm món ăn, thành phần, dinh dưỡng (quinoa, cá hồi...)",
+          "Search meals, ingredients, nutrition (quinoa, salmon...)",
+          "搜索餐品、食材成分、营养指标（藜麦、三文鱼...）"
         );
         if (searchInput.value !== State.search) {
           searchInput.value = State.search;
         }
       }
-      if (isVi()) {
-        viBtn.className = "inline-flex min-h-[44px] items-center justify-center gap-1.5 rounded-full bg-[#234d38] px-3.5 py-2 text-xs font-semibold text-white";
-        viBtn.textContent = "✓ Tiếng Việt";
-        enBtn.className = "inline-flex min-h-[44px] items-center justify-center gap-1.5 rounded-full bg-transparent px-3.5 py-2 text-xs font-medium text-[#526348] hover:bg-[#e5edde]";
-        enBtn.textContent = "English";
-      } else {
-        enBtn.className = "inline-flex min-h-[44px] items-center justify-center gap-1.5 rounded-full bg-[#234d38] px-3.5 py-2 text-xs font-semibold text-white";
-        enBtn.textContent = "✓ English";
-        viBtn.className = "inline-flex min-h-[44px] items-center justify-center gap-1.5 rounded-full bg-transparent px-3.5 py-2 text-xs font-medium text-[#526348] hover:bg-[#e5edde]";
-        viBtn.textContent = "Tiếng Việt";
+      const curLang = State.language || "vi";
+      const activeCls = "inline-flex min-h-[38px] items-center justify-center gap-1 rounded-full bg-[#234d38] px-2.5 sm:px-3 py-1 text-xs font-semibold text-white shadow-xs transition-colors";
+      const idleCls = "inline-flex min-h-[38px] items-center justify-center gap-1 rounded-full bg-transparent px-2.5 sm:px-3 py-1 text-xs font-medium text-[#526348] hover:bg-[#e5edde] transition-colors";
+
+      if (viBtn) {
+        viBtn.className = curLang === "vi" ? activeCls : idleCls;
+        viBtn.textContent = curLang === "vi" ? "✓ Tiếng Việt" : "Tiếng Việt";
+      }
+      if (enBtn) {
+        enBtn.className = curLang === "en" ? activeCls : idleCls;
+        enBtn.textContent = curLang === "en" ? "✓ English" : "English";
+      }
+      if (zhBtn) {
+        zhBtn.className = curLang === "zh" ? activeCls : idleCls;
+        zhBtn.textContent = curLang === "zh" ? "✓ 简体中文" : "简体中文";
       }
 
       const cartCount = Object.values(State.cart).reduce((a, b) => a + b, 0);
@@ -716,20 +932,21 @@
 
       const isLoggedIn = !!NB_AUTH_USER;
       const isSeller = isLoggedIn && NB_AUTH_ROLE === "seller";
+      const isStaff = isLoggedIn && NB_AUTH_ROLE === "staff";
 
       const nav = document.getElementById("mainNav");
-      const navItem = (route, vi, en) => `
-        <a href="#/${route === 'shop' ? '' : route}" onclick="navigate('${route}')" class="inline-flex min-h-[44px] items-center rounded-full px-3.5 py-2 text-xs sm:text-sm font-medium whitespace-nowrap transition-colors ${State.route === route ? 'bg-[#234d38] text-white' : 'text-[#234d38] hover:bg-[#e5edde]'}">${tr(vi, en)}</a>
+      const navItem = (route, vi, en, zh) => `
+        <a href="#/${route === 'shop' ? '' : route}" onclick="navigate('${route}')" class="inline-flex min-h-[40px] items-center rounded-full px-3.5 py-2 text-xs sm:text-sm font-semibold whitespace-nowrap transition-colors ${State.route === route ? 'bg-[#234d38] text-white shadow-xs' : 'text-[#234d38] hover:bg-[#e8f5e9]'}">${tr(vi, en, zh)}</a>
       `;
 
-      const shopLink = navItem('shop', "Cửa hàng", "The shop");
+      const shopLink = navItem('shop', "Cửa hàng", "The shop", "商城首页");
 
       const buyerLinks = `
-        ${navItem('health', "Tính BMI & TDEE", "Health tools")}
-        ${navItem('advice', "Trợ lý dinh dưỡng", "Nutrition assistant")}
-        ${navItem('diary', "Nhật ký ăn", "Food diary")}
-        ${navItem('orders', "Đơn mua", "Your orders")}
-        ${navItem('account', "Tài khoản", "Account")}
+        ${navItem('health', "Tính BMI & TDEE", "Health tools", "BMI与热量")}
+        ${navItem('advice', "Trợ lý dinh dưỡng", "Nutrition assistant", "营养助手")}
+        ${navItem('diary', "Nhật ký ăn", "Food diary", "饮食日记")}
+        ${navItem('orders', "Đơn mua", "Your orders", "我的订单")}
+        ${navItem('account', "Tài khoản", "Account", "个人中心")}
       `;
 
       const sellerLinks = `
@@ -739,14 +956,21 @@
         ${navItem('account', "Tài khoản", "Account")}
       `;
 
+      const staffLinks = `
+        ${navItem('seller_orders', "Xử lý đơn", "Orders")}
+        ${navItem('manage', "Cập nhật kho", "Stock")}
+        ${navItem('account', "Tài khoản", "Account")}
+      `;
+
       if (nav) {
         if (!isLoggedIn) nav.innerHTML = shopLink + buyerLinks;
         else if (isSeller) nav.innerHTML = shopLink + sellerLinks;
+        else if (isStaff) nav.innerHTML = shopLink + staffLinks;
         else nav.innerHTML = shopLink + buyerLinks;
       }
 
       const cartButton = document.getElementById("headerCartButton");
-      if (cartButton) cartButton.style.display = isSeller ? "none" : "";
+      if (cartButton) cartButton.style.display = (isSeller || isStaff) ? "none" : "";
 
       const authButton = document.getElementById("authButton");
       if (authButton) {
@@ -1020,156 +1244,305 @@
       }).sort(nbSorter);
     }
 
+        // Dải khuyến mãi mỏng (~80px) đổi theo nội dung
+    function renderSlimPromoBanner() {
+      const promoMessages = [
+        {
+          icon: `<svg class="size-5 text-[#234d38]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 18H3c-.6 0-1-.4-1-1V7c0-.6.4-1 1-1h10c.6 0 1 .4 1 1v11"/><path d="M14 9h4l4 4v4c0 .6-.4 1-1 1h-2"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg>`,
+          text_vi: `<strong>Miễn phí giao hàng</strong> cho đơn từ 300.000 ₫ toàn quốc!`,
+          text_en: `<strong>Free shipping</strong> on all orders over 300,000 ₫ nationwide!`,
+          text_zh: `全境订单满 <strong>300,000 ₫</strong> 即享<strong>免费包邮</strong>！`,
+          badge: "FREESHIP300"
+        },
+        {
+          icon: `<svg class="size-5 text-[#ea580c]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>`,
+          text_vi: `<strong>Giảm 10%</strong> cho đơn ăn sạch đầu tiên với mã <strong>EATCLEAN</strong>`,
+          text_en: `<strong>10% OFF</strong> your first clean-eating order with code <strong>EATCLEAN</strong>`,
+          text_zh: `首单输入优惠码 <strong>EATCLEAN</strong> 即享 <strong>9折特惠</strong>`,
+          badge: "EATCLEAN"
+        },
+        {
+          icon: `<svg class="size-5 text-[#234d38]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`,
+          text_vi: `<strong>Giao hỏa tốc 2 giờ</strong> - Đóng gói sinh học giữ nóng tươi trọn vị`,
+          text_en: `<strong>Express 2-hour delivery</strong> - Eco-insulated packing for freshness`,
+          text_zh: `<strong>2小时同城极速达</strong> - 环保保温锁鲜包装`,
+          badge: "FAST2H"
+        }
+      ];
+      const idx = State.promoIndex || 0;
+      const cur = promoMessages[idx % promoMessages.length];
+
+      return `
+        <div class="relative z-10 mb-6 overflow-hidden rounded-2xl border border-[#dce2d4] bg-gradient-to-r from-[#e8f5e9] via-[#fff3e0] to-[#f4f6f0] p-3 sm:px-6 sm:py-3.5 shadow-xs flex items-center justify-between gap-3 min-h-[72px] sm:min-h-[80px]">
+          <div class="flex items-center gap-3 min-w-0">
+            <div class="flex size-10 shrink-0 items-center justify-center rounded-2xl bg-white shadow-xs">
+              ${cur.icon}
+            </div>
+            <p class="text-xs sm:text-sm text-[#234d38] font-medium truncate sm:whitespace-normal">
+              ${trf(cur.text_vi, cur.text_en, cur.text_zh)}
+            </p>
+          </div>
+          <div class="flex items-center gap-2 shrink-0">
+            <button type="button" onclick="navigator.clipboard?.writeText('${cur.badge}'); showToast('${tr("Đã sao chép mã ưu đãi: ", "Coupon copied: ", "已复制优惠码: ")}${cur.badge}')" 
+                    class="hidden sm:inline-flex min-h-[38px] items-center gap-1.5 rounded-xl border border-[#234d38]/20 bg-white/90 px-3 py-1.5 text-xs font-bold text-[#234d38] hover:bg-white shadow-xs transition-colors">
+              <span>${cur.badge}</span>
+              <svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+            </button>
+            <div class="flex items-center gap-1">
+              <button type="button" onclick="State.promoIndex=((${idx}-1+${promoMessages.length})%${promoMessages.length});renderAll()" class="flex size-8 items-center justify-center rounded-full bg-white/80 hover:bg-white text-[#234d38] shadow-xs" aria-label="Previous">
+                ‹
+              </button>
+              <button type="button" onclick="State.promoIndex=((${idx}+1)%${promoMessages.length});renderAll()" class="flex size-8 items-center justify-center rounded-full bg-white/80 hover:bg-white text-[#234d38] shadow-xs" aria-label="Next">
+                ›
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Carousel hàng cuộn ngang theo chủ đề (lướt ngang như Shopee)
+    function renderProductCarousel(id, title, subtitle, iconSvg, products) {
+      if (!products || !products.length) return "";
+      return `
+        <section class="relative z-10 mb-8">
+          <div class="mb-3.5 flex items-end justify-between gap-3">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="flex size-7 items-center justify-center rounded-xl bg-[#e8f5e9] text-[#234d38] shadow-xs">
+                  ${iconSvg}
+                </span>
+                <h2 class="text-base sm:text-lg font-bold text-[#234d38] font-heading tracking-tight">${title}</h2>
+              </div>
+              <p class="mt-0.5 text-xs text-[#626b5e]">${subtitle}</p>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <button type="button" onclick="const c=document.getElementById('${id}');if(c)c.scrollBy({left:-280,behavior:'smooth'})" class="flex size-8 items-center justify-center rounded-full border border-[#dce2d4] bg-white text-[#234d38] shadow-xs hover:bg-[#e8f5e9] transition-colors" aria-label="Scroll left">
+                ‹
+              </button>
+              <button type="button" onclick="const c=document.getElementById('${id}');if(c)c.scrollBy({left:280,behavior:'smooth'})" class="flex size-8 items-center justify-center rounded-full border border-[#dce2d4] bg-white text-[#234d38] shadow-xs hover:bg-[#e8f5e9] transition-colors" aria-label="Scroll right">
+                ›
+              </button>
+            </div>
+          </div>
+          <div id="${id}" class="flex gap-4 overflow-x-auto pb-4 pt-1 no-scrollbar scroll-smooth snap-x">
+            ${products.map(p => `
+              <div class="w-[230px] sm:w-[250px] flex-shrink-0 snap-start">
+                ${renderProductCard(p)}
+              </div>
+            `).join("")}
+          </div>
+        </section>
+      `;
+    }
+
     function renderShop() {
       const filtered = getFilteredProducts();
       const hasNutrientFilter = State.search !== "" || State.vitaminQuery !== "" || State.maxCalories !== "";
       const recommendations = filtered.filter(p => !isSample(p) && (p.vitamins_vi || p.calories_kcal !== null)).slice(0, 3);
 
+      // Định nghĩa 5 danh mục hình tròn màu pastel với biểu tượng SVG nét mảnh
+      const CATEGORY_CIRCLES = [
+        {
+          id: "all",
+          vi: "Tất cả món", en: "All items", zh: "全部菜单",
+          bg: "#f4f6f0",
+          border: "#dce2d4",
+          icon: `<svg class="size-6 text-[#234d38]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg>`
+        },
+        {
+          id: "meals",
+          vi: "Món chín", en: "Ready meals", zh: "熟食便当",
+          bg: "#e8f5e9",
+          border: "#c8e6c9",
+          icon: `<svg class="size-6 text-[#234d38]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21a9 9 0 0 0 9-9H3a9 9 0 0 0 9 9Z"/><path d="M7 8v2"/><path d="M12 7v3"/><path d="M17 8v2"/></svg>`
+        },
+        {
+          id: "snacks",
+          vi: "Đồ ăn nhẹ", en: "Snacks", zh: "健康零食",
+          bg: "#fff3e0",
+          border: "#ffe0b2",
+          icon: `<svg class="size-6 text-[#ea580c]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="9" cy="9" r="1.5" fill="currentColor"/><circle cx="15" cy="10" r="1" fill="currentColor"/><circle cx="10" cy="15" r="1" fill="currentColor"/><circle cx="14" cy="14" r="1.5" fill="currentColor"/></svg>`
+        },
+        {
+          id: "supplements",
+          vi: "Bổ sung", en: "Supplements", zh: "营养补充",
+          bg: "#e0f2fe",
+          border: "#bae6fd",
+          icon: `<svg class="size-6 text-[#0284c7]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/></svg>`
+        },
+        {
+          id: "ingredients",
+          vi: "Gia vị", en: "Spices", zh: "烹饪佐料",
+          bg: "#fef9c3",
+          border: "#fef08a",
+          icon: `<svg class="size-6 text-[#ca8a04]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>`
+        }
+      ];
+
+      // Dữ liệu cho 3 hàng cuộn ngang Shopee
+      const bestSellers = State.products.filter(p => (p.tag_badge === 'bestseller' || [1, 3, 8, 10].includes(p.id)) && !isSample(p));
+      const todayDeals = State.products.filter(p => ((p.original_price_vnd && p.original_price_vnd > p.price_vnd) || p.tag_badge === 'near_expiry' || [2, 5, 7].includes(p.id)));
+      const newArrivals = State.products.filter(p => (p.tag_badge === 'new' || [4, 6, 9].includes(p.id)) && !isSample(p));
+
+      const isDefaultView = State.category === "all" && !hasNutrientFilter;
+
       return `
     <section id="catalog" class="relative overflow-hidden mx-auto w-full max-w-[1440px] scroll-mt-28 px-4 pb-12 pt-4 sm:px-8 sm:pt-6 lg:px-16">
-      <!-- Họa tiết lá và hoa SVG mờ ở góc đầu trang sản phẩm -->
-      <svg class="pointer-events-none select-none absolute -right-10 top-2 size-48 text-[#234d38] opacity-[0.07]" viewBox="0 0 180 180" fill="currentColor" aria-hidden="true">
-        <path d="M150 25 C85 25, 35 75, 35 145 C105 145, 150 95, 150 25 Z"/>
-        <path d="M40 140 C75 105, 110 70, 145 30" stroke="#fafaf5" stroke-width="4" stroke-linecap="round"/>
+      <!-- Họa tiết lá xanh nhạt nền nhẹ nhàng, không che chữ -->
+      <svg class="pointer-events-none select-none absolute -right-6 top-2 size-36 text-[#88b394] opacity-20" viewBox="0 0 180 180" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+        <path d="M150 25 C85 25, 35 75, 35 145 C105 145, 150 95, 150 25 Z" fill="#e8f5e9"/>
       </svg>
-      <svg class="pointer-events-none select-none absolute -left-10 top-28 size-44 text-[#f0925a] opacity-[0.08]" viewBox="0 0 160 160" fill="currentColor" aria-hidden="true">
-        <circle cx="80" cy="38" r="22"/><circle cx="122" cy="80" r="22"/><circle cx="80" cy="122" r="22"/><circle cx="38" cy="80" r="22"/>
-        <circle cx="80" cy="80" r="16" fill="#e27d8a"/>
+      <svg class="pointer-events-none select-none absolute -left-6 top-32 size-32 text-[#88b394] opacity-20" viewBox="0 0 160 160" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+        <path d="M20 140 C20 60, 80 20, 140 20 C140 80, 100 140, 20 140 Z" fill="#e8f5e9"/>
       </svg>
 
-      <!-- Hàng chip danh mục hiển thị ngay đầu trang (mỗi danh mục 1 màu riêng, chip đang chọn đậm hơn) -->
-      <div class="relative z-10 mb-4 flex items-center gap-2 overflow-x-auto pb-1.5 no-scrollbar sm:flex-wrap sm:overflow-visible">
-        ${["all", "meals", "snacks", "supplements", "ingredients"].map(cat => {
-        const th = nbCategoryTheme(cat);
-        const active = State.category === cat;
-        return `
-          <button onclick="State.category='${cat}';renderAll()" class="inline-flex min-h-[40px] sm:min-h-[44px] items-center whitespace-nowrap rounded-full border px-4 sm:px-5 py-1.5 sm:py-2 text-xs font-medium transition-all ${active ? th.chipActive : th.chipIdle}">
-            ${categoryName(cat)}
-          </button>`;
-      }).join("")}
-        ${hasNutrientFilter ? `<button type="button" onclick="State.search='';State.vitaminQuery='';State.maxCalories='';renderAll()" class="inline-flex min-h-[40px] items-center justify-center whitespace-nowrap rounded-full border border-[#f0925a] bg-[#fde8d8] px-4 py-1.5 text-xs font-semibold text-[#5e2a0d] hover:bg-[#fbd5bb] transition-colors">✕ ${tr("Xóa bộ lọc", "Clear all filters")}</button>` : ''}
+      <!-- Dải khuyến mãi mỏng (~80px) ngay trên lưới sản phẩm, thay thế hero cũ -->
+      ${renderSlimPromoBanner()}
+
+      <!-- Hàng biểu tượng danh mục tròn màu pastel với hình bên trong -->
+      <div class="relative z-10 mb-6 flex items-center justify-start sm:justify-center gap-4 sm:gap-8 overflow-x-auto pb-2 no-scrollbar">
+        ${CATEGORY_CIRCLES.map(cat => {
+          const active = State.category === cat.id;
+          return `
+            <button type="button" onclick="State.category='${cat.id}';renderAll()" 
+                    class="group flex flex-col items-center gap-2 focus:outline-none flex-shrink-0 cursor-pointer">
+              <div class="size-16 sm:size-20 rounded-full flex items-center justify-center transition-all duration-300 border-2 ${active ? 'border-[#234d38] ring-4 ring-[#e8f5e9] shadow-md scale-105' : 'border-transparent hover:scale-105 shadow-xs'}" 
+                   style="background-color: ${cat.bg};">
+                ${cat.icon}
+              </div>
+              <span class="text-xs sm:text-sm font-semibold transition-colors ${active ? 'text-[#234d38] font-bold' : 'text-[#526348] group-hover:text-[#234d38]'}">
+                ${tr(cat.vi, cat.en, cat.zh)}
+              </span>
+            </button>
+          `;
+        }).join("")}
+        ${hasNutrientFilter ? `
+          <button type="button" onclick="State.search='';State.vitaminQuery='';State.maxCalories='';renderAll()" 
+                  class="flex flex-col items-center gap-2 focus:outline-none flex-shrink-0">
+            <div class="size-16 sm:size-20 rounded-full flex items-center justify-center bg-[#fde8d8] border-2 border-[#f0925a] shadow-xs hover:scale-105 transition-all text-[#ea580c]">
+              <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6 6 18M6 6l12 12"/></svg>
+            </div>
+            <span class="text-xs font-semibold text-[#ea580c]">${tr("Xóa lọc", "Clear", "清除筛选")}</span>
+          </button>
+        ` : ''}
       </div>
 
-      <!-- Bộ lọc gọn (thu gọn trên màn hình nhỏ để thấy ngay lưới sản phẩm trên điện thoại) -->
-      <details class="relative z-10 mb-5 rounded-2xl border border-[#dce2d4] bg-white/90 px-4 py-3">
-        <summary class="cursor-pointer list-none flex flex-wrap items-center justify-between gap-2 text-xs sm:text-sm font-semibold text-[#234d38]">
-          <span>🎛️ ${tr("Bộ lọc dinh dưỡng, chế độ ăn & sắp xếp", "Nutrition, diet & sort filters")}</span>
-          <span class="text-xs font-normal text-[#526348]">${tr("Chạm để mở / thu gọn", "Tap to expand / collapse")} ▾</span>
+      <!-- Bộ lọc gọn (thu gọn dạng dropdown) -->
+      <details class="relative z-10 mb-6 rounded-2xl border border-[#dce2d4] bg-white px-4 py-3 shadow-xs">
+        <summary class="cursor-pointer list-none flex flex-wrap items-center justify-between gap-2 text-xs sm:text-sm font-bold text-[#234d38] font-heading">
+          <span class="flex items-center gap-2">
+            <svg class="size-4 text-[#234d38]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" x2="4" y1="21" y2="14"/><line x1="4" x2="4" y1="10" y2="3"/><line x1="12" x2="12" y1="21" y2="12"/><line x1="12" x2="12" y1="8" y2="3"/><line x1="20" x2="20" y1="21" y2="16"/><line x1="20" x2="20" y1="12" y2="3"/><line x1="1" x2="7" y1="14" y2="14"/><line x1="9" x2="15" y1="8" y2="8"/><line x1="17" x2="23" y1="16" y2="16"/></svg>
+            ${tr("Bộ lọc dinh dưỡng, calo & sắp xếp", "Nutrition, calories & sort filters", "营养指标、热量与排序")}
+          </span>
+          <span class="text-xs font-normal text-[#526348]">${tr("Mở / Thu gọn ▾", "Expand / Collapse ▾", "展开 / 折叠 ▾")}</span>
         </summary>
         <div class="mt-4 space-y-4 border-t border-[#e8ece2] pt-4">
           <div class="grid w-full grid-cols-1 gap-3 sm:grid-cols-2">
             <div>
-              <label for="vitamin-query" class="mb-1 block text-xs font-medium text-[#434f3d]">${tr("Vitamin cần tìm", "Vitamin statement query")}</label>
+              <label for="vitamin-query" class="mb-1 block text-xs font-medium text-[#434f3d]">${tr("Vitamin cần tìm", "Vitamin statement query", "所需维生素/微量元素")}</label>
               <input id="vitamin-query" type="search" value="${esc(State.vitaminQuery)}" oninput="State.vitaminQuery=this.value;renderAll()" placeholder="Vitamin C / Vitamin B12 / Omega-3" class="min-h-[42px] w-full rounded-xl border border-[#dce2d4] bg-white px-4 py-2 text-sm text-[#30382e]">
             </div>
             <div>
-              <label for="max-calories" class="mb-1 block text-xs font-medium text-[#434f3d]">${tr("Kcal tối đa / khẩu phần", "Maximum kcal / serving")}</label>
-              <input id="max-calories" type="number" min="0" value="${esc(State.maxCalories)}" oninput="State.maxCalories=this.value;renderAll()" placeholder="${tr("Không giới hạn (VD: 260)", "No limit (e.g. 260)")}" class="min-h-[42px] w-full rounded-xl border border-[#dce2d4] bg-white px-4 py-2 text-sm text-[#30382e]">
+              <label for="max-calories" class="mb-1 block text-xs font-medium text-[#434f3d]">${tr("Kcal tối đa / khẩu phần", "Maximum kcal / serving", "最高热量 / 每份 (Kcal)")}</label>
+              <input id="max-calories" type="number" min="0" value="${esc(State.maxCalories)}" oninput="State.maxCalories=this.value;renderAll()" placeholder="${tr("Không giới hạn (VD: 260)", "No limit (e.g. 260)", "不限 (如: 260)")}" class="min-h-[42px] w-full rounded-xl border border-[#dce2d4] bg-white px-4 py-2 text-sm text-[#30382e]">
             </div>
           </div>
           ${renderHealthyFilters()}
         </div>
       </details>
 
-      ${hasNutrientFilter ? `
-        <section class="relative z-10 mb-6 rounded-2xl border border-[#cfe8d5] bg-[#e3f3e7]/60 p-4 sm:p-5">
-          <h3 class="text-base sm:text-lg font-semibold text-[#234d38]">${tr("Gợi ý phù hợp", "Matching recommendations")}</h3>
-          <p class="mb-3 mt-1 text-xs leading-5 text-[#526348]">${tr("Xếp theo độ khớp thông tin dinh dưỡng / thành phần đã cung cấp. Sản phẩm mẫu không đưa vào gợi ý dinh dưỡng.", "Ranked by matches to supplied nutrition / ingredient text. Sample inventory is excluded.")}</p>
-          ${recommendations.length ? `
-            <div class="grid grid-cols-1 gap-3 md:grid-cols-3">
-              ${recommendations.map(r => `
-                <article class="rounded-2xl border border-[#cfe8d5] bg-white p-4">
-                  <a href="#/products/${r.id}" onclick="navigate('detail', ${r.id})" class="text-sm font-semibold text-[#234d38] hover:underline">${pname(r)}</a>
-                  <p class="mt-1.5 text-xs leading-5 text-[#526348]">🔥 ${r.calories_kcal} kcal · ${r.protein_g}g ${tr("đạm", "protein")}<br>${esc(trf(r.vitamins_vi, r.vitamins_en))}</p>
-                </article>
-              `).join("")}
-            </div>
-          ` : `<p class="rounded-xl border border-[#dce2d4] bg-white p-4 text-sm text-[#626b5e]">${tr("Chưa có gợi ý dinh dưỡng khớp bộ lọc hiện tại.", "No recommendations with matching supplied nutrient facts.")}</p>`}
-        </section>
+      <!-- Hàng cuộn ngang theo chủ đề (lướt ngang như Shopee) khi ở chế độ xem mặc định -->
+      ${isDefaultView ? `
+        <!-- Hàng 1: Bán chạy tuần này -->
+        ${renderProductCarousel(
+          "carousel_bestsellers",
+          tr("Bán chạy tuần này", "Best Sellers This Week", "本周热销榜"),
+          tr("Các món dinh dưỡng được khách hàng yêu thích và đặt nhiều nhất", "Top nutrition picks ordered most by our community", "最受健康食客喜爱的复购口碑美味"),
+          `<svg class="size-4 text-[#ea580c]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>`,
+          bestSellers
+        )}
+
+        <!-- Hàng 2: Giảm giá hôm nay -->
+        ${renderProductCarousel(
+          "carousel_todaydeals",
+          tr("Giảm giá hôm nay", "Today's Hot Deals", "今日特惠秒杀"),
+          tr("Ưu đãi đặc biệt và món sắp hết hạn với giá tiết kiệm", "Special discounts and near-expiry food saving opportunities", "限时折扣与临期特惠，美味不浪费"),
+          `<svg class="size-4 text-[#7c3aed]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`,
+          todayDeals
+        )}
+
+        <!-- Hàng 3: Món mới cập nhật -->
+        ${renderProductCarousel(
+          "carousel_newarrivals",
+          tr("Món mới cập nhật", "Fresh Arrivals", "全新上市菜品"),
+          tr("Thực đơn bổ sung mới, thanh lành và giàu dinh dưỡng", "Newly crafted healthy meals and snacks for your diet", "主厨精制健康新菜单，尝鲜正当时"),
+          `<svg class="size-4 text-[#16a34a]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>`,
+          newArrivals
+        )}
       ` : ''}
 
+      <!-- Tiêu đề danh mục lưới sản phẩm -->
+      <div class="relative z-10 mb-4 flex items-center justify-between">
+        <h2 class="text-lg sm:text-xl font-bold text-[#234d38] font-heading">
+          ${State.category === "all" ? tr("Tất cả thực đơn", "All Menu Items", "所有菜单商品") : categoryName(State.category)}
+          <span class="ml-1 text-xs font-normal text-[#626b5e]">(${filtered.length} ${tr("món", "items", "款")})</span>
+        </h2>
+      </div>
+
+      <!-- Lưới sản phẩm 4 cột trên máy tính để thấy 2 hàng mỗi màn hình -->
       ${State.loading ? `
         <div class="relative z-10 mb-4 flex items-center gap-2 text-sm text-[#557448]">
           <span class="inline-block size-4 animate-spin rounded-full border-2 border-[#234d38] border-t-transparent"></span>
-          <span>${nbT("Đang tải danh sách sản phẩm...", "Loading product catalog...")}</span>
+          <span>${nbT("Đang tải danh sách món ăn...", "Loading catalog...", "正在加载商品列表...")}</span>
         </div>
-        <div class="relative z-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          ${renderSkeletonCards(6)}
+        <div class="relative z-10 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 sm:gap-5">
+          ${renderSkeletonCards(8)}
         </div>
       ` : (filtered.length ? `
-        <div class="relative z-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div class="relative z-10 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 sm:gap-5">
           ${filtered.map(renderProductCard).join("")}
         </div>
       ` : `
-        <div class="relative z-10 rounded-2xl border border-[#dce2d4] bg-white px-6 py-16 text-center">
-          <h3 class="text-lg font-medium text-[#234d38]">${tr("Không tìm thấy sản phẩm", "No products found")}</h3>
-          <button onclick="State.search='';State.vitaminQuery='';State.maxCalories='';State.category='all';renderAll()" class="mt-4 inline-flex min-h-[44px] items-center justify-center rounded-full bg-[#234d38] px-5 py-2.5 text-sm text-white hover:bg-[#173a29] transition-colors">${tr("Xóa bộ lọc / thử lại", "Clear filters / retry")}</button>
+        <!-- Trạng thái trống khi tìm kiếm không thấy món -->
+        <div class="relative z-10 mx-auto max-w-lg rounded-3xl border border-[#dce2d4] bg-white p-8 sm:p-12 text-center shadow-xs my-8">
+          <div class="mb-5 flex size-24 mx-auto items-center justify-center rounded-full bg-[#f4f6f0]">
+            <svg class="size-12 text-[#526348] opacity-70" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/><path d="M11 8v6M8 11h6"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-[#234d38] font-heading">${tr("Không tìm thấy món ăn phù hợp", "No matching products found", "未找到符合条件的餐品")}</h3>
+          <p class="mt-2 text-xs sm:text-sm text-[#626b5e] leading-relaxed max-w-sm mx-auto">
+            ${tr("Thử tìm kiếm với từ khóa khác như 'quinoa', 'cá hồi', 'bơ', 'granola' hoặc xóa bộ lọc hiện tại.", "Try searching with keywords like 'quinoa', 'salmon', 'avocado' or clear your filters.", "可尝试搜索'藜麦'、'三文鱼'、'牛油果'或清除当前筛选条件。")}
+          </p>
+          <div class="mt-6 flex flex-wrap items-center justify-center gap-3">
+            <button onclick="State.search='';State.vitaminQuery='';State.maxCalories='';State.category='all';renderAll()" 
+                    class="inline-flex min-h-[44px] items-center justify-center gap-2 rounded-xl bg-[#234d38] px-6 py-2.5 text-xs sm:text-sm font-bold text-white shadow-xs hover:bg-[#193a2a] transition-all">
+              ${tr("Xem tất cả sản phẩm", "View all products", "查看全部商品")}
+            </button>
+          </div>
         </div>
       `)}
 
-      <div class="relative z-10 mt-8 flex items-start gap-3 rounded-xl border border-[#cfe8d5] bg-[#e3f3e7]/50 p-4 text-xs leading-5 text-[#234d38]">
-        <span>ℹ️</span>
+      <div class="relative z-10 mt-8 flex items-start gap-3 rounded-2xl border border-[#dce2d4] bg-[#e8f5e9]/50 p-4 text-xs leading-5 text-[#234d38]">
+        <span class="flex size-6 shrink-0 items-center justify-center rounded-full bg-[#e8f5e9] text-[#234d38] font-bold">ℹ</span>
         <p>
-          <strong>${tr("Lưu ý về sản phẩm MẪU. ", "About products marked SAMPLE. ")}</strong>
+          <strong>${tr("Lưu ý về sản phẩm MẪU: ", "About items marked SAMPLE: ", "关于标注为样品的商品：")}</strong>
           ${tr(
-        "Các món thực đơn chính của Bitfe (Quinoa bowl, Cá hồi gạo lứt, Salad ức gà, Tôm áp chảo, Granola, Bột đạm...) là hàng thực có tồn kho để đặt mua ngay. Riêng các mục gắn nhãn SAMPLE INVENTORY / SẢN PHẨM MẪU chỉ minh họa danh mục (Chủ cửa hàng có thể xuất bản thành hàng thật trong mục Quản lý sản phẩm).",
-        "Main Bitfe menu items are real purchasable inventory. Items marked SAMPLE INVENTORY illustrate categories only (the store owner can publish them as real products in Manage products)."
-      )}
+            "Các món thực đơn chính (Quinoa bowl, Cá hồi gạo lứt, Salad ức gà, Tôm áp chảo, Granola, Bột đạm...) là hàng thực có tồn kho để đặt mua ngay. Riêng các mục gắn nhãn MẪU chỉ minh họa danh mục.",
+            "Main menu items are real purchasable inventory. Items marked SAMPLE illustrate categories only.",
+            "主菜单商品（藜麦碗、三文鱼、鸡胸肉沙拉、香煎大虾等）均为在库现售商品；标注为样品的商品仅用于分类展示。"
+          )}
         </p>
       </div>
     </section>
 
-    <!-- Khối Hero chuyển xuống cuối trang với nền gradient nhẹ từ kem sang mint/cam đào nhạt -->
-    <section class="relative overflow-hidden border-t border-[#cfe8d5] bg-gradient-to-br from-[#fafaf5] via-[#cfe8d5]/45 to-[#f0925a]/20">
-      <svg class="pointer-events-none select-none absolute -left-10 -top-10 size-52 text-[#234d38] opacity-[0.07]" viewBox="0 0 180 180" fill="currentColor" aria-hidden="true">
-        <path d="M25 155 C25 75, 85 25, 155 25 C155 95, 105 155, 25 155 Z"/>
-      </svg>
-      <div class="relative z-10 mx-auto w-full max-w-[1440px] px-5 py-10 sm:px-8 lg:px-16 lg:py-14">
-        <div class="grid grid-cols-1 items-center gap-8 lg:grid-cols-2 lg:gap-16">
-          <div class="flex flex-col justify-center py-4 lg:py-10">
-            <div class="mb-6 flex items-center gap-2.5 text-[11px] font-semibold tracking-[0.16em] text-[#234d38]">
-              <span class="size-2 rounded-full bg-[#f0925a]"></span>
-              ${tr("MỘT CHÚT LÀNH, MỖI NGÀY", "A LITTLE GOODNESS, EVERY DAY")}
-            </div>
-            <h1 class="text-5xl font-medium leading-[1.09] tracking-[-0.045em] text-[#234d38] sm:text-6xl lg:text-[72px]">
-              ${tr("Ăn lành hơn.", "Good food.")}<br>
-              <span class="text-[#557448]">${tr("Sống nhẹ hơn.", "Better days.")}</span>
-            </h1>
-            <p class="mt-6 max-w-md text-base leading-7 text-[#434f3d]">
-              ${tr(
-        "Khám phá món nấu chín ăn ngay, món ăn nhẹ lành mạnh, thực phẩm bổ sung và gia vị/nguyên liệu lành mạnh với bảng thành phần dinh dưỡng minh bạch.",
-        "Explore store-cooked meals ready to eat immediately after cooking, healthy snacks, supplements and clean-cooking seasonings/ingredients."
-      )}
-            </p>
-            <div class="mt-8 flex flex-wrap items-center gap-5">
-              <a href="#catalog" class="inline-flex min-h-[48px] items-center justify-center gap-3 rounded-full bg-[#234d38] px-6 py-3.5 text-sm font-semibold text-white hover:bg-[#173a29] transition-colors">
-                ${tr("Khám phá cửa hàng", "Explore the shop")} ↑
-              </a>
-              <button onclick="navigate('health')" class="inline-flex min-h-[48px] items-center justify-center rounded-full border border-[#234d38]/25 bg-white px-5 py-3.5 text-sm font-medium text-[#234d38] hover:bg-[#cfe8d5]/50 transition-colors">
-                📏 ${tr("Tính BMI & TDEE", "BMI & TDEE Calculator")}
-              </button>
-            </div>
-            <div class="mt-10 flex items-center gap-2 text-xs text-[#234d38]">
-              🌿 ${tr("Nguyên liệu quen thuộc", "Real, familiar ingredients")} · ${tr("Thông tin rõ ràng", "Transparent nutrition")}
-            </div>
-          </div>
-
-          <div class="relative min-w-0">
-            <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=1400&q=90" alt="Healthy bowl" class="h-[320px] w-full rounded-[28px] object-cover sm:h-[410px] lg:h-[480px] shadow-md">
-            <div class="absolute bottom-5 left-5 right-5 flex items-center gap-3 rounded-2xl border border-white/80 bg-[#fafaf5]/95 p-4 sm:left-7 sm:right-auto sm:pr-8">
-              <span class="flex size-12 items-center justify-center rounded-full bg-[#cfe8d5] text-[#234d38] text-xl">🍃</span>
-              <div>
-                <p class="text-sm font-semibold text-[#234d38]">${tr("Từ thiên nhiên, đến bàn ăn", "From nature, to your table")}</p>
-                <p class="mt-1 text-xs text-[#626b5e]">${tr("Từng lựa chọn, một chút cân bằng", "A little balance in every choice")}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <div class="flex flex-wrap items-center justify-center gap-2 border-y border-[#cfe8d5] bg-[#cfe8d5]/45 px-5 py-4 text-xs font-medium text-[#234d38]">
-      🚚 ${tr("Giao hàng tại Việt Nam", "Delivery within Vietnam")} <span class="mx-2">·</span> ${tr("Phí 30.000 ₫ · Miễn phí từ 300.000 ₫", "30,000 ₫ delivery · Free over 300,000 ₫")}
+    <!-- Dải giao hàng chân trang tinh gọn -->
+    <div class="flex flex-wrap items-center justify-center gap-2 border-y border-[#dce2d4] bg-[#e8f5e9]/40 px-5 py-3 text-xs font-semibold text-[#234d38]">
+      <svg class="size-4 text-[#234d38]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 18H3c-.6 0-1-.4-1-1V7c0-.6.4-1 1-1h10c.6 0 1 .4 1 1v11"/><path d="M14 9h4l4 4v4c0 .6-.4 1-1 1h-2"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg>
+      <span>${tr("Giao hàng tận nơi toàn quốc", "Nationwide express delivery", "全国快捷送达")}</span>
+      <span class="mx-2 text-[#88b394]">·</span>
+      <span>${tr("Phí 30.000 ₫ · Miễn phí giao từ 300.000 ₫", "30,000 ₫ fee · Free on orders over 300,000 ₫", "基础运费 30,000 ₫ · 订单满 300,000 ₫ 享包邮")}</span>
     </div>
   `;
     }
@@ -1281,6 +1654,80 @@
         })
         .filter(Boolean);
     }
+        // Thanh tiến trình 3 bước cho Giỏ hàng & Thanh toán
+    function renderCheckoutSteps(activeStep = 1) {
+      const steps = [
+        { num: 1, vi: "Giỏ hàng", en: "Shopping bag", zh: "购物车", route: "cart" },
+        { num: 2, vi: "Giao hàng", en: "Delivery", zh: "配送信息", route: "checkout" },
+        { num: 3, vi: "Thanh toán", en: "Payment", zh: "支付确认", route: "checkout" }
+      ];
+
+      return `
+        <div class="mb-8 w-full max-w-xl mx-auto px-4">
+          <div class="relative flex items-center justify-between">
+            <div class="absolute left-6 right-6 top-1/2 -translate-y-1/2 h-0.5 bg-[#dce2d4] -z-0"></div>
+            <div class="absolute left-6 top-1/2 -translate-y-1/2 h-0.5 bg-[#234d38] transition-all duration-300 -z-0" style="width: ${activeStep === 1 ? '0%' : activeStep === 2 ? '50%' : '100%'}"></div>
+            ${steps.map(s => {
+              const isDone = s.num < activeStep;
+              const isCurrent = s.num === activeStep;
+              return `
+                <div class="relative z-10 flex flex-col items-center">
+                  <button type="button" ${s.num <= activeStep ? `onclick="navigate('${s.route}')"` : 'disabled'}
+                          class="flex size-10 items-center justify-center rounded-full font-bold text-xs transition-all ${
+                            isCurrent 
+                              ? 'bg-[#234d38] text-white ring-4 ring-[#e8f5e9] shadow-sm' 
+                              : isDone 
+                                ? 'bg-[#234d38] text-white' 
+                                : 'bg-white border-2 border-[#dce2d4] text-[#8c9488]'
+                          }">
+                    ${isDone ? `<svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><polyline points="20 6 9 17 4 12"/></svg>` : s.num}
+                  </button>
+                  <span class="mt-2 text-xs font-semibold whitespace-nowrap ${isCurrent ? 'text-[#234d38] font-bold' : isDone ? 'text-[#234d38]' : 'text-[#8c9488]'}">
+                    ${tr(s.vi, s.en, s.zh)}
+                  </span>
+                </div>
+              `;
+            }).join("")}
+          </div>
+        </div>
+      `;
+    }
+
+    // Dải tin cậy: Giao nhanh, Nguyên liệu rõ nguồn, Đổi trả dễ
+    function renderTrustBadges() {
+      return `
+        <div class="mt-6 rounded-2xl border border-[#dce2d4] bg-[#f4f6f0] p-4 space-y-3">
+          <div class="flex items-center gap-3">
+            <div class="flex size-9 shrink-0 items-center justify-center rounded-xl bg-[#e8f5e9] text-[#234d38] shadow-xs">
+              <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 18H3c-.6 0-1-.4-1-1V7c0-.6.4-1 1-1h10c.6 0 1 .4 1 1v11"/><path d="M14 9h4l4 4v4c0 .6-.4 1-1 1h-2"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg>
+            </div>
+            <div>
+              <p class="text-xs font-bold text-[#234d38] font-heading">${tr("Giao nhanh trong 2h", "Fast 2-hour delivery", "2小时闪电发货")}</p>
+              <p class="text-[11px] text-[#626b5e]">${tr("Đóng gói sinh học giữ nóng tươi chuẩn vị", "Eco-insulated pack keeping food fresh", "环保保温包装，锁住新鲜")}</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="flex size-9 shrink-0 items-center justify-center rounded-xl bg-[#e8f5e9] text-[#234d38] shadow-xs">
+              <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+            </div>
+            <div>
+              <p class="text-xs font-bold text-[#234d38] font-heading">${tr("Nguyên liệu rõ nguồn gốc", "100% Traceable ingredients", "源头可溯有机食材")}</p>
+              <p class="text-[11px] text-[#626b5e]">${tr("Đạt chuẩn hữu cơ VietGAP & GlobalGAP", "Certified organic & clean origin", "国家安全有机标准认证")}</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="flex size-9 shrink-0 items-center justify-center rounded-xl bg-[#e8f5e9] text-[#234d38] shadow-xs">
+              <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><polyline points="21 3 21 8 16 8"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><polyline points="8 16 3 16 3 21"/></svg>
+            </div>
+            <div>
+              <p class="text-xs font-bold text-[#234d38] font-heading">${tr("Đổi trả dễ dàng 24h", "Hassle-free 24h returns", "24小时无忧退换")}</p>
+              <p class="text-[11px] text-[#626b5e]">${tr("Hoàn tiền 100% nếu không hài lòng chất lượng", "100% money back if not satisfied", "品质不符承诺100%原路退款")}</p>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
     function renderCart() {
       const items = getCartItems();
       const selected = items.filter(i => i.selected);
@@ -1289,59 +1736,113 @@
       const allSelected = items.length > 0 && items.every(i => i.selected);
 
       return `
-    <div class="mx-auto w-full max-w-[1440px] px-5 py-10 sm:px-8 lg:px-16">
-      <p class="text-[10px] font-semibold tracking-widest text-[#648358]">${tr("CHỌN LÀNH, ĂN NGON", "YOUR EVERYDAY GOODNESS")}</p>
-      <h1 class="mb-3 mt-3 text-4xl font-medium tracking-tight text-[#234d38]">${tr("Giỏ hàng của bạn", "Your shopping bag")}</h1>
-      <p class="mb-7 text-sm text-[#626b5e]">${tr("Kiểm tra sản phẩm, số lượng và tổng tiền trước khi thanh toán.", "Review products, quantities and totals before checkout.")}</p>
+    <div class="mx-auto w-full max-w-[1440px] px-4 py-8 sm:px-8 sm:py-10 lg:px-16 pb-24 sm:pb-12">
+      <!-- Thanh tiến trình 3 bước -->
+      ${renderCheckoutSteps(1)}
+
+      <div class="mb-6">
+        <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-[#234d38] font-heading">${tr("Giỏ hàng của bạn", "Your shopping bag", "您的购物车")}</h1>
+        <p class="mt-1 text-xs sm:text-sm text-[#626b5e]">${tr("Kiểm tra sản phẩm, khẩu phần dinh dưỡng và tổng tiền trước khi đặt hàng.", "Review items, nutrition facts and totals before ordering.", "在下单前核对餐品清单、营养成分与应付金额。")}</p>
+      </div>
 
       ${items.length ? `
-        <div class="grid w-full grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_360px]">
-          <div class="min-w-0 rounded-2xl border border-[#dce2d4] bg-white px-5 pb-6 sm:px-7">
-            <button onclick="toggleAllCart(${!allSelected})" class="mt-5 inline-flex min-h-[44px] items-center gap-3 rounded-full border border-[#dce2d4] bg-[#eef2e8] px-4 py-2 text-sm text-[#234d38] hover:bg-[#e5edde] transition-colors">
-              <span>${allSelected ? '☑️' : '⬜'}</span> ${tr("Chọn / bỏ chọn tất cả", "Select / deselect all")}
-            </button>
-            <p class="mt-3 text-xs text-[#626b5e]">${tr("Mục chưa chọn vẫn ở trong giỏ hàng; chỉ mục đã chọn được thanh toán.", "Unselected items stay in your bag; only selected items go to checkout.")}</p>
+        <div class="grid w-full grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_380px]">
+          <div class="min-w-0 rounded-2xl border border-[#dce2d4] bg-white px-4 pb-6 sm:px-7 shadow-xs">
+            <div class="flex items-center justify-between border-b border-[#e3e7da] py-4">
+              <button onclick="toggleAllCart(${!allSelected})" class="inline-flex min-h-[40px] items-center gap-2.5 rounded-xl border border-[#dce2d4] bg-[#f4f6f0] px-3.5 py-1.5 text-xs font-semibold text-[#234d38] hover:bg-[#e8f5e9] transition-colors cursor-pointer">
+                <span class="flex size-4 items-center justify-center rounded border ${allSelected ? 'border-[#234d38] bg-[#234d38] text-white' : 'border-[#8c9488] bg-white'}">
+                  ${allSelected ? `<svg class="size-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>` : ''}
+                </span>
+                <span>${tr("Chọn / Bỏ chọn tất cả", "Select / Deselect all", "全选 / 取消全选")}</span>
+              </button>
+              <span class="text-xs text-[#626b5e]">${selected.length}/${items.length} ${tr("món đã chọn", "selected", "已选中")}</span>
+            </div>
+
             ${items.map(item => `
-              <article class="flex flex-wrap items-start gap-3 sm:gap-4 border-b border-[#e3e7da] py-5 sm:py-6 last:border-b-0 sm:flex-nowrap">
-                <button onclick="State.cartSelection[${item.id}]=!${item.selected};saveStorage();renderAll()" class="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg bg-white p-2 text-lg text-[#234d38]" aria-label="select">${item.selected ? '☑️' : '⬜'}</button>
-                <img src="${imgSrc(item)}" alt="${pname(item)}" class="size-20 rounded-xl object-cover sm:size-24">
+              <article class="flex flex-wrap items-start gap-3 sm:gap-4 border-b border-[#e3e7da] py-4 sm:py-5 last:border-b-0 sm:flex-nowrap">
+                <button onclick="State.cartSelection[${item.id}]=!${item.selected};saveStorage();renderAll()" 
+                        class="mt-2 inline-flex size-5 items-center justify-center rounded border transition-colors cursor-pointer ${item.selected ? 'border-[#234d38] bg-[#234d38] text-white' : 'border-[#8c9488] bg-white'}" 
+                        aria-label="select">
+                  ${item.selected ? `<svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>` : ''}
+                </button>
+                <img src="${imgSrc(item)}" alt="${pname(item)}" class="size-20 rounded-2xl object-cover sm:size-24 border border-[#e3e7db]">
                 <div class="min-w-0 flex-1">
-                  <a href="#/products/${item.id}" onclick="navigate('detail', ${item.id})" class="text-base font-semibold text-[#234d38] hover:underline">${pname(item)}</a>
-                  <p class="mt-1 text-xs text-[#626b5e]">${money(item.price_vnd)} · 🔥 ${item.calories_kcal || 0} kcal</p>
+                  <a href="#/products/${item.id}" onclick="navigate('detail', ${item.id})" class="text-sm sm:text-base font-bold text-[#234d38] font-heading hover:text-[#ea580c] transition-colors">${pname(item)}</a>
+                  <p class="mt-1 text-xs text-[#626b5e]">
+                    <span class="font-bold text-[#ea580c]">${money(item.price_vnd)}</span> · 
+                    <span class="inline-flex items-center gap-1 rounded-full bg-[#fff3e0] px-2 py-0.2 text-[10px] font-semibold text-[#c2410c]">${item.calories_kcal || 0} kcal</span>
+                  </p>
                   <div class="mt-3 flex flex-wrap items-center gap-3">
-                    <div class="flex items-center rounded-full border border-[#dce2d4] bg-white">
-                      <button onclick="updateCartQty(${item.id}, -1)" class="inline-flex min-h-[44px] min-w-[44px] items-center justify-center text-base font-medium" aria-label="decrease">−</button>
-                      <span class="min-w-8 text-center text-sm font-semibold">${item.quantity}</span>
-                      <button onclick="updateCartQty(${item.id}, 1)" class="inline-flex min-h-[44px] min-w-[44px] items-center justify-center text-base font-medium" aria-label="increase">+</button>
+                    <div class="flex items-center rounded-xl border border-[#dce2d4] bg-white shadow-xs">
+                      <button onclick="updateCartQty(${item.id}, -1)" class="inline-flex size-9 items-center justify-center text-sm font-bold text-[#234d38] hover:bg-[#f4f6f0] rounded-l-xl transition-colors" aria-label="decrease">−</button>
+                      <span class="min-w-8 text-center text-xs font-bold text-[#234d38]">${item.quantity}</span>
+                      <button onclick="updateCartQty(${item.id}, 1)" class="inline-flex size-9 items-center justify-center text-sm font-bold text-[#234d38] hover:bg-[#f4f6f0] rounded-r-xl transition-colors" aria-label="increase">+</button>
                     </div>
-                    <button onclick="delete State.cart[${item.id}];saveStorage();renderAll()" class="inline-flex min-h-[44px] items-center px-3 text-xs text-[#626b5e] hover:text-red-700 transition-colors">🗑️ ${tr("Xóa", "Remove")}</button>
+                    <button onclick="delete State.cart[${item.id}];saveStorage();renderAll()" class="inline-flex min-h-[36px] items-center gap-1 px-2.5 text-xs text-[#626b5e] hover:text-red-700 transition-colors">
+                      <svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+                      <span>${tr("Xóa", "Remove", "删除")}</span>
+                    </button>
                   </div>
                 </div>
-                <div class="w-full sm:w-auto text-right sm:text-left text-sm font-semibold text-[#234d38] pt-1 sm:pt-0">${money(item.price_vnd * item.quantity)}</div>
+                <div class="w-full sm:w-auto text-right sm:text-left text-sm font-bold text-[#ea580c] pt-1 sm:pt-0">${money(item.price_vnd * item.quantity)}</div>
               </article>
             `).join("")}
           </div>
 
-          <aside class="h-fit w-full rounded-2xl border border-[#dce2d4] bg-[#f0f3e8] p-6">
-            <h2 class="text-xl font-semibold text-[#234d38]">${tr("Tóm tắt đơn hàng", "Order summary")}</h2>
-            <div class="mt-6 space-y-3 text-sm text-[#626b5e]">
-              <div class="flex justify-between"><span>${tr("Tạm tính", "Subtotal")}</span><span>${money(subtotal)}</span></div>
-              <div class="flex justify-between"><span>${tr("Giao hàng", "Delivery")}</span><span>${money(fee)}</span></div>
+          <aside class="h-fit w-full rounded-2xl border border-[#dce2d4] bg-[#f0f3e8] p-5 sm:p-6 shadow-xs">
+            <h2 class="text-lg font-bold text-[#234d38] font-heading">${tr("Tóm tắt đơn hàng", "Order summary", "订单明细")}</h2>
+            <div class="mt-4 space-y-2.5 text-xs sm:text-sm text-[#626b5e]">
+              <div class="flex justify-between"><span>${tr("Tạm tính", "Subtotal", "商品小计")}</span><span class="font-semibold text-[#234d38]">${money(subtotal)}</span></div>
+              <div class="flex justify-between"><span>${tr("Phí giao hàng", "Delivery", "运费")}</span><span class="font-semibold text-[#234d38]">${money(fee)}</span></div>
             </div>
-            <div class="mt-5 flex justify-between border-t border-[#dce2d4] pt-5 text-lg font-semibold text-[#234d38]">
-              <span>${tr("Tổng cộng", "Total")}</span><span>${money(subtotal + fee)}</span>
+            <div class="mt-4 flex justify-between border-t border-[#dce2d4] pt-4 text-base sm:text-lg font-bold text-[#234d38]">
+              <span>${tr("Tổng cộng", "Total", "应付总额")}</span>
+              <span class="text-xl font-extrabold text-[#ea580c]">${money(subtotal + fee)}</span>
             </div>
             ${nbCartNutrition(selected)}
-            <p class="mt-3 text-xs leading-5 text-[#626b5e]">🚚 ${nbT("Phí giao hàng " + money(State.settings.shipping_fee) + "; miễn phí từ " + money(State.settings.free_shipping_min) + ".", money(State.settings.shipping_fee) + " delivery; free over " + money(State.settings.free_shipping_min) + ".")}</p>
-            <button onclick="navigate('checkout')" ${selected.length === 0 ? 'disabled' : ''} class="mt-6 inline-flex min-h-[48px] w-full items-center justify-center rounded-full bg-[#234d38] px-6 py-3.5 text-sm font-semibold text-white hover:bg-[#173a29] transition-colors disabled:opacity-40">
-              ${tr("Tiến hành thanh toán", "Continue to checkout")}
+            <p class="mt-3 text-xs leading-5 text-[#626b5e] flex items-center gap-1.5">
+              <svg class="size-4 text-[#234d38] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 18H3c-.6 0-1-.4-1-1V7c0-.6.4-1 1-1h10c.6 0 1 .4 1 1v11"/><path d="M14 9h4l4 4v4c0 .6-.4 1-1 1h-2"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg>
+              <span>${nbT("Phí giao hàng " + money(State.settings.shipping_fee) + "; miễn phí từ " + money(State.settings.free_shipping_min) + ".", money(State.settings.shipping_fee) + " delivery; free over " + money(State.settings.free_shipping_min) + ".", "运费 " + money(State.settings.shipping_fee) + "；满 " + money(State.settings.free_shipping_min) + " 享包邮。")}</span>
+            </p>
+            <button onclick="navigate('checkout')" ${selected.length === 0 ? 'disabled' : ''} 
+                    class="mt-5 inline-flex min-h-[46px] w-full items-center justify-center rounded-xl bg-[#234d38] px-6 py-3 text-sm font-bold text-white shadow-md hover:bg-[#193a2a] active:scale-98 transition-all disabled:opacity-40 disabled:cursor-not-allowed">
+              ${tr("Tiến hành thanh toán", "Continue to checkout", "前往结算")} →
             </button>
+
+            <!-- Dải tin cậy đặt gần nút thanh toán -->
+            ${renderTrustBadges()}
           </aside>
         </div>
+
+        <!-- Sticky bottom bar khi xem trên điện thoại -->
+        <div class="fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur-md border-t border-[#dce2d4] px-4 py-3 shadow-[0_-4px_16px_rgba(0,0,0,0.08)] sm:hidden flex items-center justify-between gap-3">
+          <div>
+            <span class="text-[10px] text-[#626b5e] block">${tr("Tổng cộng (" + selected.length + " món):", "Total (" + selected.length + " items):", "合计 (" + selected.length + " 件)：")}</span>
+            <span class="text-lg font-extrabold text-[#ea580c] leading-tight">${money(subtotal + fee)}</span>
+          </div>
+          <button onclick="navigate('checkout')" ${selected.length === 0 ? 'disabled' : ''} 
+                  class="inline-flex min-h-[42px] items-center justify-center gap-1.5 rounded-xl bg-[#234d38] px-5 py-2.5 text-xs font-bold text-white shadow-sm active:scale-95 transition-all disabled:opacity-40">
+            <span>${tr("Thanh toán", "Checkout", "立即结算")}</span>
+            <svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </div>
       ` : `
-        <div class="rounded-3xl border border-[#dce2d4] bg-white px-5 py-20 text-center">
-          <h2 class="text-2xl font-medium text-[#234d38]">${tr("Giỏ hàng đang chờ một chút lành", "Your bag is waiting for some goodness")}</h2>
-          <button onclick="navigate('shop')" class="mt-6 rounded-full bg-[#234d38] px-6 py-3.5 text-sm font-semibold text-white">${tr("Khám phá cửa hàng", "Explore the shop")} ↗</button>
+        <!-- Trạng thái trống của giỏ hàng có hình minh họa và nút gợi ý -->
+        <div class="relative z-10 mx-auto max-w-lg rounded-3xl border border-[#dce2d4] bg-white p-8 sm:p-12 text-center shadow-xs my-8">
+          <div class="mb-5 flex size-28 mx-auto items-center justify-center rounded-full bg-[#f4f6f0]">
+            <svg class="size-14 text-[#234d38] opacity-75" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/>
+            </svg>
+          </div>
+          <h2 class="text-xl sm:text-2xl font-bold text-[#234d38] font-heading">${tr("Giỏ hàng của bạn đang trống", "Your shopping bag is empty", "您的购物车是空的")}</h2>
+          <p class="mt-2 text-xs sm:text-sm text-[#626b5e] leading-relaxed max-w-sm mx-auto">
+            ${tr("Hãy chọn những món ăn lành mạnh cho ngày hôm nay và cảm nhận năng lượng tích cực từ thực phẩm sạch nhé!", "Choose wholesome meals for today and feel the nourishing energy of fresh organic food!", "快去挑选今日份健康轻食美味，开启活力满满的一天！")}
+          </p>
+          <div class="mt-6 flex justify-center">
+            <button onclick="navigate('shop')" class="inline-flex min-h-[44px] items-center justify-center gap-2 rounded-xl bg-[#234d38] px-6 py-2.5 text-xs sm:text-sm font-bold text-white shadow-xs hover:bg-[#193a2a] transition-all">
+              <span>${tr("Khám phá món ngon ngay", "Explore menu now", "立即探索精选美味")}</span> →
+            </button>
+          </div>
         </div>
       `}
     </div>
@@ -1444,7 +1945,7 @@
       <div class="flex flex-wrap items-center justify-between gap-4">
         <h1 class="text-3xl font-medium text-[#234d38]">${tr("Tài khoản của bạn", "Your account")}</h1>
         <span class="rounded-full bg-[#eef2e8] px-4 py-2 text-xs font-semibold text-[#234d38]">
-          ${isSeller ? tr("Chủ cửa hàng (Seller)", "Seller") : tr("Người mua (Buyer)", "Buyer")}
+          ${isSeller ? tr("Chủ cửa hàng (Seller)", "Seller") : (NB_AUTH_ROLE === "staff" ? tr("Nhân viên (Staff)", "Staff") : tr("Người mua (Buyer)", "Buyer"))}
         </span>
       </div>
 
@@ -1582,14 +2083,8 @@
     // ============================================================================
     // V2-A. TIỆN ÍCH AN TOÀN + LỚP DỮ LIỆU SUPABASE (mọi thao tác ghi đi qua hàm máy chủ nb2_*)
     // ============================================================================
-    const NB_PLACEHOLDER_IMG = "data:image/svg+xml;utf8," + encodeURIComponent(
-      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"><rect width="400" height="300" fill="#e5edde"/><text x="200" y="170" font-size="72" text-anchor="middle">🌱</text></svg>'
-    );
-    const trf = (vi, en) => isVi() ? (vi || "") : (en || vi || "");
-    const safeUrl = u => { const s = String(u || "").trim(); return /^https:\/\//i.test(s) ? s : NB_PLACEHOLDER_IMG; };
-    const imgSrc = p => esc(safeUrl(p && p.image_url));
-    const nbT = (vi, en) => esc(tr(vi, en));
-    const pname = p => esc(trf(p.name_vi, p.name_en));
+// NB_PLACEHOLDER_IMG & safeUrl defined at top
+    // imgSrc defined at top
     const nbNumOrNull = v => (v === null || v === undefined || v === "" || isNaN(Number(v))) ? null : Number(v);
     const nbStars = r => "★".repeat(Math.round(r)) + "☆".repeat(5 - Math.round(r));
     const nbDateVN = d => new Date(d).toLocaleDateString("vi-VN");
@@ -1760,8 +2255,8 @@
         State.profile = { ...State.profile, display_name: NB_AUTH_USER.email || "", email: NB_AUTH_USER.email || "" };
         return;
       }
-      NB_AUTH_ROLE = data.role === "seller" ? "seller" : "buyer";
-      State.currentRole = NB_AUTH_ROLE === "seller" ? "owner" : "buyer";
+      NB_AUTH_ROLE = (data.role === "seller" || data.role === "staff") ? data.role : "buyer";
+      State.currentRole = NB_AUTH_ROLE === "seller" ? "owner" : (NB_AUTH_ROLE === "staff" ? "staff" : "buyer");
       State.profile = {
         display_name: data.display_name || NB_AUTH_USER.email || "",
         email: data.email || NB_AUTH_USER.email || "",
@@ -1839,56 +2334,210 @@
       return `<span class="text-[12px] font-semibold text-amber-600" title="${p.avg_rating}/5">${nbStars(p.avg_rating)}</span> <span class="text-[11px] text-[#626b5e]">${p.avg_rating} (${p.review_count})</span>`;
     }
 
+        // Quick View Modal
+    function openQuickView(id) {
+      State.quickViewId = id;
+      const p = State.products.find(x => x.id === id);
+      if (!p) return;
+      const modal = document.getElementById("nbQuickViewModal");
+      if (!modal) return;
+      
+      const exp = nbExpiryInfo(p);
+      const sellPrice = exp.effectivePrice;
+      const crossedPrice = exp.discountPct > 0 ? p.price_vnd : (p.original_price_vnd && p.original_price_vnd > sellPrice ? p.original_price_vnd : null);
+      const hasOrig = !!crossedPrice;
+      const sample = isSample(p);
+      const unavailable = p.stock_quantity <= 0 || sample || State.demo;
+      const al = nbAllergens(p);
+
+      modal.innerHTML = `
+        <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-3 sm:p-6" onclick="if(event.target===this)closeQuickView()">
+          <div class="relative w-full max-w-2xl max-h-[92vh] overflow-y-auto rounded-3xl bg-white p-5 sm:p-8 shadow-2xl animate-in fade-in zoom-in-95">
+            <button onclick="closeQuickView()" class="absolute right-4 top-4 z-10 flex size-9 items-center justify-center rounded-full bg-[#f4f6f0] text-[#526348] hover:bg-[#e8f5e9] hover:text-[#234d38] transition-colors" aria-label="Close">
+              <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            </button>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-7 items-start">
+              <div>
+                <div class="relative overflow-hidden rounded-2xl border border-[#e3e7db] bg-[#f4f6f0]">
+                  <img src="${imgSrc(p)}" alt="${pname(p)}" class="aspect-[4/3] w-full object-cover">
+                  ${sample ? `<span class="absolute left-3 top-3 rounded-lg bg-[#4b5563] px-2 py-0.5 text-[10px] font-bold text-white shadow-xs">${tr("SẢN PHẨM MẪU", "SAMPLE", "样品展示")}</span>` : ''}
+                  ${hasOrig ? `<span class="absolute right-3 top-3 rounded-lg bg-[#7c3aed] px-2 py-0.5 text-xs font-bold text-white shadow-xs">-${Math.round((1 - sellPrice / crossedPrice) * 100)}%</span>` : ''}
+                </div>
+                <!-- Bảng dinh dưỡng chi tiết -->
+                <div class="mt-4 rounded-2xl border border-[#e3e7db] bg-[#f4f6f0] p-3.5">
+                  <h4 class="text-[11px] font-bold uppercase tracking-wider text-[#234d38] mb-2.5 font-heading">${tr("Thông tin dinh dưỡng / khẩu phần", "Nutrition facts / serving", "营养成分 / 每份")}</h4>
+                  <div class="grid grid-cols-3 gap-1.5 text-center">
+                    <div class="rounded-xl bg-white p-1.5 border border-[#e3e7db]">
+                      <span class="block text-[10px] text-[#626b5e]">${tr("Kcal", "Calories", "能量")}</span>
+                      <span class="text-xs font-bold text-[#ea580c]">${fmtNum(p.calories_kcal)}</span>
+                    </div>
+                    <div class="rounded-xl bg-white p-1.5 border border-[#e3e7db]">
+                      <span class="block text-[10px] text-[#626b5e]">${tr("Đạm", "Protein", "蛋白质")}</span>
+                      <span class="text-xs font-bold text-[#234d38]">${fmtNum(p.protein_g)}g</span>
+                    </div>
+                    <div class="rounded-xl bg-white p-1.5 border border-[#e3e7db]">
+                      <span class="block text-[10px] text-[#626b5e]">${tr("Xơ", "Fiber", "膳食纤维")}</span>
+                      <span class="text-xs font-bold text-[#234d38]">${fmtNum(p.fiber_g)}g</span>
+                    </div>
+                    <div class="rounded-xl bg-white p-1.5 border border-[#e3e7db]">
+                      <span class="block text-[10px] text-[#626b5e]">Carb</span>
+                      <span class="text-xs font-semibold text-[#526348]">${fmtNum(p.carbohydrate_g)}g</span>
+                    </div>
+                    <div class="rounded-xl bg-white p-1.5 border border-[#e3e7db]">
+                      <span class="block text-[10px] text-[#626b5e]">${tr("Béo", "Fat", "脂肪")}</span>
+                      <span class="text-xs font-semibold text-[#526348]">${fmtNum(p.fat_g)}g</span>
+                    </div>
+                    <div class="rounded-xl bg-white p-1.5 border border-[#e3e7db]">
+                      <span class="block text-[10px] text-[#626b5e]">${tr("Natri", "Sodium", "钠")}</span>
+                      <span class="text-xs font-semibold text-[#526348]">${fmtNum(p.sodium_mg)}mg</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex flex-col">
+                <span class="inline-block w-fit rounded-full bg-[#e8f5e9] px-2.5 py-0.5 text-[10px] font-bold text-[#234d38] uppercase tracking-wider mb-1.5">${esc(categoryName(p.category))}</span>
+                <h2 class="text-lg sm:text-xl font-bold text-[#234d38] font-heading leading-snug">${pname(p)}</h2>
+                <div class="mt-1.5 flex items-center gap-2">
+                  ${nbRatingHtml(p)}
+                </div>
+
+                <div class="mt-3 flex items-baseline gap-2.5">
+                  <span class="text-2xl sm:text-3xl font-extrabold text-[#ea580c]">${money(sellPrice)}</span>
+                  ${hasOrig ? `<span class="text-sm text-[#8c9488] line-through font-medium">${money(crossedPrice)}</span>` : ''}
+                </div>
+
+                <div class="mt-3 border-t border-[#e3e7db] pt-3">
+                  <h4 class="text-[11px] font-bold uppercase tracking-wider text-[#526348] mb-1">${tr("Mô tả món ăn", "Description", "餐品介绍")}</h4>
+                  <p class="text-xs leading-relaxed text-[#434f3d]">${esc(trf(p.description_vi, p.description_en, p.description_zh))}</p>
+                </div>
+
+                ${p.ingredients_vi ? `
+                  <div class="mt-2.5">
+                    <h4 class="text-[11px] font-bold uppercase tracking-wider text-[#526348] mb-1">${tr("Thành phần nguyên liệu", "Ingredients", "配料成分")}</h4>
+                    <p class="text-xs text-[#626b5e] leading-relaxed">${esc(trf(p.ingredients_vi, p.ingredients_en, p.ingredients_zh))}</p>
+                  </div>
+                ` : ''}
+
+                ${al.length ? `
+                  <div class="mt-2.5 rounded-xl bg-red-50 border border-red-200 p-2 text-xs text-red-800">
+                    <span class="font-bold">⚠️ ${tr("Dị ứng", "Allergens", "致敏成分")}:</span> ${nbAllergenNames(al)}
+                  </div>
+                ` : ''}
+
+                <div class="mt-5 pt-3.5 border-t border-[#e3e7db] flex items-center gap-2.5">
+                  <button onclick="addToCart(${p.id}, 1); closeQuickView();" ${unavailable ? 'disabled' : ''} 
+                          class="flex-1 inline-flex min-h-[44px] items-center justify-center gap-2 rounded-xl bg-[#234d38] px-4 py-2.5 text-xs sm:text-sm font-bold text-white shadow-md hover:bg-[#193a2a] active:scale-98 transition-all disabled:opacity-40 disabled:cursor-not-allowed">
+                    <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+                    <span>${tr("Thêm vào giỏ", "Add to Bag", "加入购物车")}</span>
+                  </button>
+                  <button onclick="closeQuickView(); navigate('detail', ${p.id});" 
+                          class="inline-flex min-h-[44px] items-center justify-center rounded-xl border border-[#dce2d4] bg-white px-3.5 py-2 text-xs font-semibold text-[#234d38] hover:bg-[#e8f5e9] transition-colors">
+                    ${tr("Chi tiết", "Details", "详情")} →
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+      modal.classList.remove("hidden");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeQuickView() {
+      const modal = document.getElementById("nbQuickViewModal");
+      if (modal) {
+        modal.classList.add("hidden");
+        modal.innerHTML = "";
+      }
+      document.body.style.overflow = "";
+    }
+
     function renderProductCard(p) {
       const sample = isSample(p);
       const exp = nbExpiryInfo(p);
       const sellPrice = exp.effectivePrice;
       const crossedPrice = exp.discountPct > 0 ? p.price_vnd : (p.original_price_vnd && p.original_price_vnd > sellPrice ? p.original_price_vnd : null);
       const hasOrig = !!crossedPrice;
-      const al = nbAllergens(p);
       const unavailable = p.stock_quantity <= 0 || sample || State.demo;
       const cmp = State.compare.includes(p.id);
       const low = !sample && p.stock_quantity > 0 && p.stock_quantity <= 5;
-      const th = nbCategoryTheme(p.category);
+
+      // Badges logic: Bán chạy (orange), Mới (green), Sắp hết hạn (red), Giảm giá (purple)
+      const isBestSeller = p.tag_badge === 'bestseller' || [1, 3, 8].includes(p.id);
+      const isNew = p.tag_badge === 'new' || [4, 6, 9].includes(p.id);
+      const isNearExpiry = exp.status === "near" || p.tag_badge === 'near_expiry';
+
       return `
-        <article class="min-w-0 overflow-hidden rounded-[20px] border border-[#e3e7db] ${th.cardBorder} bg-white transition-all hover:border-[#b9c9aa] hover:shadow-sm flex flex-col" data-product-id="${p.id}">
-          <a href="#/products/${p.id}" onclick="navigate('detail', ${p.id})" class="group relative block overflow-hidden">
-            <img src="${imgSrc(p)}" alt="${pname(p)}" loading="lazy" class="aspect-[4/3] w-full object-cover transition-transform duration-500 group-hover:scale-105">
-            ${sample ? `<span class="absolute left-3 top-3 rounded-full bg-[#fafaf5]/95 px-2.5 py-1 text-[9px] font-semibold tracking-wider text-[#234d38]">${nbT("SẢN PHẨM MẪU", "SAMPLE INVENTORY")}</span>` : ''}
-            ${hasOrig ? `<span class="absolute right-3 top-3 rounded-full bg-[#f0925a] px-2.5 py-1 text-[11px] font-bold text-[#2b1204] shadow-sm">-${Math.round((1 - p.price_vnd / p.original_price_vnd) * 100)}%</span>` : ''}
-          </a>
-          <div class="p-5 flex-1 flex flex-col">
-            <div class="mb-2">
-              <span class="inline-block rounded-full px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.08em] ${th.badge}">${esc(categoryName(p.category))}</span>
+        <article class="group relative min-w-0 overflow-hidden rounded-2xl border border-[#e3e7db] bg-white flex flex-col transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-[#234d38]/30 cursor-pointer" data-product-id="${p.id}" onclick="openQuickView(${p.id})">
+          <div class="relative block overflow-hidden aspect-[4/3] bg-[#f4f6f0]">
+            <img src="${imgSrc(p)}" alt="${pname(p)}" loading="lazy" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+            
+            <!-- Badges top-left -->
+            <div class="absolute left-2.5 top-2.5 flex flex-col gap-1 items-start pointer-events-none">
+              ${isBestSeller ? `<span class="rounded-lg bg-[#ea580c] px-2 py-0.5 text-[10px] sm:text-xs font-bold text-white shadow-xs">${tr("Bán chạy", "Best Seller", "热销")}</span>` : ''}
+              ${isNew ? `<span class="rounded-lg bg-[#16a34a] px-2 py-0.5 text-[10px] sm:text-xs font-bold text-white shadow-xs">${tr("Món mới", "New", "新品")}</span>` : ''}
+              ${sample ? `<span class="rounded-lg bg-[#4b5563] px-2 py-0.5 text-[10px] font-bold text-white shadow-xs">${tr("MẪU", "SAMPLE", "样品")}</span>` : ''}
             </div>
-            <a href="#/products/${p.id}" onclick="navigate('detail', ${p.id})" class="hover:text-[#234d38]">
-              <h3 class="text-base font-semibold leading-6 text-[#303d2c]">${pname(p)}</h3>
-            </a>
-            <div class="mt-1">${nbRatingHtml(p)}</div>
-            <p class="mt-1.5 text-xs text-[#626b5e] line-clamp-2">${esc(trf(p.description_vi, p.description_en))}</p>
-            <div class="mt-2 flex flex-wrap items-center gap-2 text-[11px] text-[#6b5320]">
-              ${nbNutriBadge(p)}${al.length ? `<span>⚠️ ${nbAllergenNames(al)}</span>` : ""}${nbFitBadge(p)}
-              <button onclick="toggleWish(${p.id})" class="ml-auto inline-flex min-h-[44px] min-w-[44px] items-center justify-center text-xl leading-none text-[#e27d8a] hover:scale-110 transition-transform" aria-label="wishlist">${State.wishlist.includes(p.id) ? "♥" : "♡"}</button>
+
+            <!-- Badges top-right -->
+            <div class="absolute right-2.5 top-2.5 flex flex-col gap-1 items-end pointer-events-none">
+              ${isNearExpiry ? `<span class="rounded-lg bg-[#dc2626] px-2 py-0.5 text-[10px] sm:text-xs font-bold text-white shadow-xs">${tr("Sắp hết hạn", "Near Expiry", "临期特惠")}</span>` : ''}
+              ${hasOrig ? `<span class="rounded-lg bg-[#7c3aed] px-2 py-0.5 text-[10px] sm:text-xs font-bold text-white shadow-xs">-${Math.round((1 - sellPrice / crossedPrice) * 100)}%</span>` : ''}
             </div>
-            <p class="mt-2 text-[11px] font-medium text-[#234d38]">
-              ${sample || p.calories_kcal === null
-          ? nbT("Chưa có dữ liệu dinh dưỡng", "Nutrition not supplied")
-          : `${fmtNum(p.calories_kcal)} kcal · ${fmtNum(p.protein_g)} g ${nbT("đạm / khẩu phần", "protein / serving")}`}
-            </p>
-            <label class="mt-2 inline-flex min-h-[44px] w-fit cursor-pointer items-center gap-2 text-[11px] text-[#626b5e]">
-              <input type="checkbox" ${cmp ? "checked" : ""} onchange="toggleCompare(${p.id})" class="size-4"> ⚖️ ${nbT("So sánh", "Compare")}
-            </label>
-            <div class="mt-auto pt-4 flex items-center justify-between gap-2 border-t border-[#f0f3e8]">
-             <div class="text-base font-semibold text-[#234d38]">
-                ${hasOrig ? `<s class="block text-xs font-normal text-[#626b5e]">${money(crossedPrice)}</s>` : ''}
-                <span>${money(sellPrice)}</span>
-                ${exp.status === "near" ? `<span class="mt-0.5 block text-[10px] font-semibold text-amber-700">⏳ ${nbT("Sắp hết hạn", "Near expiry")}${exp.discountPct > 0 ? ` · -${exp.discountPct}%` : ""} (${esc(nbFormatDateDMY(p.expires_at))})</span>` : ""}
-              </div>
-              <button onclick="addToCart(${p.id}, 1)" ${unavailable ? 'disabled' : ''} class="inline-flex min-h-[44px] items-center justify-center gap-1.5 rounded-full bg-[#f0925a] px-4 py-2 text-xs font-bold text-[#2b1204] shadow-sm transition-colors hover:bg-[#e57e42] disabled:cursor-not-allowed disabled:opacity-40">
-                + ${nbT("Thêm", "Add")}
+
+            <!-- Hover overlay button -->
+            <div class="absolute inset-0 bg-black/25 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
+              <span class="inline-flex items-center gap-1.5 rounded-full bg-white/95 px-3 py-1.5 text-xs font-bold text-[#234d38] shadow-md backdrop-blur-xs">
+                <svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                ${tr("Xem nhanh", "Quick view", "快速预览")}
+              </span>
+            </div>
+          </div>
+
+          <div class="p-3.5 sm:p-4 flex-1 flex flex-col">
+            <div class="flex items-center justify-between gap-1 mb-1">
+              <span class="inline-block rounded-full bg-[#f4f6f0] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[#526348]">${esc(categoryName(p.category))}</span>
+              <button type="button" onclick="event.stopPropagation(); toggleWish(${p.id})" class="inline-flex size-7 items-center justify-center text-sm leading-none text-[#ea580c] hover:scale-125 transition-transform" aria-label="wishlist">
+                ${State.wishlist.includes(p.id) ? "♥" : "♡"}
               </button>
             </div>
-            ${unavailable ? `<p class="mt-2 text-xs text-red-700">${sample ? nbT("Mẫu minh họa · không thể đặt mua", "Sample only · no actual availability") : (p.stock_quantity <= 0 ? nbT("Hết hàng", "Out of stock") : nbT("Chế độ xem thử", "Preview mode"))}</p>` : (low ? `<p class="mt-2 text-xs text-amber-700">${nbT("Chỉ còn " + p.stock_quantity + " sản phẩm", "Only " + p.stock_quantity + " left")}</p>` : "")}
+
+            <h3 class="text-sm sm:text-base font-bold text-[#234d38] font-heading line-clamp-1 leading-snug group-hover:text-[#ea580c] transition-colors">${pname(p)}</h3>
+            
+            <p class="mt-1 text-xs text-[#626b5e] line-clamp-2 leading-relaxed">${esc(trf(p.description_vi, p.description_en, p.description_zh))}</p>
+
+            <!-- 2 viên thuốc nhỏ kcal và đạm -->
+            <div class="mt-2 flex flex-wrap items-center gap-1.5">
+              ${p.calories_kcal !== null ? `
+                <span class="inline-flex items-center gap-1 rounded-full bg-[#fff3e0] px-2 py-0.5 text-[11px] font-semibold text-[#c2410c]">
+                  <svg class="size-3 text-[#ea580c]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
+                  ${fmtNum(p.calories_kcal)} kcal
+                </span>
+              ` : ''}
+              ${p.protein_g !== null ? `
+                <span class="inline-flex items-center gap-1 rounded-full bg-[#e8f5e9] px-2 py-0.5 text-[11px] font-semibold text-[#234d38]">
+                  <svg class="size-3 text-[#234d38]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                  ${fmtNum(p.protein_g)}g ${tr("đạm", "pro", "蛋白质")}
+                </span>
+              ` : ''}
+              ${nbFitBadge(p)}
+            </div>
+
+            <!-- Giá là ngôi sao của thẻ & nút + Thêm -->
+            <div class="mt-auto pt-3 flex items-center justify-between gap-2 border-t border-[#f4f6f0]">
+              <div class="flex flex-col">
+                ${hasOrig ? `<span class="text-[11px] font-medium text-[#8c9488] line-through leading-tight">${money(crossedPrice)}</span>` : ''}
+                <span class="text-base sm:text-lg font-extrabold text-[#ea580c] tracking-tight leading-none">${money(sellPrice)}</span>
+              </div>
+              <button type="button" onclick="event.stopPropagation(); addToCart(${p.id}, 1)" ${unavailable ? 'disabled' : ''} 
+                      class="inline-flex min-h-[40px] items-center justify-center gap-1 rounded-xl bg-[#234d38] px-3.5 py-2 text-xs sm:text-sm font-bold text-white shadow-xs hover:bg-[#193a2a] active:scale-95 transition-all disabled:opacity-40 disabled:cursor-not-allowed">
+                <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+                <span>+ ${tr("Thêm", "Add", "加入")}</span>
+              </button>
+            </div>
+            ${unavailable ? `<p class="mt-1.5 text-[11px] text-red-700">${sample ? nbT("Mẫu minh họa · không thể mua", "Sample only · not for sale", "仅供样品展示") : (p.stock_quantity <= 0 ? nbT("Hết hàng", "Out of stock", "已售罄") : nbT("Chế độ xem thử", "Preview mode", "预览模式"))}</p>` : (low ? `<p class="mt-1.5 text-[11px] text-amber-700">${nbT("Chỉ còn " + p.stock_quantity + " món", "Only " + p.stock_quantity + " left", "仅剩 " + p.stock_quantity + " 份")}</p>` : "")}
           </div>
         </article>`;
     }
@@ -2009,21 +2658,61 @@
     async function nbLoadReviews(productId) {
       if (!NB_SUPABASE_READY || State.demo || !productId) return;
       const { data, error } = await NB_SUPABASE.from("nb2_reviews")
-        .select("rating,comment,buyer_name,created_at")
+        .select("id,rating,comment,buyer_name,created_at,seller_reply,seller_replied_at")
         .eq("product_id", productId).order("created_at", { ascending: false }).limit(20);
       if (error) { console.error("Không tải được đánh giá:", error); return; }
       State.reviews[productId] = data || [];
       if (State.route === "detail" && State.selectedProductId === productId) renderAll();
     }
 
+    async function saveSellerReviewReply(e, reviewId, productId) {
+      e.preventDefault();
+      const txt = (document.getElementById(`rv_reply_${reviewId}`).value || "").trim();
+      try {
+        await nbRpc("nb2_reply_review", { p_review_id: reviewId, p_reply: txt });
+        State.replyEditId = 0;
+        await nbLoadReviews(productId);
+        showNotice("Đã lưu phản hồi đánh giá.", "Review reply saved.");
+      } catch (err) { nbFail(err); }
+    }
+
+    async function deleteSellerReviewReply(reviewId, productId) {
+      if (!window.confirm(tr("Xóa câu trả lời này?", "Delete this reply?"))) return;
+      try {
+        await nbRpc("nb2_reply_review", { p_review_id: reviewId, p_reply: "" });
+        State.replyEditId = 0;
+        await nbLoadReviews(productId);
+        showNotice("Đã xóa phản hồi.", "Reply deleted.");
+      } catch (err) { nbFail(err); }
+    }
+
     function nbReviewsHtml(p) {
       const list = State.reviews[p.id] || [];
+      const isSeller = NB_AUTH_ROLE === "seller";
       return `<section class="mt-8"><h2 class="text-lg font-semibold text-[#234d38]">⭐ ${nbT("Đánh giá của khách hàng", "Customer reviews")}</h2>
         <div class="mt-2">${nbRatingHtml(p)}</div>
         ${list.length ? `<ul class="mt-4 space-y-3">${list.map(r => `<li class="rounded-xl border border-[#dce2d4] bg-white p-4 text-sm">
             <div class="flex items-center justify-between gap-3"><span class="font-semibold text-[#30382e]">${esc(r.buyer_name || tr("Khách", "Guest"))}</span><span class="text-xs text-[#626b5e]">${esc(nbDateVN(r.created_at))}</span></div>
             <div class="mt-1 text-sm font-bold text-amber-600">${nbStars(r.rating)}</div>
-            ${r.comment ? `<p class="mt-1 text-[#434f3d]">${esc(r.comment)}</p>` : ""}</li>`).join("")}</ul>`
+            ${r.comment ? `<p class="mt-1 text-[#434f3d]">${esc(r.comment)}</p>` : ""}
+            ${r.seller_reply ? `<div class="mt-3 rounded-xl border border-[#cfe8d5] bg-[#f4f7ef] p-3 text-xs">
+              <div class="flex items-center justify-between gap-2 font-semibold text-[#234d38]">
+                <span>🌱 ${nbT("Phản hồi của cửa hàng", "Shop reply")}</span>
+                ${r.seller_replied_at ? `<span class="font-normal text-[#626b5e]">${esc(nbDateVN(r.seller_replied_at))}</span>` : ""}
+              </div>
+              <p class="mt-1 text-[#30382e]">${esc(r.seller_reply)}</p>
+            </div>` : ""}
+            ${isSeller ? (State.replyEditId === r.id ? `
+              <form onsubmit="saveSellerReviewReply(event, ${r.id}, ${p.id})" class="mt-3 flex flex-wrap gap-2">
+                <input id="rv_reply_${r.id}" required maxlength="500" value="${esc(r.seller_reply || "")}" placeholder="${nbT("Nhập câu trả lời của shop...", "Write shop reply...")}" class="min-h-[40px] min-w-0 flex-1 rounded-full border border-[#d8dfcf] px-4 py-1.5 text-xs">
+                <button class="inline-flex min-h-[40px] items-center rounded-full bg-[#234d38] px-4 py-1.5 text-xs font-semibold text-white">${nbT("Lưu", "Save")}</button>
+                <button type="button" onclick="State.replyEditId=0;renderAll()" class="inline-flex min-h-[40px] items-center px-3 text-xs text-[#626b5e]">${nbT("Hủy", "Cancel")}</button>
+              </form>` : `
+              <div class="mt-2 flex gap-3 text-xs">
+                <button type="button" onclick="State.replyEditId=${r.id};renderAll()" class="underline font-semibold text-[#234d38]">${r.seller_reply ? nbT("Sửa trả lời", "Edit reply") : nbT("Trả lời", "Reply")}</button>
+                ${r.seller_reply ? `<button type="button" onclick="deleteSellerReviewReply(${r.id}, ${p.id})" class="underline text-red-700">${nbT("Xóa trả lời", "Delete reply")}</button>` : ""}
+              </div>`) : ""}
+          </li>`).join("")}</ul>`
           : `<p class="mt-3 text-sm text-[#626b5e]">${nbT("Chưa có đánh giá. Sau khi nhận hàng, bạn có thể đánh giá món này trong mục Đơn mua.", "No reviews yet. After delivery you can review this item under Your orders.")}</p>`}
       </section>`;
     }
@@ -2324,9 +3013,12 @@
       const field = (id, label, val, extra = "") => `<div><label class="mb-1 block text-xs font-medium">${label}</label><input id="${id}" ${extra} value="${esc(val || "")}" class="min-h-[44px] w-full rounded-xl border border-[#d8dfcf] px-4 py-2.5 text-sm"></div>`;
       const payBtn = (key, label) => `<button type="button" onclick="State.paymentMethod='${key}';renderAll()" class="inline-flex min-h-[48px] flex-1 sm:flex-none items-center justify-center rounded-xl border px-4 sm:px-5 py-3 text-xs sm:text-sm font-medium transition-colors ${pm === key ? "border-[#234d38] bg-[#234d38] text-white" : "border-[#d8dfcf] bg-white text-[#234d38]"}">${label}</button>`;
       return `
-    <div class="mx-auto w-full max-w-[1440px] px-5 py-10 sm:px-8 lg:px-16">
-      <a href="#/cart" onclick="navigate('cart')" class="mb-6 inline-flex min-h-[44px] items-center gap-2 text-sm text-[#557448] hover:underline">← ${nbT("Quay lại giỏ hàng", "Back to your bag")}</a>
-      <h1 class="mb-3 text-3xl font-medium tracking-tight text-[#234d38]">${nbT("Một bước nữa tới bữa lành", "One step closer to goodness")}</h1>
+    <div class="mx-auto w-full max-w-[1440px] px-4 py-8 sm:px-8 sm:py-10 lg:px-16 pb-24 sm:pb-12">
+      <!-- Thanh tiến trình 3 bước -->
+      ${renderCheckoutSteps(3)}
+
+      <a href="#/cart" onclick="navigate('cart')" class="mb-4 inline-flex min-h-[40px] items-center gap-2 text-xs sm:text-sm text-[#557448] hover:underline">← ${nbT("Quay lại giỏ hàng", "Back to your bag", "返回购物车")}</a>
+      <h1 class="mb-2 text-2xl sm:text-3xl font-bold tracking-tight text-[#234d38] font-heading">${nbT("Xác nhận thông tin & Thanh toán", "Checkout & Payment", "配送信息与付款确认")}</h1>
       <div class="grid w-full grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_380px] mt-6">
         <form onsubmit="submitCheckout(event)" class="space-y-6">
           <section class="rounded-2xl border border-[#dce2d4] bg-white p-6">
@@ -2381,11 +3073,27 @@
             ${State.coupon && State.couponInfo && State.couponInfo.kind === "freeship" ? `<p class="text-[#2f7d4f]">${nbT("Miễn phí giao hàng", "Free delivery")} (${esc(State.coupon)})</p>` : ""}
           </div>
           <div class="mt-4 flex gap-2"><input id="cp_code" value="${esc(State.coupon || "")}" placeholder="${nbT("Mã giảm giá", "Coupon code")}" class="min-h-[44px] min-w-0 flex-1 rounded-full border border-[#d8dfcf] bg-white px-4 py-2 text-sm uppercase"><button type="button" onclick="applyCoupon()" class="inline-flex min-h-[44px] items-center justify-center rounded-full bg-[#234d38] px-4 sm:px-5 py-2 text-xs font-semibold text-white hover:bg-[#173a29] transition-colors">${nbT("Áp dụng", "Apply")}</button></div>
-          <div class="mt-4 flex justify-between border-t border-[#dce2d4] pt-4 text-lg font-semibold text-[#234d38]">
-            <span>${nbT("Tổng cộng", "Total")}</span><span>${money(pr.total)}</span>
+          <div class="mt-4 flex justify-between border-t border-[#dce2d4] pt-4 text-lg font-bold text-[#234d38]">
+            <span>${nbT("Tổng cộng", "Total", "应付总额")}</span><span class="text-xl font-extrabold text-[#ea580c]">${money(pr.total)}</span>
           </div>
-          <p class="mt-3 text-[11px] leading-5 text-[#626b5e]">${nbT("Tổng tiền cuối cùng do máy chủ tính lại theo giá và tồn kho tại thời điểm đặt.", "The final total is recalculated on the server from current prices and stock when you place the order.")}</p>
+          <p class="mt-2 text-[11px] leading-5 text-[#626b5e]">${nbT("Tổng tiền cuối cùng được xác nhận theo giá và tồn kho tại thời điểm đặt.", "Final total recalculated on current stock and prices.", "最终金额以实时在库状态与活动折扣为准。")}</p>
+          
+          <!-- Dải tin cậy gần nút thanh toán -->
+          ${renderTrustBadges()}
         </aside>
+      </div>
+
+      <!-- Sticky bottom bar cho checkout trên điện thoại -->
+      <div class="fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur-md border-t border-[#dce2d4] px-4 py-3 shadow-[0_-4px_16px_rgba(0,0,0,0.08)] sm:hidden flex items-center justify-between gap-3">
+        <div>
+          <span class="text-[10px] text-[#626b5e] block">${tr("Tổng thanh toán:", "Total:", "应付总额：")}</span>
+          <span class="text-lg font-extrabold text-[#ea580c] leading-tight">${money(pr.total)}</span>
+        </div>
+        <button onclick="document.getElementById('ck_submit')?.click()" 
+                class="inline-flex min-h-[42px] items-center justify-center gap-1.5 rounded-xl bg-[#234d38] px-5 py-2.5 text-xs font-bold text-white shadow-sm active:scale-95 transition-all">
+          <span>${tr("Xác nhận đặt hàng", "Place order", "确认下单")}</span>
+          <svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
       </div>
     </div>`;
     }
@@ -2841,7 +3549,7 @@
       <p class="mt-3 text-sm text-[#626b5e]">📍 ${esc(o.address)}</p>
       ${o.contact ? `<p class="mt-1 text-xs text-[#626b5e]">✉️ ${esc(o.contact)}</p>` : ""}
       ${o.notes ? `<p class="mt-1 text-xs text-[#626b5e]">📝 ${esc(o.notes)}</p>` : ""}
-      ${sellerView ? `<p class="mt-2 text-xs text-[#557448]">${nbT("Hoa hồng chốt lúc đặt: ", "Commission at purchase: ")}${((o.commission_bps_snapshot || 0) / 100).toFixed(2)}% (${money(commAmt)})</p>` : ""}
+     ${sellerView && NB_AUTH_ROLE === "seller" ? `<p class="mt-2 text-xs text-[#557448]">${nbT("Hoa hồng chốt lúc đặt: ", "Commission at purchase: ")}${((o.commission_bps_snapshot || 0) / 100).toFixed(2)}% (${money(commAmt)})</p>` : ""}
 
       <details class="mt-4">
         <summary class="cursor-pointer py-2 text-sm font-medium text-[#234d38]">${nbT("Lịch sử đơn hàng", "Order timeline")} (${o.events.length})</summary>
@@ -2904,7 +3612,22 @@
       <p class="mt-2 mb-6 text-sm text-[#626b5e]">${nbT("Theo dõi đơn, hủy khi còn chờ xác nhận, mua lại, in hóa đơn, đánh giá từng món và nhắn tin với cửa hàng.", "Track orders, cancel while pending, buy again, print invoices, review each item and message the shop.")}</p>
       ${State.orders.length ? nbOrderFilterBar() : ""}
       ${list.length ? `<div class="grid w-full grid-cols-1 items-start gap-6 xl:grid-cols-2">${list.map(o => renderOrderCard(o, false)).join("")}</div>`
-          : `<div class="rounded-3xl border border-[#dce2d4] bg-white px-5 py-16 text-center"><p class="text-[#626b5e]">${State.orders.length ? nbT("Không có đơn nào khớp bộ lọc.", "No orders match the filter.") : nbT("Bạn chưa có đơn hàng nào.", "You have no orders yet.")}</p><button onclick="navigate('shop')" class="mt-5 rounded-full bg-[#234d38] px-6 py-3 text-sm font-semibold text-white">${nbT("Khám phá cửa hàng", "Explore the shop")}</button></div>`}
+          : `<div class="relative z-10 mx-auto max-w-lg rounded-3xl border border-[#dce2d4] bg-white p-8 sm:p-12 text-center shadow-xs my-8">
+            <div class="mb-5 flex size-24 mx-auto items-center justify-center rounded-full bg-[#f4f6f0]">
+              <svg class="size-12 text-[#234d38] opacity-75" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/>
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold text-[#234d38] font-heading">${State.orders.length ? tr("Không có đơn nào khớp bộ lọc", "No orders match filter", "没有找到符合条件的订单") : tr("Bạn chưa có đơn hàng nào", "You have no orders yet", "您目前暂无任何订单")}</h3>
+            <p class="mt-2 text-xs sm:text-sm text-[#626b5e] leading-relaxed max-w-sm mx-auto">
+              ${State.orders.length ? tr("Thử điều chỉnh lại bộ lọc trạng thái để xem các đơn hàng khác.", "Try adjusting filters to see other orders.", "请尝试调整筛选条件以查看其他订单。") : tr("Khám phá các món ăn lành mạnh cho ngày hôm nay và đặt mua ngay để nhận ưu đãi giao hàng!", "Explore healthy meals for today and order now to receive fast delivery specials!", "立即探索营养餐品并下单，享受快捷送达特惠！")}
+            </p>
+            <div class="mt-6 flex justify-center">
+              <button onclick="navigate('shop')" class="inline-flex min-h-[44px] items-center justify-center gap-2 rounded-xl bg-[#234d38] px-6 py-2.5 text-xs sm:text-sm font-bold text-white shadow-xs hover:bg-[#193a2a] transition-all">
+                ${tr("Khám phá cửa hàng ngay", "Explore the shop now", "立即探索商城")} →
+              </button>
+            </div>
+          </div>`}
     </section>`;
     }
 
@@ -2994,8 +3717,102 @@
         ` : `<p class="mt-3 text-xs text-[#626b5e]">${nbT("Hiện không có đơn nào cần chuẩn bị.", "No orders waiting to be prepared right now.")}</p>`}
       </section>`;
     }
+    async function nbLoadCustomers(minOrders) {
+      if (!NB_SUPABASE_READY || NB_AUTH_ROLE !== "seller") return;
+      if (minOrders !== undefined) State.custMinOrders = Math.max(1, Number(minOrders) || 1);
+      State.custLoading = true;
+      renderAll();
+      try {
+        State.customers = (await nbRpc("nb2_seller_customers", { p_min_orders: State.custMinOrders })) || [];
+      } catch (e) { console.error("Không tải được khách quen:", e); }
+      State.custLoading = false;
+      if (State.route === "seller_orders") renderAll();
+    }
 
+    function nbFilteredCustomers() {
+      const q = (State.custSearch || "").trim().toLowerCase();
+      if (!q) return State.customers;
+      return State.customers.filter(c =>
+        `${c.name} ${c.phone} ${c.email}`.toLowerCase().includes(q)
+      );
+    }
+
+    function exportCustomersCsv() {
+      const list = nbFilteredCustomers();
+      if (!list.length) {
+        showNotice("Không có khách hàng nào để xuất CSV.", "No customers to export.", true);
+        return;
+      }
+      const csvCell = v => {
+        let s = String(v ?? "").replace(/\r?\n/g, " ");
+        if (/^[=+\-@\t\r]/.test(s)) s = "'" + s;
+        return `"${s.replace(/"/g, '""')}"`;
+      };
+      const header = ["Tên khách", "Số điện thoại", "Email", "Số đơn", "Tổng chi tiêu (VND)", "Lần mua gần nhất", "Món hay mua"];
+      const lines = [header.map(csvCell).join(",")];
+      list.forEach(c => {
+        const fav = (c.top_items || []).map(i => `${trf(i.name_vi, i.name_en)} (x${i.qty})`).join("; ");
+        lines.push([
+          csvCell(c.name), csvCell(c.phone), csvCell(c.email),
+          Number(c.order_count || 0), Number(c.total_spent || 0),
+          csvCell(c.last_order_at), csvCell(fav)
+        ].join(","));
+      });
+      const blob = new Blob(["\uFEFF" + lines.join("\r\n")], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `khach-quen-tu-${State.custMinOrders}-don.csv`;
+      document.body.appendChild(a); a.click(); a.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    function renderSellerCustomersBlock() {
+      const list = nbFilteredCustomers();
+      return `
+      <div class="space-y-5">
+        <div class="flex flex-wrap items-end gap-3 rounded-2xl border border-[#dce2d4] bg-[#f4f7ef] p-4 sm:p-5">
+          <div>
+            <label class="mb-1 block text-xs font-medium text-[#234d38]">${nbT("Số đơn tối thiểu", "Min orders")}</label>
+            <input type="number" min="1" max="999" value="${Number(State.custMinOrders)}" onchange="nbLoadCustomers(this.value)" class="min-h-[42px] w-28 rounded-xl border border-[#d8dfcf] bg-white px-3 py-1.5 text-sm">
+          </div>
+          <div class="flex gap-2">
+            <button onclick="nbLoadCustomers(1)" class="min-h-[42px] rounded-full border px-4 py-1.5 text-xs font-semibold ${State.custMinOrders === 1 ? "border-[#234d38] bg-[#234d38] text-white" : "border-[#dce2d4] bg-white text-[#234d38]"}">${nbT("Tất cả (≥1 đơn)", "All (≥1)")}</button>
+            <button onclick="nbLoadCustomers(3)" class="min-h-[42px] rounded-full border px-4 py-1.5 text-xs font-semibold ${State.custMinOrders === 3 ? "border-[#234d38] bg-[#234d38] text-white" : "border-[#dce2d4] bg-white text-[#234d38]"}">⭐ ${nbT("Khách quen (≥3 đơn)", "Regulars (≥3)")}</button>
+          </div>
+          <div class="flex-1 min-w-[200px]">
+            <label class="mb-1 block text-xs font-medium text-[#234d38]">${nbT("Tìm khách hàng", "Search customer")}</label>
+            <input value="${esc(State.custSearch)}" oninput="State.custSearch=this.value;renderAll()" placeholder="${nbT("Tên, SĐT hoặc email...", "Name, phone or email...")}" class="min-h-[42px] w-full rounded-xl border border-[#d8dfcf] bg-white px-3 py-1.5 text-sm">
+          </div>
+          <button onclick="exportCustomersCsv()" class="inline-flex min-h-[42px] items-center rounded-full border border-[#234d38] bg-white px-4 py-1.5 text-xs font-semibold text-[#234d38] hover:bg-[#edf2e7]">📥 ${nbT("Xuất CSV", "Export CSV")}</button>
+        </div>
+
+        ${State.custLoading ? `<p class="text-xs text-[#626b5e]">${nbT("Đang tổng hợp dữ liệu khách hàng...", "Loading customer summary...")}</p>` : (
+          list.length ? `
+          <div class="overflow-x-auto rounded-2xl border border-[#dce2d4] bg-white">
+            <table class="w-full text-left text-xs min-w-[700px]">
+              <thead class="bg-[#f4f7ef] text-[#626b5e]">
+                <tr><th class="p-3.5">${nbT("Khách hàng", "Customer")}</th><th>${nbT("Số đơn", "Orders")}</th><th>${nbT("Tổng chi tiêu", "Total spent")}</th><th>${nbT("Lần mua gần nhất", "Last order")}</th><th>${nbT("Món hay mua", "Favorite items")}</th></tr>
+              </thead>
+              <tbody>
+                ${list.map(c => `<tr class="border-t border-[#eef2e8]">
+                  <td class="p-3.5">
+                    <div class="font-semibold text-[#234d38]">${esc(c.name || tr("Khách", "Guest"))}</div>
+                    <div class="text-[#626b5e]">${esc(c.phone || "")}${c.phone && c.email ? " · " : ""}${esc(c.email || "")}</div>
+                  </td>
+                  <td class="font-semibold">${Number(c.order_count)}</td>
+                  <td class="font-semibold text-[#234d38]">${money(c.total_spent)}</td>
+                  <td class="text-[#626b5e]">${esc(c.last_order_at)}</td>
+                  <td>${(c.top_items || []).map(i => `<span class="mr-1 mb-1 inline-block rounded-full bg-[#edf4e7] px-2.5 py-0.5 text-[11px] text-[#234d38]">${esc(trf(i.name_vi, i.name_en))} × ${Number(i.qty)}</span>`).join("") || "—"}</td>
+                </tr>`).join("")}
+              </tbody>
+            </table>
+          </div>` : `<div class="rounded-2xl border border-[#dce2d4] bg-white p-10 text-center text-sm text-[#626b5e]">${nbT("Chưa có khách nào đạt ngưỡng đơn này.", "No customers match this order threshold yet.")}</div>`
+        )}
+      </div>`;
+    }
     function renderSellerOrders() {
+      const isOwner = NB_AUTH_ROLE === "seller";
       const deliveredPaid = State.orders.filter(o => o.status === "delivered" && o.payment === "paid");
       const gross = deliveredPaid.reduce((s, o) => s + o.total, 0);
       const commission = deliveredPaid.reduce((s, o) => s + (o.commission_bps_snapshot ? Math.round((o.total * o.commission_bps_snapshot) / 10000) : 0), 0);
@@ -3007,22 +3824,31 @@
       return `
     <section class="mx-auto w-full max-w-[1440px] px-5 py-10 sm:px-8 lg:px-16">
       <div class="mb-6 flex flex-wrap items-center justify-between gap-3">
-        <h1 class="text-3xl font-medium text-[#234d38]">${nbT("Đơn hàng & doanh thu", "Orders & revenue")}</h1>
-        <button onclick="runExpireUnpaidNow()" class="inline-flex min-h-[44px] items-center justify-center rounded-full border border-red-300 bg-red-50 px-4 py-2 text-xs font-semibold text-red-700 hover:bg-red-100 transition-colors">⏰ ${nbT("Hủy đơn quá hạn ngay", "Cancel overdue orders now")}</button>
+        <div class="flex flex-wrap items-center gap-3">
+          <h1 class="text-3xl font-medium text-[#234d38]">${nbT("Đơn hàng & doanh thu", "Orders & revenue")}</h1>
+      ${isOwner ? `<div class="flex gap-2">
+            <button onclick="State.sellerOrdersTab='orders';renderAll()" class="inline-flex min-h-[40px] items-center rounded-full border px-4 py-1.5 text-xs font-semibold ${State.sellerOrdersTab !== 'customers' ? 'border-[#234d38] bg-[#234d38] text-white' : 'border-[#dce2d4] bg-white text-[#234d38]'}">📦 ${nbT("Đơn & thống kê", "Orders & stats")}</button>
+            <button onclick="State.sellerOrdersTab='customers';nbLoadCustomers()" class="inline-flex min-h-[40px] items-center rounded-full border px-4 py-1.5 text-xs font-semibold ${State.sellerOrdersTab === 'customers' ? 'border-[#234d38] bg-[#234d38] text-white' : 'border-[#dce2d4] bg-white text-[#234d38]'}">👥 ${nbT("Khách quen", "Regular customers")}</button>
+          </div>` : ""}
+        </div>
+        ${isOwner ? `<button onclick="runExpireUnpaidNow()" class="inline-flex min-h-[44px] items-center justify-center rounded-full border border-red-300 bg-red-50 px-4 py-2 text-xs font-semibold text-red-700 hover:bg-red-100 transition-colors">⏰ ${nbT("Hủy đơn quá hạn ngay", "Cancel overdue orders now")}</button>` : ""}
       </div>
-      ${renderSellerStatsBlock()}
+      ${isOwner && State.sellerOrdersTab === "customers" ? renderSellerCustomersBlock() : `
+      ${isOwner ? renderSellerStatsBlock() : ""}
       ${renderPrepBox()}
-      <div class="mb-5 grid w-full grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
+      <div class="mb-5 grid w-full grid-cols-1 sm:grid-cols-2 ${isOwner ? "lg:grid-cols-5" : "lg:grid-cols-2"} gap-3 sm:gap-4">
         ${card(nbT("Đơn chờ xác nhận", "Pending orders"), pending)}
         ${card(nbT("Chờ nhận chuyển khoản", "Awaiting transfer"), awaitingMoney)}
-        ${card(nbT("Doanh thu đã giao + đã thu", "Delivered + paid gross"), money(gross))}
-        ${card(nbT("Hoa hồng chốt theo đơn", "Snapshotted commission"), money(commission))}
-        ${card(nbT("Doanh thu ròng", "Net revenue"), money(gross - commission))}
-      </div>
+        ${isOwner ? card(nbT("Doanh thu đã giao + đã thu", "Delivered + paid gross"), money(gross)) : ""}
+        ${isOwner ? card(nbT("Hoa hồng chốt theo đơn", "Snapshotted commission"), money(commission)) : ""}
+        ${isOwner ? card(nbT("Doanh thu ròng", "Net revenue"), money(gross - commission)) : ""}
+      </div>    
+      
       ${low.length ? `<div class="mb-6 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">⚠️ <b>${nbT("Sắp hết hàng", "Low stock")}:</b> ${low.map(p => `${pname(p)} (${p.stock_quantity})`).join(" · ")} — <a href="#/manage" onclick="navigate('manage')" class="underline">${nbT("cập nhật tồn kho", "update stock")}</a></div>` : ""}
       ${nbOrderFilterBar()}
       ${list.length ? `<div class="grid w-full grid-cols-1 items-start gap-6 xl:grid-cols-2">${list.map(o => renderOrderCard(o, true)).join("")}</div>`
-          : `<div class="rounded-3xl border border-[#dce2d4] bg-white px-5 py-16 text-center text-[#626b5e]">${nbT("Chưa có đơn nào khớp.", "No matching orders.")}</div>`}
+            : `<div class="rounded-3xl border border-[#dce2d4] bg-white px-5 py-16 text-center text-[#626b5e]">${nbT("Chưa có đơn nào khớp.", "No matching orders.")}</div>`}
+   `}
     </section>`;
     }
     // ---- Cài đặt cửa hàng + mã giảm giá (người bán) ---------------------------
@@ -3074,7 +3900,33 @@
         await nbLoadCoupons();
       } catch (err) { nbFail(err); }
     }
+    async function nbLoadStaff() {
+      if (!NB_SUPABASE_READY || NB_AUTH_ROLE !== "seller") return;
+      try { State.staffList = (await nbRpc("nb2_list_staff")) || []; renderAll(); }
+      catch (e) { console.error("Không tải được nhân viên:", e); }
+    }
 
+    async function inviteStaffEmail(e) {
+      e.preventDefault();
+      const inp = document.getElementById("stf_email");
+      const email = (inp.value || "").trim().toLowerCase();
+      if (!email) return;
+      try {
+        await nbRpc("nb2_invite_staff", { p_email: email });
+        inp.value = "";
+        await nbLoadStaff();
+        showNotice(`Đã mời nhân viên ${email}.`, `Invited staff ${email}.`);
+      } catch (err) { nbFail(err); }
+    }
+
+    async function revokeStaffEmail(email) {
+      if (!window.confirm(tr(`Thu hồi quyền nhân viên của ${email}?`, `Revoke staff access for ${email}?`))) return;
+      try {
+        await nbRpc("nb2_revoke_staff", { p_email: email });
+        await nbLoadStaff();
+        showNotice(`Đã thu hồi quyền của ${email}.`, `Revoked ${email}.`);
+      } catch (err) { nbFail(err); }
+    }
     function renderSellerSettings() {
       const s = State.settings, b = State.payInfo || {};
       const inp = (id, label, val, extra = "") => `<div><label class="mb-1 block text-xs font-medium">${label}</label><input id="${id}" value="${esc(val ?? "")}" ${extra} class="min-h-[44px] w-full rounded-xl border border-[#d8dfcf] px-4 py-2.5 text-sm"></div>`;
@@ -3122,6 +3974,24 @@
           <button class="col-span-2 inline-flex min-h-[44px] items-center justify-center rounded-full bg-[#234d38] px-5 py-2.5 text-xs font-semibold text-white sm:col-span-6 sm:w-fit hover:bg-[#173a29] transition-colors">${nbT("Lưu mã", "Save coupon")}</button>
         </form>
       </div>
+
+      <div class="mt-8 rounded-2xl border border-[#dce2d4] bg-white p-6 sm:p-8">
+        <h2 class="text-lg font-semibold text-[#234d38]">👥 ${nbT("Tài khoản nhân viên (Staff)", "Staff accounts")}</h2>
+        <p class="mt-1 text-xs text-[#626b5e]">${nbT("Nhân viên chỉ được xử lý đơn, in phiếu và cập nhật tồn kho; không xem được giá vốn, lợi nhuận, khách quen hay cài đặt.", "Staff can process orders, print slips and update stock; cannot view costs, profit, customers or settings.")}</p>
+        <form onsubmit="inviteStaffEmail(event)" class="mt-4 flex flex-wrap gap-2">
+          <input id="stf_email" type="email" required placeholder="${nbT("Nhập email Google của nhân viên...", "Enter staff Google email...")}" class="min-h-[44px] min-w-[240px] flex-1 rounded-full border border-[#d8dfcf] px-4 py-2 text-sm">
+          <button class="inline-flex min-h-[44px] items-center rounded-full bg-[#234d38] px-5 py-2 text-xs font-semibold text-white hover:bg-[#173a29]">+ ${nbT("Mời nhân viên", "Invite staff")}</button>
+        </form>
+        ${State.staffList.length ? `<div class="mt-4 overflow-x-auto"><table class="w-full text-left text-xs">
+          <thead class="text-[#626b5e]"><tr><th class="py-2">Email</th><th>${nbT("Tên", "Name")}</th><th>${nbT("Trạng thái", "Status")}</th><th></th></tr></thead>
+          <tbody>${State.staffList.map(s => `<tr class="border-t border-[#eef2e8]">
+            <td class="py-2 font-semibold text-[#234d38]">${esc(s.email)}</td>
+            <td>${esc(s.display_name || "—")}</td>
+            <td>${s.status === "active" ? `<span class="rounded-full bg-[#dff0d8] px-2 py-0.5 text-[#234d38]">✓ ${nbT("Đang hoạt động", "Active")}</span>` : `<span class="rounded-full bg-amber-50 px-2 py-0.5 text-amber-800">${nbT("Chờ đăng nhập", "Pending sign-in")}</span>`}</td>
+            <td class="text-right"><button type="button" onclick="revokeStaffEmail('${esc(s.email)}')" class="underline text-red-700">${nbT("Thu hồi", "Revoke")}</button></td>
+          </tr>`).join("")}</tbody>
+        </table></div>` : `<p class="mt-3 text-xs text-[#626b5e]">${nbT("Chưa có nhân viên nào.", "No staff accounts yet.")}</p>`}
+      </div>
     </section>`;
     }
 
@@ -3130,6 +4000,110 @@
       if (!NB_SUPABASE_READY || NB_AUTH_ROLE !== "seller") return;
       try { State.productCosts = (await nbRpc("nb2_get_product_costs")) || {}; }
       catch (e) { console.error("Không tải được giá vốn:", e); }
+    } async function nbLoadStockLogs() {
+      if (!NB_SUPABASE_READY || (NB_AUTH_ROLE !== "seller" && NB_AUTH_ROLE !== "staff")) return;
+      try {
+        State.stockLogs = (await nbRpc("nb2_list_stock_logs", {
+          p_product_id: State.stockFilterProd ? Number(State.stockFilterProd) : null,
+          p_from: State.stockFilterFrom || null,
+          p_to: State.stockFilterTo || null
+        })) || [];
+      } catch (e) { console.error("Không tải được nhật ký kho:", e); }
+    }
+
+    async function submitStockAdjust(e) {
+      e.preventDefault();
+      const pid = Number(document.getElementById("stk_prod").value);
+      const kind = document.getElementById("stk_kind").value;
+      const qty = Number(document.getElementById("stk_qty").value);
+      const reason = (document.getElementById("stk_reason").value || "").trim();
+      try {
+        const after = await nbRpc("nb2_adjust_stock", {
+          p_product_id: pid, p_kind: kind, p_qty: Math.round(qty), p_reason: reason
+        });
+        document.getElementById("stk_reason").value = "";
+        await Promise.all([nbLoadProducts(), nbLoadStockLogs()]);
+        renderAll();
+        showNotice(`Đã cập nhật tồn kho thành ${after}.`, `Stock updated to ${after}.`);
+      } catch (err) { nbFail(err); }
+    }
+
+    function renderStockTab() {
+      const prods = State.products.filter(p => !isSample(p));
+      const selId = State.stockModalProdId || (prods[0] ? prods[0].id : 0);
+      const kindBadge = k => {
+        if (k === "import") return `<span class="rounded-full bg-[#dff0d8] px-2.5 py-0.5 font-semibold text-[#234d38]">+ ${nbT("Nhập kho", "Import")}</span>`;
+        if (k === "loss") return `<span class="rounded-full bg-red-100 px-2.5 py-0.5 font-semibold text-red-700">− ${nbT("Hao hụt", "Loss")}</span>`;
+        return `<span class="rounded-full bg-amber-100 px-2.5 py-0.5 font-semibold text-amber-800">⇄ ${nbT("Điều chỉnh", "Adjust")}</span>`;
+      };
+      return `
+      <div class="mt-6 space-y-6">
+        <form onsubmit="submitStockAdjust(event)" class="rounded-2xl border border-[#dce2d4] bg-white p-5 sm:p-6 space-y-4">
+          <h2 class="text-lg font-semibold text-[#234d38]">📦 ${nbT("Nhập kho / Hao hụt / Điều chỉnh tồn kho", "Stock import / loss / adjustment")}</h2>
+          <div class="grid grid-cols-1 gap-4 sm:grid-cols-4">
+            <div class="sm:col-span-2">
+              <label class="mb-1 block text-xs font-medium">${nbT("Chọn sản phẩm *", "Product *")}</label>
+              <select id="stk_prod" onchange="State.stockModalProdId=Number(this.value)" class="min-h-[44px] w-full rounded-xl border border-[#d8dfcf] px-3 py-2 text-sm">
+                ${prods.map(p => `<option value="${p.id}" ${p.id === selId ? "selected" : ""}>${pname(p)} (${nbT("hiện còn:", "current:")} ${p.stock_quantity})</option>`).join("")}
+              </select>
+            </div>
+            <div>
+              <label class="mb-1 block text-xs font-medium">${nbT("Loại thao tác *", "Action type *")}</label>
+              <select id="stk_kind" class="min-h-[44px] w-full rounded-xl border border-[#d8dfcf] px-3 py-2 text-sm">
+                <option value="import">${nbT("Nhập thêm (+)", "Import (+)")}</option>
+                <option value="loss">${nbT("Hao hụt / Hỏng (−)", "Loss / Spoilage (−)")}</option>
+                <option value="adjust">${nbT("Kiểm kê (đặt về số thực tế)", "Adjust (set exact qty)")}</option>
+              </select>
+            </div>
+            <div>
+              <label class="mb-1 block text-xs font-medium">${nbT("Số lượng *", "Quantity *")}</label>
+              <input id="stk_qty" type="number" min="0" step="1" required value="1" class="min-h-[44px] w-full rounded-xl border border-[#d8dfcf] px-3 py-2 text-sm">
+            </div>
+            <div class="sm:col-span-3">
+              <label class="mb-1 block text-xs font-medium">${nbT("Lý do (bắt buộc) *", "Reason (required) *")}</label>
+              <input id="stk_reason" required maxlength="300" placeholder="${nbT("VD: Nhập lô sáng 13/11, Hư hỏng 2 hộp do vận chuyển...", "e.g. Morning batch restock, 2 boxes damaged...")}" class="min-h-[44px] w-full rounded-xl border border-[#d8dfcf] px-3 py-2 text-sm">
+            </div>
+            <div class="flex items-end">
+              <button class="inline-flex min-h-[44px] w-full items-center justify-center rounded-full bg-[#234d38] px-5 py-2 text-xs font-semibold text-white hover:bg-[#173a29]">${nbT("Lưu thay đổi kho", "Save stock log")}</button>
+            </div>
+          </div>
+        </form>
+
+        <div class="rounded-2xl border border-[#dce2d4] bg-white p-5 sm:p-6">
+          <div class="flex flex-wrap items-end gap-3 mb-4">
+            <h3 class="text-base font-semibold text-[#234d38] mr-auto">📜 ${nbT("Lịch sử xuất / nhập / hao hụt", "Stock history")}</h3>
+            <div>
+              <label class="mb-1 block text-[11px] font-medium">${nbT("Lọc theo món", "Product")}</label>
+              <select onchange="State.stockFilterProd=this.value;nbLoadStockLogs().then(renderAll)" class="min-h-[40px] rounded-xl border border-[#d8dfcf] px-3 py-1.5 text-xs">
+                <option value="">${nbT("Tất cả món", "All products")}</option>
+                ${prods.map(p => `<option value="${p.id}" ${String(State.stockFilterProd) === String(p.id) ? "selected" : ""}>${pname(p)}</option>`).join("")}
+              </select>
+            </div>
+            <div>
+              <label class="mb-1 block text-[11px] font-medium">${nbT("Từ ngày", "From")}</label>
+              <input type="date" value="${esc(State.stockFilterFrom)}" onchange="State.stockFilterFrom=this.value;nbLoadStockLogs().then(renderAll)" class="min-h-[40px] rounded-xl border border-[#d8dfcf] px-3 py-1.5 text-xs">
+            </div>
+            <div>
+              <label class="mb-1 block text-[11px] font-medium">${nbT("Đến ngày", "To")}</label>
+              <input type="date" value="${esc(State.stockFilterTo)}" onchange="State.stockFilterTo=this.value;nbLoadStockLogs().then(renderAll)" class="min-h-[40px] rounded-xl border border-[#d8dfcf] px-3 py-1.5 text-xs">
+            </div>
+          </div>
+          ${State.stockLogs.length ? `
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs min-w-[680px]">
+                <thead class="bg-[#f4f7ef] text-[#626b5e]"><tr><th class="p-3">${nbT("Thời gian", "Time")}</th><th>${nbT("Món", "Product")}</th><th>${nbT("Loại", "Type")}</th><th>${nbT("Thay đổi", "Change")}</th><th>${nbT("Lý do", "Reason")}</th><th>${nbT("Người thao tác", "Actor")}</th></tr></thead>
+                <tbody>${State.stockLogs.map(l => `<tr class="border-t border-[#eef2e8]">
+                  <td class="p-3 text-[#626b5e]">${esc(l.created_at)}</td>
+                  <td class="font-semibold text-[#234d38]">${esc(trf(l.name_vi, l.name_en))}</td>
+                  <td>${kindBadge(l.kind)}</td>
+                  <td><b>${l.delta_qty > 0 ? "+" + l.delta_qty : l.delta_qty}</b> <span class="text-[#626b5e]">(${l.before_qty} → ${l.after_qty})</span></td>
+                  <td>${esc(l.reason)}</td>
+                  <td class="text-[#626b5e]">${esc(l.actor_email || "—")}</td>
+                </tr>`).join("")}</tbody>
+              </table>
+            </div>` : `<p class="py-6 text-center text-xs text-[#626b5e]">${nbT("Chưa có lịch sử kho nào khớp bộ lọc.", "No stock logs match the filter.")}</p>`}
+        </div>
+      </div>`;
     }
     function renderIngredientsTab() {
       const ie = State.ingEditId ? (State.ingredients.find(x => x.id === State.ingEditId) || {}) : {};
@@ -3238,11 +4212,14 @@
     <div class="mx-auto w-full max-w-[1440px] px-5 py-10 sm:px-8 lg:px-16">
       <div class="flex flex-wrap items-center justify-between gap-4">
         <h1 class="text-3xl font-medium text-[#234d38]">${nbT("Quản lý sản phẩm", "Manage products")}</h1>
-        <div class="flex flex-wrap gap-2">
-          <button onclick="State.manageTab='products';renderAll()" class="inline-flex min-h-[44px] items-center rounded-full border px-4 py-2 text-xs font-semibold ${State.manageTab !== 'ingredients' ? 'border-[#234d38] bg-[#234d38] text-white' : 'border-[#dce2d4] bg-white text-[#234d38]'}">📦 ${nbT("Sản phẩm", "Products")}</button>
-          <button onclick="State.manageTab='ingredients';nbLoadIngredients().then(renderAll)" class="inline-flex min-h-[44px] items-center rounded-full border px-4 py-2 text-xs font-semibold ${State.manageTab === 'ingredients' ? 'border-[#234d38] bg-[#234d38] text-white' : 'border-[#dce2d4] bg-white text-[#234d38]'}">🥬 ${nbT("Kho nguyên liệu", "Ingredients")}</button>
-          ${State.products.length === 0 ? `<button onclick="importSampleProducts()" class="inline-flex min-h-[44px] items-center justify-center rounded-full border border-[#234d38] bg-white px-5 py-2.5 text-sm font-semibold text-[#234d38] hover:bg-[#edf2e7] transition-colors">${nbT("Nạp sản phẩm mẫu ban đầu", "Import starter products")}</button>` : ""}
-          <button onclick="State.manageTab='products';State.editorOpen=true;State.editorId=0;renderAll()" class="inline-flex min-h-[44px] items-center justify-center rounded-full bg-[#234d38] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#173a29] transition-colors">+ ${nbT("Thêm sản phẩm mới", "Add new product")}</button>
+       <div class="flex flex-wrap gap-2">
+          ${NB_AUTH_ROLE === "seller" ? `
+            <button onclick="State.manageTab='products';renderAll()" class="inline-flex min-h-[44px] items-center rounded-full border px-4 py-2 text-xs font-semibold ${State.manageTab === 'products' ? 'border-[#234d38] bg-[#234d38] text-white' : 'border-[#dce2d4] bg-white text-[#234d38]'}">🛍️ ${nbT("Sản phẩm", "Products")}</button>
+            <button onclick="State.manageTab='stock';nbLoadStockLogs().then(renderAll)" class="inline-flex min-h-[44px] items-center rounded-full border px-4 py-2 text-xs font-semibold ${State.manageTab === 'stock' ? 'border-[#234d38] bg-[#234d38] text-white' : 'border-[#dce2d4] bg-white text-[#234d38]'}">📦 ${nbT("Nhật ký kho", "Stock log")}</button>
+            <button onclick="State.manageTab='ingredients';nbLoadIngredients().then(renderAll)" class="inline-flex min-h-[44px] items-center rounded-full border px-4 py-2 text-xs font-semibold ${State.manageTab === 'ingredients' ? 'border-[#234d38] bg-[#234d38] text-white' : 'border-[#dce2d4] bg-white text-[#234d38]'}">🥬 ${nbT("Kho nguyên liệu", "Ingredients")}</button>
+            ${State.products.length === 0 ? `<button onclick="importSampleProducts()" class="inline-flex min-h-[44px] items-center justify-center rounded-full border border-[#234d38] bg-white px-5 py-2.5 text-sm font-semibold text-[#234d38] hover:bg-[#edf2e7] transition-colors">${nbT("Nạp sản phẩm mẫu ban đầu", "Import starter products")}</button>` : ""}
+            <button onclick="State.manageTab='products';State.editorOpen=true;State.editorId=0;renderAll()" class="inline-flex min-h-[44px] items-center justify-center rounded-full bg-[#234d38] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#173a29] transition-colors">+ ${nbT("Thêm sản phẩm mới", "Add new product")}</button>
+          ` : `<span class="rounded-full bg-[#edf4e7] px-4 py-2 text-xs font-semibold text-[#234d38]">📦 ${nbT("Cập nhật tồn kho (Nhân viên)", "Stock management (Staff)")}</span>`}
         </div>
       </div>
 
@@ -3254,7 +4231,7 @@
       }).join("")}
       </div>` : ""}
 
-      ${State.manageTab === "ingredients" ? renderIngredientsTab() : `
+     ${State.manageTab === "ingredients" ? renderIngredientsTab() : State.manageTab === "stock" ? renderStockTab() : `
       ${renderRecipeEditorModal()}
       ${State.editorOpen ? `
         <form onsubmit="saveManagedProduct(event)" class="my-8 space-y-5 rounded-2xl border border-[#dce2d4] bg-white p-6">
@@ -3269,7 +4246,9 @@
               <select id="ed_cat" class="w-full rounded-xl border border-[#d8dfcf] px-3 py-2 text-sm">${["meals", "snacks", "supplements", "ingredients"].map(c => `<option value="${c}" ${e.category === c ? "selected" : ""}>${esc(categoryName(c))}</option>`).join("")}</select></div>
             ${num("ed_price", nbT("Giá bán (₫) *", "Price (₫) *"), e.price_vnd, "1")}
             ${num("ed_orig", nbT("Giá gốc (₫)", "Original price (₫)"), e.original_price_vnd, "1")}
-           ${num("ed_stock", nbT("Tồn kho * (ghi đè số hiện tại)", "Stock * (overwrites current)"), e.stock_quantity, "1")}
+         ${State.editorId === 0
+              ? num("ed_stock", nbT("Tồn kho ban đầu *", "Initial stock *"), e.stock_quantity, "1")
+              : text("ed_stock", nbT("Tồn kho (chỉ sửa ở tab Nhật ký kho)", "Stock (use Stock log tab)"), e.stock_quantity, "disabled")}
             ${num("ed_cost", nbT("Giá vốn (₫ — chỉ chủ shop thấy)", "Cost price (₫ — seller only)"), State.editorId ? (State.productCosts[String(State.editorId)] ?? 0) : 0, "1")}
             ${text("ed_img", nbT("Link ảnh (bắt buộc bắt đầu bằng https://)", "Image URL (must start with https://)"), e.image_url, 'maxlength=500 placeholder="https://..."', "sm:col-span-3")}
             ${area("ed_desc_vi", nbT("Mô tả (tiếng Việt)", "Description (Vietnamese)"), e.description_vi)}
@@ -3326,7 +4305,8 @@
                 </div>
               </div>
             </div>
-            <div class="flex flex-wrap gap-2">
+          <div class="flex flex-wrap gap-2">
+              <button onclick="State.manageTab='stock';State.stockModalProdId=${p.id};nbLoadStockLogs().then(renderAll);window.scrollTo({top:0,behavior:'smooth'})" class="inline-flex min-h-[44px] items-center justify-center rounded-full border border-[#234d38] px-4 py-2 text-xs font-medium text-[#234d38] hover:bg-[#edf2e7]">📦 ${nbT("Kho", "Stock")}</button>
               <button onclick="openRecipeModal(${p.id});window.scrollTo({top:0,behavior:'smooth'})" class="inline-flex min-h-[44px] items-center justify-center rounded-full border border-[#234d38] px-4 py-2 text-xs font-medium text-[#234d38] hover:bg-[#edf2e7]">🧪 ${nbT("Công thức", "Recipe")}</button>
               <button onclick="printNutritionLabel(${p.id})" class="inline-flex min-h-[44px] items-center justify-center rounded-full border border-[#d8dfcf] px-4 py-2 text-xs font-medium text-[#234d38] hover:bg-[#edf2e7]">🏷️ ${nbT("In nhãn", "Print label")}</button>
               <button onclick="State.editorId=${p.id};State.editorOpen=true;renderAll();window.scrollTo({top:0,behavior:'smooth'})" class="inline-flex min-h-[44px] items-center justify-center rounded-full border border-[#d8dfcf] px-4 py-2 text-xs font-medium text-[#234d38] hover:bg-[#edf2e7] transition-colors">${nbT("Chỉnh sửa", "Edit")}</button>
@@ -3410,14 +4390,15 @@
     function navigate(route, param = null) {
       const loggedIn = !!NB_AUTH_USER;
       const isSeller = loggedIn && NB_AUTH_ROLE === "seller";
-      const isBuyer = loggedIn && !isSeller;
+      const isStaff = loggedIn && NB_AUTH_ROLE === "staff";
+      const isBuyer = loggedIn && !isSeller && !isStaff;
 
       if (!loggedIn && !nbPublicRoute(route)) {
         State.route = "shop"; renderAll();
         nbShowAuthMessage();
         return;
       }
-      if (isSeller && nbBuyerRoute(route)) {
+      if ((isSeller || isStaff) && nbBuyerRoute(route) && route !== "account") {
         State.route = "shop"; renderAll();
         showNotice("Chức năng này dành cho Buyer.", "This feature is for Buyer accounts.", true);
         return;
@@ -3427,7 +4408,12 @@
         showNotice("Chức năng này dành cho Seller.", "This feature is for Seller accounts.", true);
         return;
       }
-
+      if (isStaff && route === "seller_settings") {
+        State.route = "shop"; renderAll();
+        showNotice("Chỉ chủ cửa hàng mới xem được Cài đặt.", "Only the store owner can access Settings.", true);
+        return;
+      }
+      if (isStaff && route === "manage") State.manageTab = "stock";
       State.route = route;
       if (route === "detail" && param !== null) {
         State.selectedProductId = Number(param);
@@ -3439,9 +4425,9 @@
       const still = fn => () => { if (State.route === route) fn(); };
       if (route === "detail") nbLoadReviews(State.selectedProductId);
       else if (route === "orders") nbLoadOrders().then(still(renderAll));
-      else if (route === "seller_orders") nbLoadSellerOrdersView().then(still(renderAll));
-      else if (route === "manage") Promise.all([nbLoadProducts(), nbLoadIngredients(), nbLoadProductCosts()]).then(still(renderAll));
-      else if (route === "seller_settings") nbLoadSettings().then(still(renderAll)).then(nbLoadCoupons);
+      else if (route === "seller_orders") (isStaff ? nbLoadOrders() : nbLoadSellerOrdersView()).then(still(renderAll));
+      else if (route === "manage") (isStaff ? Promise.all([nbLoadProducts(), nbLoadStockLogs()]) : Promise.all([nbLoadProducts(), nbLoadIngredients(), nbLoadProductCosts()])).then(still(renderAll));
+      else if (route === "seller_settings") nbLoadSettings().then(still(renderAll)).then(nbLoadCoupons).then(nbLoadStaff);
       else if (route === "diary") nbLoadDiary();
     }
 
@@ -3458,7 +4444,7 @@
     function addToCart(id, qty) {
       const p = State.products.find(x => x.id === id);
       if (State.demo) { showNotice("Cửa hàng đang ở chế độ xem thử, chưa đặt mua được.", "The shop is in preview mode; ordering is not available yet.", true); return; }
-      if (NB_AUTH_ROLE === "seller") { showNotice("Tài khoản chủ cửa hàng không đặt mua được. Hãy dùng tài khoản khách để thử mua hàng.", "Seller accounts cannot place orders. Use a buyer account to test purchasing.", true); return; }
+      if (NB_AUTH_ROLE === "seller" || NB_AUTH_ROLE === "staff") { showNotice("Tài khoản chủ cửa hàng không đặt mua được. Hãy dùng tài khoản khách để thử mua hàng.", "Seller accounts cannot place orders. Use a buyer account to test purchasing.", true); return; }
       if (!p || isSample(p) || p.stock_quantity <= 0) {
         showNotice("Sản phẩm này không thể đặt mua (mẫu hoặc hết hàng).", "This item cannot be purchased (sample or out of stock).", true);
         return;
@@ -3470,6 +4456,7 @@
       saveStorage();
       renderAll();
       showNotice(`Đã thêm "${p.name_vi}" vào giỏ hàng.`, `Added "${p.name_en}" to your bag.`);
+      showToast(tr(`Đã thêm "${pname(p)}" vào giỏ hàng`, `Added "${pname(p)}" to bag`, `已加入购物车："${pname(p)}"`), "success");
     }
 
     function updateCartQty(id, delta) {
@@ -3732,7 +4719,16 @@
     // V2-E. CHÂN TRANG
     // ============================================================================
     function nbRefreshFooter() {
-      document.querySelectorAll("[data-vi]").forEach(el => { el.textContent = isVi() ? el.getAttribute("data-vi") : el.getAttribute("data-en"); });
+      const l = State.language || "vi";
+      document.querySelectorAll("[data-vi]").forEach(el => {
+        if (l === "zh") {
+          el.textContent = el.getAttribute("data-zh") || el.getAttribute("data-en") || el.getAttribute("data-vi");
+        } else if (l === "en") {
+          el.textContent = el.getAttribute("data-en") || el.getAttribute("data-vi");
+        } else {
+          el.textContent = el.getAttribute("data-vi");
+        }
+      });
       const c = document.getElementById("footerContact");
       if (c) { const s = State.settings; c.textContent = [s.store_phone, s.store_email].filter(Boolean).join(" · "); }
     }
