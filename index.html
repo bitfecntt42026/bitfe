@@ -581,6 +581,10 @@
       statsRange: "7d", statsData: null, statsLoading: false, printSelected: {}, orderMeta: {},
       editorOpen: false,
       editorId: 0,
+      manageTab: "products",
+      ingredients: [], ingEditorOpen: false, ingEditId: 0,
+      recipeOpen: false, recipeProductId: 0, recipeRows: [],
+      productCosts: {},
       healthResult: null,
       wishlist: JSON.parse(localStorage.getItem("nb_wish") || "[]"),
       diet: [], avoid: [], sort: "default", onlyWish: false, inStock: false, coupon: null,
@@ -789,7 +793,208 @@
         </article>
       `).join("");
     }
+    function nbExpiryInfo(p) {
+      if (!p || !p.expires_at) return { status: "none", daysLeft: null, effectivePrice: p ? p.price_vnd : 0, discountPct: 0 };
+      const todayMs = new Date(nbTodayVN() + "T00:00:00Z").getTime();
+      const expMs = new Date(String(p.expires_at).slice(0, 10) + "T00:00:00Z").getTime();
+      const daysLeft = Math.round((expMs - todayMs) / 86400000);
+      if (daysLeft < 0) return { status: "expired", daysLeft, effectivePrice: p.price_vnd, discountPct: 0 };
+      const nearDays = Math.max(0, Number(p.near_expiry_days ?? 2));
+      if (daysLeft <= nearDays) {
+        const pct = (p.near_expiry_discount_enabled !== false && Number(p.near_expiry_discount_pct) > 0)
+          ? Math.min(90, Number(p.near_expiry_discount_pct)) : 0;
+        const effectivePrice = pct > 0 ? Math.round(p.price_vnd * (100 - pct) / 100) : p.price_vnd;
+        return { status: "near", daysLeft, effectivePrice, discountPct: pct };
+      }
+      return { status: "ok", daysLeft, effectivePrice: p.price_vnd, discountPct: 0 };
+    }
 
+    function nbFormatDateDMY(iso) {
+      if (!iso) return "";
+      const [y, m, d] = String(iso).slice(0, 10).split("-");
+      return d && m && y ? `${d}/${m}/${y}` : iso;
+    }
+
+    function nbSyncExpiryDate() {
+      const mfg = (document.getElementById("ed_mfg_date") || {}).value;
+      const shelf = Number((document.getElementById("ed_shelf") || {}).value);
+      const expEl = document.getElementById("ed_exp_date");
+      if (mfg && shelf > 0 && expEl) {
+        const d = new Date(mfg + "T00:00:00Z");
+        d.setUTCDate(d.getUTCDate() + Math.round(shelf));
+        expEl.value = d.toISOString().slice(0, 10);
+      }
+    }
+
+    function printNutritionLabel(productId) {
+      const p = State.products.find(x => x.id === productId);
+      if (!p) return;
+      const area = document.getElementById("nbPrintArea");
+      const verifiedTxt = (p.has_recipe && p.nutrition_verified)
+        ? tr("✓ Đã kiểm chứng", "✓ Verified")
+        : tr("⚠️ Ước tính, chưa kiểm chứng", "⚠️ Estimated, unverified");
+      const sourcesTxt = (p.nutrition_sources && p.nutrition_sources.length)
+        ? p.nutrition_sources.join(", ") : "";
+      const row = (vi, en, val, unit, bold = false) => `
+        <tr style="border-bottom:1px solid #222">
+          <td style="padding:3px 0;${bold ? "font-weight:bold" : "padding-left:10px"}">${esc(tr(vi, en))}</td>
+          <td style="padding:3px 0;text-align:right;font-weight:bold">${val === null || val === undefined || val === "" ? "—" : esc(val + " " + unit)}</td>
+        </tr>`;
+      area.innerHTML = `
+        <article class="nb-slip" style="max-width:340px;margin:0 auto;border:2px solid #111;padding:12px;font-family:Arial,sans-serif">
+          <h2 style="margin:0;font-size:18px;font-weight:900;border-bottom:1px solid #111;padding-bottom:4px">
+            ${esc(tr("THÔNG TIN DINH DƯỠNG", "NUTRITION FACTS"))}
+          </h2>
+          <p style="margin:4px 0;font-size:13px;font-weight:bold">${pname(p)}</p>
+          <p style="margin:0 0 6px;font-size:11px;border-bottom:6px solid #111;padding-bottom:6px">
+            ${esc(tr("Khẩu phần", "Serving size"))}: <b>${p.serving_size_g ? p.serving_size_g + " g" : "—"}</b><br>
+            <span style="font-size:10px">${esc(verifiedTxt)}</span>
+          </p>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;border-bottom:4px solid #111;padding:4px 0;font-size:16px;font-weight:900">
+            <span>${esc(tr("Năng lượng / Calories", "Calories"))}</span>
+            <span>${p.calories_kcal === null ? "—" : p.calories_kcal + " kcal"}</span>
+          </div>
+          <table style="width:100%;border-collapse:collapse;font-size:12px">
+            ${row("Chất béo tổng", "Total Fat", p.fat_g, "g", true)}
+            ${row("Tinh bột", "Total Carbohydrate", p.carbohydrate_g, "g", true)}
+            ${row("Chất xơ", "Dietary Fiber", p.fiber_g, "g")}
+            ${row("Đường", "Total Sugars", p.sugar_g, "g")}
+            ${row("Chất đạm", "Protein", p.protein_g, "g", true)}
+            ${row("Natri", "Sodium", p.sodium_mg, "mg", true)}
+          </table>
+          ${(p.ingredients_vi || p.ingredients_en) ? `<p style="margin:8px 0 0;font-size:10px;line-height:1.4"><b>${esc(tr("Thành phần", "Ingredients"))}:</b> ${esc(trf(p.ingredients_vi, p.ingredients_en))}</p>` : ""}
+          ${sourcesTxt ? `<p style="margin:4px 0 0;font-size:10px;color:#444"><b>${esc(tr("Nguồn số liệu", "Sources"))}:</b> ${esc(sourcesTxt)}</p>` : ""}
+        </article>`;
+      document.body.classList.add("nb-printing");
+      const cleanup = () => {
+        document.body.classList.remove("nb-printing");
+        area.innerHTML = "";
+        window.removeEventListener("afterprint", cleanup);
+      };
+      window.addEventListener("afterprint", cleanup);
+      setTimeout(() => window.print(), 50);
+    }
+
+    async function nbLoadIngredients() {
+      if (!NB_SUPABASE_READY || NB_AUTH_ROLE !== "seller") return;
+      try { State.ingredients = (await nbRpc("nb2_list_ingredients")) || []; }
+      catch (e) { console.error("Không tải được nguyên liệu:", e); }
+    }
+
+    async function saveIngredientForm(e) {
+      e.preventDefault();
+      const v = id => (document.getElementById(id).value || "").trim();
+      const n = id => Number(v(id) || 0);
+      try {
+        await nbRpc("nb2_save_ingredient", {
+          p: {
+            id: State.ingEditId || null,
+            name_vi: v("ing_name_vi"), name_en: v("ing_name_en"),
+            kcal_100g: n("ing_kcal"), protein_100g: n("ing_pro"), fat_100g: n("ing_fat"),
+            carb_100g: n("ing_carb"), fiber_100g: n("ing_fib"), sugar_100g: n("ing_sug"),
+            sodium_100g: n("ing_sod"), source: v("ing_source"),
+            is_verified: document.getElementById("ing_verified").checked
+          }
+        });
+        State.ingEditorOpen = false;
+        await Promise.all([nbLoadIngredients(), nbLoadProducts()]);
+        renderAll();
+        showNotice("Đã lưu nguyên liệu và cập nhật dinh dưỡng các món liên quan.", "Ingredient saved and linked products recalculated.");
+      } catch (err) { nbFail(err); }
+    }
+
+    async function deleteIngredientItem(id) {
+      if (!window.confirm(tr("Xóa nguyên liệu này?", "Delete this ingredient?"))) return;
+      try {
+        await nbRpc("nb2_delete_ingredient", { p_id: id });
+        await nbLoadIngredients();
+        renderAll();
+      } catch (err) { nbFail(err); }
+    }
+
+    function downloadSampleIngredientsCsv() {
+      const header = ["name_vi", "name_en", "kcal_100g", "protein_100g", "fat_100g", "carb_100g", "fiber_100g", "sugar_100g", "sodium_100g", "source", "is_verified"];
+      const rows = [
+        ["VÍ DỤ - cần kiểm tra lại: Ức gà", "EXAMPLE - verify: Chicken breast", "0", "0", "0", "0", "0", "0", "0", "VÍ DỤ - điền nguồn thực tế", "false"],
+        ["VÍ DỤ - cần kiểm tra lại: Gạo lứt", "EXAMPLE - verify: Brown rice", "0", "0", "0", "0", "0", "0", "0", "VÍ DỤ - điền nguồn thực tế", "false"],
+        ["VÍ DỤ - cần kiểm tra lại: Dầu olive", "EXAMPLE - verify: Olive oil", "0", "0", "0", "0", "0", "0", "0", "VÍ DỤ - điền nguồn thực tế", "false"]
+      ];
+      const csv = "\uFEFF" + [header, ...rows].map(r => r.map(c => `"${String(c).replace(/"/g, '""')}"`).join(",")).join("\r\n");
+      const url = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8;" }));
+      const a = document.createElement("a");
+      a.href = url; a.download = "mau-nguyen-lieu-vi-du.csv";
+      document.body.appendChild(a); a.click(); a.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    function handleIngredientsCsvUpload(input) {
+      const file = input.files && input.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = async () => {
+        try {
+          const text = String(reader.result || "").replace(/^\uFEFF/, "");
+          const lines = text.split(/\r?\n/).filter(l => l.trim() !== "");
+          if (lines.length < 2) { showNotice("File CSV chưa có dữ liệu.", "CSV file has no data rows.", true); return; }
+          const parseLine = line => {
+            const out = []; let cur = "", inQ = false;
+            for (let i = 0; i < line.length; i++) {
+              const ch = line[i];
+              if (ch === '"') { if (inQ && line[i + 1] === '"') { cur += '"'; i++; } else inQ = !inQ; }
+              else if (ch === ',' && !inQ) { out.push(cur.trim()); cur = ""; }
+              else cur += ch;
+            }
+            out.push(cur.trim());
+            return out;
+          };
+          const cols = parseLine(lines[0]).map(c => c.toLowerCase());
+          const rows = lines.slice(1).map(l => {
+            const vals = parseLine(l);
+            const obj = {};
+            cols.forEach((c, idx) => { obj[c] = vals[idx] ?? ""; });
+            obj.is_verified = /^(true|1|yes|x|co|có)$/i.test(String(obj.is_verified || ""));
+            return obj;
+          }).filter(r => r.name_vi);
+          const count = await nbRpc("nb2_import_ingredients_csv", { p_rows: rows });
+          await nbLoadIngredients();
+          renderAll();
+          showNotice(`Đã nhập ${count} nguyên liệu từ CSV.`, `Imported ${count} ingredients from CSV.`);
+        } catch (err) { nbFail(err); }
+        input.value = "";
+      };
+      reader.readAsText(file, "UTF-8");
+    }
+
+    async function openRecipeModal(productId) {
+      State.recipeProductId = productId;
+      State.recipeOpen = true;
+      State.recipeRows = [];
+      renderAll();
+      try {
+        if (!State.ingredients.length) await nbLoadIngredients();
+        const rows = (await nbRpc("nb2_get_product_recipe", { p_product_id: productId })) || [];
+        State.recipeRows = rows.map(r => ({ ingredient_id: Number(r.ingredient_id), grams: Number(r.grams) }));
+        renderAll();
+      } catch (err) { nbFail(err); }
+    }
+
+    function addRecipeRow() {
+      const firstId = State.ingredients.length ? State.ingredients[0].id : 0;
+      if (!firstId) { showNotice("Hãy thêm nguyên liệu vào Kho nguyên liệu trước.", "Add ingredients first.", true); return; }
+      State.recipeRows.push({ ingredient_id: firstId, grams: 100 });
+      renderAll();
+    }
+
+    async function saveProductRecipe(e) {
+      e.preventDefault();
+      try {
+        await nbRpc("nb2_save_product_recipe", { p_product_id: State.recipeProductId, p_items: State.recipeRows });
+        State.recipeOpen = false;
+        await nbLoadProducts();
+        renderAll();
+        showNotice("Đã lưu công thức và tự động cập nhật dinh dưỡng món ăn.", "Recipe saved and product nutrition updated.");
+      } catch (err) { nbFail(err); }
+    }
     function getFilteredProducts() {
       const q = State.search.trim().toLowerCase();
       const vit = State.vitaminQuery.trim().toLowerCase();
@@ -797,6 +1002,7 @@
 
       return State.products.filter(p => {
         if (!p.is_active) return false;
+        if (nbExpiryInfo(p).status === "expired") return false;
         if (State.category !== "all" && p.category !== State.category) return false;
         if (q) {
           const hay = `${p.name_vi} ${p.name_en} ${p.description_vi} ${p.description_en} ${p.ingredients_vi} ${p.ingredients_en} ${p.vitamins_vi} ${p.vitamins_en}`.toLowerCase();
@@ -975,8 +1181,11 @@
       const p = State.products.find(x => x.id === State.selectedProductId);
       if (!p) return `<div class="py-20 text-center"><h1 class="text-2xl text-[#234d38]">${tr("Không tìm thấy sản phẩm", "Product not found")}</h1></div>`;
       const sample = isSample(p);
-      const hasOrig = p.original_price_vnd && p.original_price_vnd > p.price_vnd;
-
+      const exp = nbExpiryInfo(p);
+      const sellPrice = exp.effectivePrice;
+      const crossedPrice = exp.discountPct > 0 ? p.price_vnd : (p.original_price_vnd && p.original_price_vnd > sellPrice ? p.original_price_vnd : null);
+      const hasOrig = !!crossedPrice;
+      const isExpired = exp.status === "expired";
       return `
     <div class="mx-auto w-full max-w-[1440px] px-5 py-10 sm:px-8 lg:px-16">
       <a href="#/" onclick="navigate('shop')" class="mb-7 inline-flex min-h-[44px] items-center gap-2 text-sm text-[#557448] hover:underline">
@@ -990,10 +1199,12 @@
         <div>
           <p class="text-xs font-semibold uppercase tracking-widest text-[#648358]">${categoryName(p.category)}</p>
           <h1 class="mt-3 text-3xl font-medium tracking-tight text-[#234d38] sm:text-4xl">${pname(p)}</h1>
-          <div class="mt-5 text-2xl font-semibold text-[#234d38]">
-            ${hasOrig ? `<s class="block text-sm font-normal text-[#626b5e]">${money(p.original_price_vnd)}</s>` : ''}
-            ${money(p.price_vnd)}
+       <div class="mt-5 text-2xl font-semibold text-[#234d38]">
+            ${hasOrig ? `<s class="block text-sm font-normal text-[#626b5e]">${money(crossedPrice)}</s>` : ''}
+            ${money(sellPrice)}
           </div>
+          ${exp.status === "near" ? `<p class="mt-2 inline-block rounded-full border border-amber-300 bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-800">⏳ ${nbT(`Sắp hết hạn (HSD: ${nbFormatDateDMY(p.expires_at)})`, `Near expiry (Exp: ${nbFormatDateDMY(p.expires_at)})`)}${exp.discountPct > 0 ? nbT(` · Giảm ${exp.discountPct}%`, ` · ${exp.discountPct}% off`) : ""}</p>` : ""}
+          ${isExpired ? `<p class="mt-2 inline-block rounded-full border border-red-300 bg-red-50 px-3 py-1 text-xs font-semibold text-red-700">⛔ ${nbT("Sản phẩm đã hết hạn", "Product expired")}</p>` : ""}
           <p class="mt-5 text-sm leading-7 text-[#626b5e]">${esc(trf(p.description_vi, p.description_en))}</p>
           ${nbDetailExtras(p)}
 
@@ -1006,7 +1217,7 @@
             </div>
           </div>
 
-          <button onclick="addToCart(${p.id}, State.detailQuantity)" ${(p.stock_quantity <= 0 || sample) ? 'disabled' : ''} class="mt-5 inline-flex min-h-[48px] w-full items-center justify-center gap-3 rounded-full bg-[#234d38] px-6 py-3.5 text-sm font-semibold text-white hover:bg-[#173a29] transition-colors disabled:opacity-40">
+        <button onclick="addToCart(${p.id}, State.detailQuantity)" ${(p.stock_quantity <= 0 || sample || isExpired) ? 'disabled' : ''} class="mt-5 inline-flex min-h-[48px] w-full items-center justify-center gap-3 rounded-full bg-[#234d38] px-6 py-3.5 text-sm font-semibold text-white hover:bg-[#173a29] transition-colors disabled:opacity-40">
             🛍️ ${tr("Thêm vào giỏ hàng", "Add to bag")}
           </button>
 
@@ -1026,8 +1237,17 @@
             <p class="mt-2 text-sm leading-6 text-[#626b5e]">${esc(trf(p.vitamins_vi, p.vitamins_en)) || tr("Chưa được người bán cung cấp.", "Not supplied by the seller.")}</p>
           </div>
 
-          <h2 class="mt-8 text-lg font-semibold text-[#234d38]">${tr("Thông tin dinh dưỡng", "A closer look at nutrition")}</h2>
-          <p class="mt-1 text-xs text-[#626b5e]">
+        <div class="mt-8 flex flex-wrap items-center justify-between gap-2">
+            <h2 class="text-lg font-semibold text-[#234d38]">${tr("Thông tin dinh dưỡng", "A closer look at nutrition")}</h2>
+            <button type="button" onclick="printNutritionLabel(${p.id})" class="inline-flex min-h-[40px] items-center rounded-full border border-[#234d38] bg-white px-4 py-1.5 text-xs font-semibold text-[#234d38] hover:bg-[#edf2e7]">🏷️ ${nbT("In nhãn dinh dưỡng", "Print nutrition label")}</button>
+          </div>
+          <div class="mt-2 flex flex-wrap items-center gap-2 text-xs">
+            ${(p.has_recipe && p.nutrition_verified)
+          ? `<span class="rounded-full bg-[#dff0d8] px-3 py-1 font-semibold text-[#234d38]">✓ ${nbT("Đã kiểm chứng", "Verified")}</span>`
+          : `<span class="rounded-full border border-amber-300 bg-amber-50 px-3 py-1 font-medium text-amber-800">⚠️ ${nbT("Ước tính, chưa kiểm chứng", "Estimated, unverified")}</span>`}
+            ${(p.nutrition_sources && p.nutrition_sources.length) ? `<span class="text-[#626b5e]">${nbT("Nguồn:", "Source:")} ${esc(p.nutrition_sources.join(", "))}</span>` : ""}
+          </div>
+          <p class="mt-2 text-xs text-[#626b5e]">
             ${p.serving_size_g ? tr(`Mỗi khẩu phần ${p.serving_size_g} g. Dấu — nghĩa là chưa có thông tin.`, `Per ${p.serving_size_g} g serving. — means not supplied.`) : tr("Chưa cung cấp khối lượng khẩu phần.", "Serving weight has not been supplied.")}
           </p>
           <dl class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
@@ -1054,11 +1274,13 @@
       return Object.entries(State.cart)
         .map(([id, qty]) => {
           const p = State.products.find(x => x.id === Number(id));
-          return p && !isSample(p) && qty > 0 ? { ...p, quantity: qty, selected: State.cartSelection[id] !== false } : null;
+          if (!p || isSample(p) || qty <= 0) return null;
+          const exp = nbExpiryInfo(p);
+          if (exp.status === "expired") return null;
+          return { ...p, price_vnd: exp.effectivePrice, quantity: qty, selected: State.cartSelection[id] !== false };
         })
         .filter(Boolean);
     }
-
     function renderCart() {
       const items = getCartItems();
       const selected = items.filter(i => i.selected);
@@ -1385,6 +1607,7 @@
         bad_method: ["Phương thức thanh toán không hợp lệ.", "Invalid payment method."],
         bad_shipping: ["Thông tin giao hàng chưa đúng (kiểm tra họ tên, số điện thoại Việt Nam và địa chỉ).", "Delivery details look invalid (check name, Vietnamese phone number and address)."],
         product_unavailable: ['Sản phẩm "' + arg + '" hiện không bán được.', '"' + arg + '" is no longer available.'],
+        product_expired: ['Sản phẩm "' + arg + '" đã hết hạn sử dụng.', '"' + arg + '" has expired.'],
         out_of_stock: ['"' + arg + '" không đủ số lượng trong kho.', 'Not enough stock for "' + arg + '".'],
         coupon_invalid: ["Mã giảm giá không hợp lệ hoặc đã hết hạn.", "Invalid or expired coupon."],
         coupon_used_up: ["Mã giảm giá đã hết lượt dùng.", "This coupon has no uses left."],
@@ -1440,6 +1663,14 @@
         stock_quantity: Number(r.stock_quantity) || 0,
         is_active: r.is_active !== false,
         image_url: String(r.image_url || ""),
+        manufactured_at: r.manufactured_at || "",
+        expires_at: r.expires_at || "",
+        near_expiry_days: r.near_expiry_days ?? 2,
+        near_expiry_discount_pct: r.near_expiry_discount_pct ?? 20,
+        near_expiry_discount_enabled: r.near_expiry_discount_enabled !== false,
+        has_recipe: !!d.has_recipe,
+        nutrition_verified: !!d.nutrition_verified,
+        nutrition_sources: Array.isArray(d.nutrition_sources) ? d.nutrition_sources : [],
         avg_rating: rt ? Number(rt.avg_rating) : null,
         review_count: rt ? Number(rt.review_count) : 0
       };
@@ -1610,7 +1841,10 @@
 
     function renderProductCard(p) {
       const sample = isSample(p);
-      const hasOrig = p.original_price_vnd && p.original_price_vnd > p.price_vnd;
+      const exp = nbExpiryInfo(p);
+      const sellPrice = exp.effectivePrice;
+      const crossedPrice = exp.discountPct > 0 ? p.price_vnd : (p.original_price_vnd && p.original_price_vnd > sellPrice ? p.original_price_vnd : null);
+      const hasOrig = !!crossedPrice;
       const al = nbAllergens(p);
       const unavailable = p.stock_quantity <= 0 || sample || State.demo;
       const cmp = State.compare.includes(p.id);
@@ -1645,9 +1879,10 @@
               <input type="checkbox" ${cmp ? "checked" : ""} onchange="toggleCompare(${p.id})" class="size-4"> ⚖️ ${nbT("So sánh", "Compare")}
             </label>
             <div class="mt-auto pt-4 flex items-center justify-between gap-2 border-t border-[#f0f3e8]">
-              <div class="text-base font-semibold text-[#234d38]">
-                ${hasOrig ? `<s class="block text-xs font-normal text-[#626b5e]">${money(p.original_price_vnd)}</s>` : ''}
-                <span>${money(p.price_vnd)}</span>
+             <div class="text-base font-semibold text-[#234d38]">
+                ${hasOrig ? `<s class="block text-xs font-normal text-[#626b5e]">${money(crossedPrice)}</s>` : ''}
+                <span>${money(sellPrice)}</span>
+                ${exp.status === "near" ? `<span class="mt-0.5 block text-[10px] font-semibold text-amber-700">⏳ ${nbT("Sắp hết hạn", "Near expiry")}${exp.discountPct > 0 ? ` · -${exp.discountPct}%` : ""} (${esc(nbFormatDateDMY(p.expires_at))})</span>` : ""}
               </div>
               <button onclick="addToCart(${p.id}, 1)" ${unavailable ? 'disabled' : ''} class="inline-flex min-h-[44px] items-center justify-center gap-1.5 rounded-full bg-[#f0925a] px-4 py-2 text-xs font-bold text-[#2b1204] shadow-sm transition-colors hover:bg-[#e57e42] disabled:cursor-not-allowed disabled:opacity-40">
                 + ${nbT("Thêm", "Add")}
@@ -2528,14 +2763,16 @@
         if (/^[=+\-@\t\r]/.test(s)) s = "'" + s;
         return `"${s.replace(/"/g, '""')}"`;
       };
-      const header = ["Mã đơn", "Ngày", "Trạng thái", "Thanh toán", "Phương thức", "Tổng tiền (VND)", "Địa chỉ & Người nhận", "Món", "Ghi chú", "Lý do hủy"];
+      const header = ["Mã đơn", "Ngày", "Trạng thái", "Thanh toán", "Phương thức", "Tạm tính", "Phí giao", "Giảm giá", "Tổng tiền (VND)", "Địa chỉ & Người nhận", "Món", "Ghi chú", "Lý do hủy"];
       const lines = [header.map(csvCell).join(",")];
       rows.forEach(o => {
         const itemsText = o.items.map(i => `${i.name_vi} x${i.quantity}`).join("; ");
+        const methodTxt = o.method === "cod" ? tr("COD", "COD") : tr("Chuyển khoản", "Bank transfer");
         lines.push([
-          o.number, o.date, statusLabel(o.status), paymentLabel(o.payment),
-          o.method, o.total, nbOrderAddress(o), itemsText, o.notes || "", nbOrderCancelReason(o)
-        ].map(csvCell).join(","));
+          csvCell(o.number), csvCell(o.date), csvCell(statusLabel(o.status)), csvCell(paymentLabel(o.payment)),
+          csvCell(methodTxt), Number(o.subtotal || 0), Number(o.fee || 0), Number(o.discount || 0), Number(o.total || 0),
+          csvCell(nbOrderAddress(o)), csvCell(itemsText), csvCell(o.notes || ""), csvCell(nbOrderCancelReason(o))
+        ].join(","));
       });
       const blob = new Blob(["\uFEFF" + lines.join("\r\n")], { type: "text/csv;charset=utf-8;" });
       const url = URL.createObjectURL(blob);
@@ -2674,7 +2911,7 @@
     function renderSellerStatsBlock() {
       const ranges = [["today", "Hôm nay", "Today"], ["7d", "7 ngày", "7 days"], ["30d", "30 ngày", "30 days"], ["month", "Tháng này", "This month"]];
       const st = State.statsData;
-      const sum = (st && st.summary) || { revenue: 0, valid_orders: 0, avg_order_value: 0, cancel_rate: 0, pending_orders: 0 };
+      const sum = (st && st.summary) || { revenue: 0, gross_profit: 0, profit_margin: 0, valid_orders: 0, avg_order_value: 0, cancel_rate: 0, pending_orders: 0 };
       const daily = (st && st.daily) || [];
       const top = (st && st.top_products) || [];
       const maxRev = Math.max(1, ...daily.map(x => Number(x.revenue) || 0));
@@ -2689,8 +2926,10 @@
           </div>
         </div>
         ${State.statsLoading ? `<p class="mt-4 text-xs text-[#626b5e]">${nbT("Đang tải thống kê...", "Loading statistics...")}</p>` : `
-          <div class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-5">
+         <div class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-7">
             ${statCard(nbT("Tổng doanh thu", "Total revenue"), money(sum.revenue))}
+            ${statCard(nbT("Lợi nhuận gộp", "Gross profit"), money(sum.gross_profit || 0))}
+            ${statCard(nbT("Biên lợi nhuận", "Profit margin"), Number(sum.profit_margin || 0) + "%")}
             ${statCard(nbT("Số đơn hợp lệ", "Valid orders"), Number(sum.valid_orders))}
             ${statCard(nbT("Giá trị đơn TB", "Avg order value"), money(sum.avg_order_value))}
             ${statCard(nbT("Tỷ lệ hủy", "Cancel rate"), Number(sum.cancel_rate) + "%")}
@@ -2713,8 +2952,8 @@
             <div class="lg:col-span-5 rounded-2xl border border-[#dce2d4] bg-white p-4 sm:p-5">
               <h3 class="text-sm font-semibold text-[#234d38]">🏆 ${nbT("Món bán chạy (Top 10)", "Top selling items")}</h3>
               ${top.length ? `<div class="mt-3 max-h-48 overflow-y-auto"><table class="w-full text-left text-xs">
-                <thead class="text-[#626b5e]"><tr><th class="py-1.5">${nbT("Món", "Item")}</th><th class="text-right">${nbT("SL", "Qty")}</th><th class="text-right">${nbT("Doanh thu", "Revenue")}</th></tr></thead>
-                <tbody>${top.map(t => `<tr class="border-t border-[#eef2e8]"><td class="py-1.5 pr-2 font-medium text-[#234d38]">${esc(trf(t.name_vi, t.name_en))}</td><td class="text-right">${Number(t.qty)}</td><td class="text-right">${money(t.revenue)}</td></tr>`).join("")}</tbody>
+               <thead class="text-[#626b5e]"><tr><th class="py-1.5">${nbT("Món", "Item")}</th><th class="text-right">${nbT("SL", "Qty")}</th><th class="text-right">${nbT("Doanh thu", "Revenue")}</th><th class="text-right">${nbT("Lãi gộp", "Profit")}</th><th class="text-right">${nbT("Biên LN", "Margin")}</th></tr></thead>
+                <tbody>${top.map(t => `<tr class="border-t border-[#eef2e8]"><td class="py-1.5 pr-2 font-medium text-[#234d38]">${esc(trf(t.name_vi, t.name_en))}</td><td class="text-right">${Number(t.qty)}</td><td class="text-right">${money(t.revenue)}</td><td class="text-right font-semibold text-[#234d38]">${money(t.profit || 0)}</td><td class="text-right">${Number(t.margin || 0)}%</td></tr>`).join("")}</tbody>
               </table></div>` : `<p class="mt-4 text-xs text-[#626b5e]">${nbT("Chưa có dữ liệu bán hàng trong kỳ.", "No sales data in this period.")}</p>`}
             </div>
           </div>
@@ -2887,23 +3126,136 @@
     }
 
     // ---- Quản lý sản phẩm (người bán) -----------------------------------------
+    async function nbLoadProductCosts() {
+      if (!NB_SUPABASE_READY || NB_AUTH_ROLE !== "seller") return;
+      try { State.productCosts = (await nbRpc("nb2_get_product_costs")) || {}; }
+      catch (e) { console.error("Không tải được giá vốn:", e); }
+    }
+    function renderIngredientsTab() {
+      const ie = State.ingEditId ? (State.ingredients.find(x => x.id === State.ingEditId) || {}) : {};
+      const fInp = (id, label, val, extra = "") => `<div><label class="mb-1 block text-xs font-medium">${label}</label><input id="${id}" value="${esc(val ?? "")}" ${extra} class="min-h-[44px] w-full rounded-xl border border-[#d8dfcf] px-3 py-2 text-sm"></div>`;
+      return `
+      <div class="mt-6 space-y-5">
+        <div class="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[#dce2d4] bg-[#f4f7ef] p-4">
+          <div class="text-xs text-[#434f3d]">
+            <p class="font-semibold text-sm text-[#234d38]">🥬 ${nbT("Kho nguyên liệu (tính trên 100g)", "Ingredients library (per 100g)")}</p>
+            <p>${nbT("Nhập số liệu thực tế từ bảng thành phần hoặc nhãn nhà sản xuất. Tích “Đã kiểm chứng” khi có nguồn rõ ràng.", "Enter verified figures from food composition tables or manufacturer labels.")}</p>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <button type="button" onclick="downloadSampleIngredientsCsv()" class="inline-flex min-h-[40px] items-center rounded-full border border-[#234d38] bg-white px-4 py-1.5 text-xs font-semibold text-[#234d38]">📥 ${nbT("Tải CSV mẫu (3 dòng VÍ DỤ)", "Download sample CSV")}</button>
+            <label class="inline-flex min-h-[40px] cursor-pointer items-center rounded-full border border-[#234d38] bg-white px-4 py-1.5 text-xs font-semibold text-[#234d38]">📤 ${nbT("Nhập từ CSV", "Import CSV")}<input type="file" accept=".csv,text/csv" class="hidden" onchange="handleIngredientsCsvUpload(this)"></label>
+            <button type="button" onclick="State.ingEditorOpen=true;State.ingEditId=0;renderAll()" class="inline-flex min-h-[40px] items-center rounded-full bg-[#234d38] px-4 py-1.5 text-xs font-semibold text-white">+ ${nbT("Thêm nguyên liệu", "Add ingredient")}</button>
+          </div>
+        </div>
+
+        ${State.ingEditorOpen ? `
+          <form onsubmit="saveIngredientForm(event)" class="rounded-2xl border border-[#dce2d4] bg-white p-5 space-y-4">
+            <div class="flex items-center justify-between">
+              <h3 class="text-base font-semibold text-[#234d38]">${State.ingEditId ? nbT("Sửa nguyên liệu", "Edit ingredient") : nbT("Thêm nguyên liệu mới", "New ingredient")}</h3>
+              <button type="button" onclick="State.ingEditorOpen=false;renderAll()" class="text-xs text-[#626b5e]">✕ ${nbT("Đóng", "Close")}</button>
+            </div>
+            <div class="grid grid-cols-2 gap-3 sm:grid-cols-4">
+              <div class="col-span-2">${fInp("ing_name_vi", nbT("Tên tiếng Việt *", "Name (VI) *"), ie.name_vi, "required")}</div>
+              <div class="col-span-2">${fInp("ing_name_en", nbT("Tên tiếng Anh", "Name (EN)"), ie.name_en)}</div>
+              ${fInp("ing_kcal", "Kcal / 100g", ie.kcal_100g ?? 0, 'type="number" step="any" min="0"')}
+              ${fInp("ing_pro", nbT("Đạm (g)", "Protein (g)"), ie.protein_100g ?? 0, 'type="number" step="any" min="0"')}
+              ${fInp("ing_fat", nbT("Béo (g)", "Fat (g)"), ie.fat_100g ?? 0, 'type="number" step="any" min="0"')}
+              ${fInp("ing_carb", nbT("Tinh bột (g)", "Carbs (g)"), ie.carb_100g ?? 0, 'type="number" step="any" min="0"')}
+              ${fInp("ing_fib", nbT("Xơ (g)", "Fiber (g)"), ie.fiber_100g ?? 0, 'type="number" step="any" min="0"')}
+              ${fInp("ing_sug", nbT("Đường (g)", "Sugar (g)"), ie.sugar_100g ?? 0, 'type="number" step="any" min="0"')}
+              ${fInp("ing_sod", nbT("Natri (mg)", "Sodium (mg)"), ie.sodium_100g ?? 0, 'type="number" step="any" min="0"')}
+              <div>${fInp("ing_source", nbT("Nguồn dữ liệu", "Data source"), ie.source, `placeholder="${nbT("VD: Bảng TPTPVN", "e.g. Manufacturer label")}"`)}</div>
+            </div>
+            <label class="inline-flex items-center gap-2 text-xs cursor-pointer"><input id="ing_verified" type="checkbox" ${ie.is_verified ? "checked" : ""} class="size-4"> ✓ ${nbT("Đã kiểm chứng (phải có nguồn dữ liệu đi kèm)", "Verified (requires data source)")}</label>
+            <div><button class="inline-flex min-h-[44px] items-center rounded-full bg-[#234d38] px-6 py-2 text-xs font-semibold text-white">${nbT("Lưu nguyên liệu", "Save ingredient")}</button></div>
+          </form>` : ""}
+
+        ${State.ingredients.length ? `
+          <div class="overflow-x-auto rounded-2xl border border-[#dce2d4] bg-white">
+            <table class="w-full text-left text-xs min-w-[650px]">
+              <thead class="bg-[#f4f7ef] text-[#626b5e]"><tr><th class="p-3">${nbT("Nguyên liệu", "Ingredient")}</th><th>Kcal</th><th>${nbT("Đạm", "Pro")}</th><th>${nbT("Béo", "Fat")}</th><th>Carb</th><th>${nbT("Nguồn", "Source")}</th><th>${nbT("Trạng thái", "Status")}</th><th></th></tr></thead>
+              <tbody>${State.ingredients.map(i => `<tr class="border-t border-[#eef2e8]">
+                <td class="p-3 font-semibold text-[#234d38]">${esc(trf(i.name_vi, i.name_en))}</td>
+                <td>${Number(i.kcal_100g)}</td><td>${Number(i.protein_100g)}g</td><td>${Number(i.fat_100g)}g</td><td>${Number(i.carb_100g)}g</td>
+                <td class="max-w-[180px] truncate">${esc(i.source || "—")}</td>
+                <td>${(i.is_verified && i.source) ? `<span class="rounded-full bg-[#dff0d8] px-2 py-0.5 text-[#234d38] font-semibold">✓ ${nbT("Đã kiểm chứng", "Verified")}</span>` : `<span class="rounded-full bg-amber-50 px-2 py-0.5 text-amber-800">${nbT("Chưa kiểm chứng", "Unverified")}</span>`}</td>
+                <td class="p-2 flex gap-2"><button onclick="State.ingEditId=${i.id};State.ingEditorOpen=true;renderAll()" class="underline text-[#234d38]">${nbT("Sửa", "Edit")}</button><button onclick="deleteIngredientItem(${i.id})" class="underline text-red-700">${nbT("Xóa", "Delete")}</button></td>
+              </tr>`).join("")}</tbody>
+            </table>
+          </div>` : `<div class="rounded-2xl border border-[#dce2d4] bg-white p-8 text-center text-sm text-[#626b5e]">${nbT("Chưa có nguyên liệu nào. Hãy bấm “Thêm nguyên liệu” hoặc “Nhập từ CSV”.", "No ingredients yet. Click “Add ingredient” or “Import CSV”.")}</div>`}
+      </div>`;
+    }
+
+    function renderRecipeEditorModal() {
+      if (!State.recipeOpen) return "";
+      const prod = State.products.find(x => x.id === State.recipeProductId);
+      const totals = { grams: 0, kcal: 0, pro: 0, fat: 0, carb: 0 };
+      State.recipeRows.forEach(r => {
+        const ing = State.ingredients.find(i => i.id === Number(r.ingredient_id));
+        const g = Number(r.grams) || 0;
+        totals.grams += g;
+        if (ing) {
+          totals.kcal += g * Number(ing.kcal_100g) / 100;
+          totals.pro += g * Number(ing.protein_100g) / 100;
+          totals.fat += g * Number(ing.fat_100g) / 100;
+          totals.carb += g * Number(ing.carb_100g) / 100;
+        }
+      });
+      return `
+      <form onsubmit="saveProductRecipe(event)" class="my-6 rounded-2xl border-2 border-[#234d38] bg-white p-6 space-y-4">
+        <div class="flex items-center justify-between">
+          <h2 class="text-lg font-semibold text-[#234d38]">🧪 ${nbT("Công thức dinh dưỡng:", "Nutrition recipe:")} ${prod ? pname(prod) : ""}</h2>
+          <button type="button" onclick="State.recipeOpen=false;renderAll()" class="text-sm text-[#626b5e]">✕ ${nbT("Đóng", "Close")}</button>
+        </div>
+        <div class="space-y-2">
+          ${State.recipeRows.map((r, idx) => `
+            <div class="flex flex-wrap items-center gap-2">
+              <select onchange="State.recipeRows[${idx}].ingredient_id=Number(this.value);renderAll()" class="min-h-[44px] flex-1 rounded-xl border border-[#d8dfcf] px-3 py-2 text-sm">
+                ${State.ingredients.map(i => `<option value="${i.id}" ${Number(r.ingredient_id) === i.id ? "selected" : ""}>${esc(trf(i.name_vi, i.name_en))} (${i.is_verified && i.source ? "✓" : "⚠️"})</option>`).join("")}
+              </select>
+              <input type="number" min="0.1" step="any" value="${Number(r.grams)}" oninput="State.recipeRows[${idx}].grams=Number(this.value)" class="min-h-[44px] w-28 rounded-xl border border-[#d8dfcf] px-3 py-2 text-sm" placeholder="gram">
+              <span class="text-xs text-[#626b5e]">g</span>
+              <button type="button" onclick="State.recipeRows.splice(${idx},1);renderAll()" class="min-h-[44px] px-3 text-xs text-red-700">🗑️</button>
+            </div>`).join("")}
+        </div>
+        <div class="flex flex-wrap items-center justify-between gap-3 rounded-xl bg-[#f4f7ef] p-3 text-xs">
+          <span><b>${nbT("Tổng 1 phần:", "Total per serving:")}</b> ${totals.grams.toFixed(1)}g · 🔥 ${totals.kcal.toFixed(1)} kcal · 💪 ${totals.pro.toFixed(1)}g ${nbT("đạm", "pro")} · 🥑 ${totals.fat.toFixed(1)}g ${nbT("béo", "fat")} · 🍚 ${totals.carb.toFixed(1)}g carb</span>
+          <button type="button" onclick="addRecipeRow()" class="rounded-full border border-[#234d38] bg-white px-3.5 py-1.5 font-semibold text-[#234d38]">+ ${nbT("Thêm nguyên liệu", "Add ingredient")}</button>
+        </div>
+        <button class="inline-flex min-h-[44px] items-center rounded-full bg-[#234d38] px-6 py-2.5 text-xs font-semibold text-white">${nbT("Lưu công thức & cập nhật món", "Save recipe & recalculate")}</button>
+      </form>`;
+    }
+
     function renderManage() {
-      const blank = { id: 0, name_vi: "", name_en: "", category: "meals", image_url: "", price_vnd: "", original_price_vnd: null, stock_quantity: 0, is_active: true, allergens_declared: null };
+      const blank = { id: 0, name_vi: "", name_en: "", category: "meals", image_url: "", price_vnd: "", original_price_vnd: null, stock_quantity: 0, is_active: true, allergens_declared: null, manufactured_at: "", expires_at: "", near_expiry_days: 2, near_expiry_discount_pct: 20, near_expiry_discount_enabled: true };
       const e = State.editorId ? (State.products.find(x => x.id === State.editorId) || blank) : blank;
       const text = (id, label, val, extra = "", span = "") => `<div class="${span}"><label class="mb-1 block text-xs font-medium">${label}</label><input id="${id}" value="${esc(val ?? "")}" ${extra} class="min-h-[44px] w-full rounded-xl border border-[#d8dfcf] px-3 py-2 text-sm"></div>`;
       const num = (id, label, val, step = "any") => text(id, label, val === null || val === undefined ? "" : val, `type="number" step="${step}" min="0"`);
       const area = (id, label, val) => `<div class="sm:col-span-3"><label class="mb-1 block text-xs font-medium">${label}</label><textarea id="${id}" rows="2" class="w-full rounded-xl border border-[#d8dfcf] px-3 py-2 text-sm">${esc(val ?? "")}</textarea></div>`;
       const declared = Array.isArray(e.allergens_declared);
+      const expAlerts = State.products.filter(p => { const s = nbExpiryInfo(p).status; return s === "expired" || s === "near"; });
       return `
     <div class="mx-auto w-full max-w-[1440px] px-5 py-10 sm:px-8 lg:px-16">
       <div class="flex flex-wrap items-center justify-between gap-4">
         <h1 class="text-3xl font-medium text-[#234d38]">${nbT("Quản lý sản phẩm", "Manage products")}</h1>
         <div class="flex flex-wrap gap-2">
+          <button onclick="State.manageTab='products';renderAll()" class="inline-flex min-h-[44px] items-center rounded-full border px-4 py-2 text-xs font-semibold ${State.manageTab !== 'ingredients' ? 'border-[#234d38] bg-[#234d38] text-white' : 'border-[#dce2d4] bg-white text-[#234d38]'}">📦 ${nbT("Sản phẩm", "Products")}</button>
+          <button onclick="State.manageTab='ingredients';nbLoadIngredients().then(renderAll)" class="inline-flex min-h-[44px] items-center rounded-full border px-4 py-2 text-xs font-semibold ${State.manageTab === 'ingredients' ? 'border-[#234d38] bg-[#234d38] text-white' : 'border-[#dce2d4] bg-white text-[#234d38]'}">🥬 ${nbT("Kho nguyên liệu", "Ingredients")}</button>
           ${State.products.length === 0 ? `<button onclick="importSampleProducts()" class="inline-flex min-h-[44px] items-center justify-center rounded-full border border-[#234d38] bg-white px-5 py-2.5 text-sm font-semibold text-[#234d38] hover:bg-[#edf2e7] transition-colors">${nbT("Nạp sản phẩm mẫu ban đầu", "Import starter products")}</button>` : ""}
-          <button onclick="State.editorOpen=true;State.editorId=0;renderAll()" class="inline-flex min-h-[44px] items-center justify-center rounded-full bg-[#234d38] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#173a29] transition-colors">+ ${nbT("Thêm sản phẩm mới", "Add new product")}</button>>+ ${nbT("Thêm sản phẩm mới", "Add new product")}</button>
+          <button onclick="State.manageTab='products';State.editorOpen=true;State.editorId=0;renderAll()" class="inline-flex min-h-[44px] items-center justify-center rounded-full bg-[#234d38] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#173a29] transition-colors">+ ${nbT("Thêm sản phẩm mới", "Add new product")}</button>
         </div>
       </div>
 
+      ${expAlerts.length ? `<div class="mt-5 rounded-2xl border border-amber-300 bg-amber-50 p-4 text-xs leading-6 text-amber-900">
+        <b>⏰ ${nbT("Cảnh báo hạn dùng (Món sắp hết hạn / đã hết hạn):", "Expiry alerts (Near expiry / Expired):")}</b>
+        ${expAlerts.map(p => {
+        const ex = nbExpiryInfo(p);
+        return `<span class="ml-2 inline-block rounded-full px-2.5 py-0.5 font-semibold ${ex.status === "expired" ? "bg-red-100 text-red-800" : "bg-amber-200 text-amber-900"}">${pname(p)}: ${ex.status === "expired" ? nbT("Hết hạn", "Expired") : nbT("Sắp hết hạn", "Near expiry")} (${esc(nbFormatDateDMY(p.expires_at))})</span>`;
+      }).join("")}
+      </div>` : ""}
+
+      ${State.manageTab === "ingredients" ? renderIngredientsTab() : `
+      ${renderRecipeEditorModal()}
       ${State.editorOpen ? `
         <form onsubmit="saveManagedProduct(event)" class="my-8 space-y-5 rounded-2xl border border-[#dce2d4] bg-white p-6">
           <div class="flex items-center justify-between">
@@ -2917,7 +3269,8 @@
               <select id="ed_cat" class="w-full rounded-xl border border-[#d8dfcf] px-3 py-2 text-sm">${["meals", "snacks", "supplements", "ingredients"].map(c => `<option value="${c}" ${e.category === c ? "selected" : ""}>${esc(categoryName(c))}</option>`).join("")}</select></div>
             ${num("ed_price", nbT("Giá bán (₫) *", "Price (₫) *"), e.price_vnd, "1")}
             ${num("ed_orig", nbT("Giá gốc (₫)", "Original price (₫)"), e.original_price_vnd, "1")}
-            ${num("ed_stock", nbT("Tồn kho * (ghi đè số hiện tại)", "Stock * (overwrites current)"), e.stock_quantity, "1")}
+           ${num("ed_stock", nbT("Tồn kho * (ghi đè số hiện tại)", "Stock * (overwrites current)"), e.stock_quantity, "1")}
+            ${num("ed_cost", nbT("Giá vốn (₫ — chỉ chủ shop thấy)", "Cost price (₫ — seller only)"), State.editorId ? (State.productCosts[String(State.editorId)] ?? 0) : 0, "1")}
             ${text("ed_img", nbT("Link ảnh (bắt buộc bắt đầu bằng https://)", "Image URL (must start with https://)"), e.image_url, 'maxlength=500 placeholder="https://..."', "sm:col-span-3")}
             ${area("ed_desc_vi", nbT("Mô tả (tiếng Việt)", "Description (Vietnamese)"), e.description_vi)}
             ${area("ed_desc_en", nbT("Mô tả (tiếng Anh)", "Description (English)"), e.description_en === e.description_vi ? "" : e.description_en)}
@@ -2936,10 +3289,15 @@
               ${text("ed_notes_vi", nbT("Ghi chú dinh dưỡng (VI)", "Nutrition note (VI)"), e.nutrition_notes_vi)}${text("ed_notes_en", nbT("Ghi chú dinh dưỡng (EN)", "Nutrition note (EN)"), e.nutrition_notes_en === e.nutrition_notes_vi ? "" : e.nutrition_notes_en)}
             </div>
           </div>
-          <div>
+         <div>
             <h3 class="mb-2 text-sm font-semibold text-[#234d38]">${nbT("Xuất xứ, hạn dùng, bảo quản", "Origin, shelf life, storage")}</h3>
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
-              ${text("ed_origin_vi", nbT("Xuất xứ / nguồn nguyên liệu (VI)", "Origin (VI)"), e.origin_vi)}${text("ed_origin_en", nbT("Xuất xứ (EN)", "Origin (EN)"), e.origin_en === e.origin_vi ? "" : e.origin_en)}${num("ed_shelf", nbT("Hạn dùng (ngày)", "Shelf life (days)"), e.shelf_life_days, "1")}
+              ${text("ed_origin_vi", nbT("Xuất xứ / nguồn nguyên liệu (VI)", "Origin (VI)"), e.origin_vi)}${text("ed_origin_en", nbT("Xuất xứ (EN)", "Origin (EN)"), e.origin_en === e.origin_vi ? "" : e.origin_en)}${num("ed_shelf", nbT("Hạn dùng (ngày)", "Shelf life (days)"), e.shelf_life_days, '1" oninput="nbSyncExpiryDate()')}
+              ${text("ed_mfg_date", nbT("Ngày sản xuất", "Manufactured date"), e.manufactured_at || "", 'type="date" onchange="nbSyncExpiryDate()"')}
+              ${text("ed_exp_date", nbT("Ngày hết hạn (để trống nếu không có)", "Expiry date (optional)"), e.expires_at || "", 'type="date"')}
+              ${num("ed_near_days", nbT("Ngưỡng sắp hết hạn (ngày)", "Near-expiry threshold (days)"), e.near_expiry_days ?? 2, "1")}
+              ${num("ed_near_pct", nbT("% giảm giá khi sắp hết hạn", "Near-expiry discount (%)"), e.near_expiry_discount_pct ?? 20, "1")}
+              <label class="sm:col-span-2 inline-flex min-h-[44px] items-center gap-2 text-xs cursor-pointer"><input id="ed_near_enabled" type="checkbox" class="size-4" ${e.near_expiry_discount_enabled !== false ? "checked" : ""}> ${nbT("Tự động giảm giá khi sắp hết hạn", "Enable automatic near-expiry discount")}</label>
               ${text("ed_stor_vi", nbT("Hướng dẫn bảo quản (VI)", "Storage (VI)"), e.storage_vi, "", "sm:col-span-2")}${text("ed_stor_en", nbT("Bảo quản (EN)", "Storage (EN)"), e.storage_en === e.storage_vi ? "" : e.storage_en)}
             </div>
           </div>
@@ -2963,17 +3321,20 @@
                   <span class="rounded-full bg-[#edf2e7] px-2.5 py-0.5 text-[#234d38]">${p.is_active ? nbT("Đang bán", "Active") : nbT("Đã ẩn", "Hidden")}</span>
                   ${isSample(p) ? `<span class="rounded-full border border-[#dce2d4] px-2.5 py-0.5">SAMPLE</span>` : ""}
                   ${p.calories_kcal === null ? `<span class="rounded-full border border-amber-300 bg-amber-50 px-2.5 py-0.5 text-amber-800">${nbT("Chưa có dinh dưỡng", "No nutrition data")}</span>` : ""}
-                  <b>${money(p.price_vnd)}</b> · <span class="${p.stock_quantity <= 5 ? "font-semibold text-amber-700" : ""}">${nbT("Tồn kho:", "Stock:")} ${p.stock_quantity}</span>
+                <b>${money(p.price_vnd)}</b> · <span class="text-[#526348]">${nbT("Giá vốn:", "Cost:")} ${money(State.productCosts[String(p.id)] || 0)}</span> · <span class="${p.stock_quantity <= 5 ? "font-semibold text-amber-700" : ""}">${nbT("Tồn kho:", "Stock:")} ${p.stock_quantity}</span>
+                  ${(() => { const ex = nbExpiryInfo(p); return ex.status === "expired" ? `<span class="rounded-full bg-red-100 px-2.5 py-0.5 font-semibold text-red-700">⛔ ${nbT("Hết hạn", "Expired")}</span>` : ex.status === "near" ? `<span class="rounded-full bg-amber-100 px-2.5 py-0.5 font-semibold text-amber-800">⏳ ${nbT("Sắp hết hạn", "Near expiry")}${ex.discountPct > 0 ? ` · -${ex.discountPct}%` : ""}</span>` : ""; })()}
                 </div>
               </div>
             </div>
-            <div class="flex gap-2">
+            <div class="flex flex-wrap gap-2">
+              <button onclick="openRecipeModal(${p.id});window.scrollTo({top:0,behavior:'smooth'})" class="inline-flex min-h-[44px] items-center justify-center rounded-full border border-[#234d38] px-4 py-2 text-xs font-medium text-[#234d38] hover:bg-[#edf2e7]">🧪 ${nbT("Công thức", "Recipe")}</button>
+              <button onclick="printNutritionLabel(${p.id})" class="inline-flex min-h-[44px] items-center justify-center rounded-full border border-[#d8dfcf] px-4 py-2 text-xs font-medium text-[#234d38] hover:bg-[#edf2e7]">🏷️ ${nbT("In nhãn", "Print label")}</button>
               <button onclick="State.editorId=${p.id};State.editorOpen=true;renderAll();window.scrollTo({top:0,behavior:'smooth'})" class="inline-flex min-h-[44px] items-center justify-center rounded-full border border-[#d8dfcf] px-4 py-2 text-xs font-medium text-[#234d38] hover:bg-[#edf2e7] transition-colors">${nbT("Chỉnh sửa", "Edit")}</button>
               <button onclick="toggleArchiveProduct(${p.id})" class="inline-flex min-h-[44px] items-center justify-center rounded-full border border-[#d8dfcf] px-4 py-2 text-xs font-medium text-[#234d38] hover:bg-[#edf2e7] transition-colors">${p.is_active ? nbT("Ẩn", "Hide") : nbT("Hiện lại", "Show")}</button>
             </div>
           </article>`).join("")
-          : `<div class="rounded-2xl border border-[#dce2d4] bg-white p-8 text-center text-sm text-[#626b5e]">${nbT("Chưa có sản phẩm nào. Bấm “Nạp sản phẩm mẫu ban đầu” hoặc “Thêm sản phẩm mới”.", "No products yet. Use “Import starter products” or “Add new product”.")}</div>`}
-      </div>
+            : `<div class="rounded-2xl border border-[#dce2d4] bg-white p-8 text-center text-sm text-[#626b5e]">${nbT("Chưa có sản phẩm nào. Bấm “Nạp sản phẩm mẫu ban đầu” hoặc “Thêm sản phẩm mới”.", "No products yet. Use “Import starter products” or “Add new product”.")}</div>`}
+      </div>`}
     </div>`;
     }
 
@@ -3003,11 +3364,21 @@
       const payload = {
         id: State.editorId || null, name_vi: vi, name_en: val("ed_name_en") || vi, category: document.getElementById("ed_cat").value,
         price_vnd: num("ed_price"), original_price_vnd: num("ed_orig"), stock_quantity: num("ed_stock") ?? 0,
-        is_active: document.getElementById("ed_active").checked, image_url: img, data
+        is_active: document.getElementById("ed_active").checked, image_url: img,
+        manufactured_at: val("ed_mfg_date") || null,
+        expires_at: val("ed_exp_date") || null,
+        near_expiry_days: num("ed_near_days") ?? 2,
+        near_expiry_discount_pct: num("ed_near_pct") ?? 20,
+        near_expiry_discount_enabled: document.getElementById("ed_near_enabled").checked,
+        data
       };
       try {
-        await nbRpc("nb2_save_product", { p: payload });
-        await nbLoadProducts();
+        const savedId = await nbRpc("nb2_save_product", { p: payload });
+        await nbRpc("nb2_save_product_cost", {
+          p_product_id: savedId,
+          p_cost_vnd: Math.max(0, Math.round(num("ed_cost") ?? 0))
+        });
+        await Promise.all([nbLoadProducts(), nbLoadProductCosts()]);
         State.editorOpen = false;
         renderAll();
         showNotice("Đã lưu sản phẩm.", "Product saved.");
@@ -3069,7 +3440,7 @@
       if (route === "detail") nbLoadReviews(State.selectedProductId);
       else if (route === "orders") nbLoadOrders().then(still(renderAll));
       else if (route === "seller_orders") nbLoadSellerOrdersView().then(still(renderAll));
-      else if (route === "manage") nbLoadProducts().then(still(renderAll));
+      else if (route === "manage") Promise.all([nbLoadProducts(), nbLoadIngredients(), nbLoadProductCosts()]).then(still(renderAll));
       else if (route === "seller_settings") nbLoadSettings().then(still(renderAll)).then(nbLoadCoupons);
       else if (route === "diary") nbLoadDiary();
     }
