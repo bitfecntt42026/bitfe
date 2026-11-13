@@ -34,6 +34,39 @@
       -ms-overflow-style: none;
       scrollbar-width: none;
     }
+
+    @media print {
+      @page {
+        size: A5 portrait;
+        margin: 8mm;
+      }
+
+      body.nb-printing {
+        background: #fff !important;
+      }
+
+      body.nb-printing>*:not(#nbPrintArea) {
+        display: none !important;
+      }
+
+      body.nb-printing #nbPrintArea {
+        display: block !important;
+        width: 100% !important;
+      }
+
+      .nb-slip {
+        page-break-after: always;
+        break-after: page;
+        padding: 4px 0;
+        color: #111;
+        font-size: 12px;
+      }
+
+      .nb-slip:last-child {
+        page-break-after: auto;
+        break-after: auto;
+      }
+    }
   </style>
 </head>
 
@@ -113,6 +146,7 @@
 
   <main id="appRoot" class="w-full flex-1"></main>
   <div id="compareBar"></div>
+  <div id="nbPrintArea" class="hidden"></div>
 
   <footer
     class="relative overflow-hidden border-t border-[#cfe8d5] bg-gradient-to-br from-[#fafaf5] via-[#cfe8d5]/40 to-[#f0925a]/15 px-6 py-12 sm:px-8 lg:px-16 mt-12">
@@ -544,6 +578,7 @@
       reviews: {}, compare: [], compareMode: "serving",
       diary: [], diaryDate: "", coupons: [], couponInfo: null,
       orderFilter: "all", orderSearch: "",
+      statsRange: "7d", statsData: null, statsLoading: false, printSelected: {}, orderMeta: {},
       editorOpen: false,
       editorId: 0,
       healthResult: null,
@@ -1435,8 +1470,15 @@
     }
 
     async function nbLoadOrders() {
-      if (!NB_SUPABASE_READY || !NB_AUTH_USER) { State.orders = []; return; }
-      try { State.orders = (await nbRpc("nb2_my_orders")) || []; }
+      if (!NB_SUPABASE_READY || !NB_AUTH_USER) { State.orders = []; State.orderMeta = {}; return; }
+      try {
+        const [orders, meta] = await Promise.all([
+          nbRpc("nb2_my_orders"),
+          nbRpc("nb2_orders_meta").catch(() => ({}))
+        ]);
+        State.orders = orders || [];
+        State.orderMeta = meta || {};
+      }
       catch (e) { console.error("Không tải được đơn hàng:", e); }
     }
 
@@ -2165,7 +2207,8 @@
         ship: tr("Bắt đầu giao hàng", "Handed to delivery"),
         deliver: tr("Đã giao hàng", "Delivered"),
         mark_paid: tr("Đã nhận thanh toán", "Payment received"),
-        cancel: tr("Đơn hàng bị hủy", "Order cancelled")
+        cancel: tr("Đơn hàng bị hủy", "Order cancelled"),
+        expire_unpaid: tr("Tự động hủy do quá hạn thanh toán", "Auto-cancelled due to payment timeout")
       };
       return m[a] || a;
     }
@@ -2342,7 +2385,168 @@
       const base = style === "danger" ? "border-red-300 bg-red-50 text-red-700 hover:bg-red-100" : style === "solid" ? "border-[#234d38] bg-[#234d38] text-white hover:bg-[#173a29]" : "border-[#b9c9aa] bg-white text-[#234d38] hover:bg-[#edf2e7]";
       return `<button onclick="${onclick}" class="inline-flex min-h-[44px] items-center justify-center rounded-full border px-4 py-2 text-xs font-semibold transition-colors ${base}">${label}</button>`;
     }
+    function nbStatsBounds(range) {
+      const today = nbTodayVN();
+      const d = new Date(today + "T00:00:00Z");
+      if (range === "today") return { from: today, to: today };
+      if (range === "30d") { d.setUTCDate(d.getUTCDate() - 29); return { from: d.toISOString().slice(0, 10), to: today }; }
+      if (range === "month") return { from: today.slice(0, 8) + "01", to: today };
+      d.setUTCDate(d.getUTCDate() - 6);
+      return { from: d.toISOString().slice(0, 10), to: today };
+    }
 
+    async function nbLoadStats(range) {
+      if (!NB_SUPABASE_READY || NB_AUTH_ROLE !== "seller") return;
+      State.statsRange = range || State.statsRange || "7d";
+      State.statsLoading = true;
+      const { from, to } = nbStatsBounds(State.statsRange);
+      try {
+        State.statsData = await nbRpc("nb2_seller_stats", { p_from: from, p_to: to });
+      } catch (e) { console.error("Không tải được thống kê:", e); }
+      State.statsLoading = false;
+      if (State.route === "seller_orders") renderAll();
+    }
+
+    async function nbLoadSellerOrdersView() {
+      if (NB_SUPABASE_READY && NB_AUTH_ROLE === "seller") {
+        try {
+          const expired = await nbRpc("nb2_expire_unpaid_orders");
+          if (expired > 0) {
+            await nbLoadProducts();
+            showNotice(`Đã tự động hủy ${expired} đơn chuyển khoản quá hạn và hoàn kho.`, `Auto-cancelled ${expired} overdue transfer order(s) and restored stock.`);
+          }
+        } catch (e) { console.error("expire check:", e); }
+      }
+      await Promise.all([nbLoadOrders(), nbLoadStats(State.statsRange)]);
+    }
+
+    async function runExpireUnpaidNow() {
+      if (State.busy) return;
+      State.busy = true;
+      try {
+        const n = await nbRpc("nb2_expire_unpaid_orders");
+        await Promise.all([nbLoadOrders(), nbLoadProducts(), nbLoadStats(State.statsRange)]);
+        showNotice(
+          n > 0 ? `Đã hủy ${n} đơn chuyển khoản quá hạn và trả lại kho.` : "Không có đơn chuyển khoản nào quá hạn.",
+          n > 0 ? `Cancelled ${n} overdue transfer order(s) and restored stock.` : "No overdue bank transfer orders found."
+        );
+      } catch (e) { nbFail(e); }
+      State.busy = false;
+      renderAll();
+    }
+
+    function nbOrderDeadlineInfo(o) {
+      if (o.method !== "bank_transfer" || o.payment !== "unpaid" || o.status === "cancelled") return null;
+      const meta = (State.orderMeta.orders && State.orderMeta.orders[String(o.id)]) || null;
+      const expMin = Number(State.orderMeta.expire_minutes || State.settings.bank_transfer_expire_minutes || 1440);
+      if (!meta || !meta.created_at) return null;
+      const leftMs = (new Date(meta.created_at).getTime() + expMin * 60000) - Date.now();
+      if (leftMs <= 0) return { overdue: true };
+      const totalMin = Math.ceil(leftMs / 60000);
+      const hrs = Math.floor(totalMin / 60);
+      const mins = totalMin % 60;
+      return { overdue: false, hrs, mins };
+    }
+
+    function nbOrderCancelReason(o) {
+      if (o.status !== "cancelled") return "";
+      const meta = (State.orderMeta.orders && State.orderMeta.orders[String(o.id)]) || null;
+      if (meta && meta.cancel_reason) return meta.cancel_reason;
+      const ev = (o.events || []).find(x => x.action === "expire_unpaid");
+      return ev ? "quá hạn thanh toán" : "";
+    }
+
+    function togglePrintOrder(id) {
+      State.printSelected[id] = !State.printSelected[id];
+      renderAll();
+    }
+
+    function togglePrintAllPrep(ids, val) {
+      ids.forEach(id => { State.printSelected[id] = val; });
+      renderAll();
+    }
+
+    function nbSlipHtml(o) {
+      const codDue = (o.method === "cod" && o.payment === "unpaid") ? money(o.total) : tr("0 ₫ (Đã thanh toán / CK)", "0 ₫ (Paid / Transfer)");
+      const itemsHtml = o.items.map(i => `
+        <tr style="border-bottom:1px dashed #ccc">
+          <td style="padding:4px 0">${esc(trf(i.name_vi, i.name_en))}</td>
+          <td style="padding:4px 0;text-align:right;font-weight:bold">× ${Number(i.quantity)}</td>
+        </tr>`).join("");
+      return `
+        <article class="nb-slip">
+          <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #234d38;padding-bottom:6px;margin-bottom:8px">
+            <strong style="font-size:15px;color:#234d38">🌱 NourishBitfe Organics</strong>
+            <strong style="font-size:14px">${esc(o.number)}</strong>
+          </div>
+          <p style="margin:2px 0"><b>${nbT("Người nhận / Địa chỉ", "Recipient / Address")}:</b> ${esc(nbOrderAddress(o))}</p>
+          ${o.contact ? `<p style="margin:2px 0"><b>Email:</b> ${esc(o.contact)}</p>` : ""}
+          <p style="margin:2px 0"><b>${nbT("Thanh toán", "Payment")}:</b> ${o.method === "cod" ? "COD" : nbT("Chuyển khoản", "Bank transfer")} (${esc(paymentLabel(o.payment))})</p>
+          <p style="margin:4px 0;padding:5px 8px;background:#f3f5ed;border:1px solid #ccc;font-size:13px"><b>${nbT("Thu hộ (COD)", "Cash to collect")}:</b> ${codDue}</p>
+          ${o.notes ? `<p style="margin:4px 0"><b>${nbT("Ghi chú", "Notes")}:</b> ${esc(o.notes)}</p>` : ""}
+          <table style="width:100%;border-collapse:collapse;margin-top:8px">
+            <thead><tr style="border-bottom:1px solid #333"><th style="text-align:left;padding-bottom:4px">${nbT("Món", "Item")}</th><th style="text-align:right;padding-bottom:4px">${nbT("SL", "Qty")}</th></tr></thead>
+            <tbody>${itemsHtml}</tbody>
+          </table>
+          <div style="margin-top:8px;text-align:right;font-size:13px"><b>${nbT("Tổng đơn", "Order total")}: ${money(o.total)}</b></div>
+        </article>`;
+    }
+
+    function printShippingSlips(orderIds) {
+      const list = orderIds.map(id => State.orders.find(o => o.id === id)).filter(Boolean);
+      if (!list.length) {
+        showNotice("Hãy chọn ít nhất 1 đơn để in phiếu giao hàng.", "Please select at least 1 order to print.", true);
+        return;
+      }
+      const area = document.getElementById("nbPrintArea");
+      area.innerHTML = list.map(nbSlipHtml).join("");
+      document.body.classList.add("nb-printing");
+      const cleanup = () => {
+        document.body.classList.remove("nb-printing");
+        area.innerHTML = "";
+        window.removeEventListener("afterprint", cleanup);
+      };
+      window.addEventListener("afterprint", cleanup);
+      setTimeout(() => window.print(), 50);
+    }
+
+    function exportOrdersCsv() {
+      const { from, to } = nbStatsBounds(State.statsRange);
+      const metaMap = (State.orderMeta && State.orderMeta.orders) || {};
+      const rows = State.orders.filter(o => {
+        const m = metaMap[String(o.id)];
+        if (!m || !m.created_at) return true;
+        const d = new Date(new Date(m.created_at).getTime() + 7 * 3600 * 1000).toISOString().slice(0, 10);
+        return d >= from && d <= to;
+      });
+      if (!rows.length) {
+        showNotice("Không có đơn nào trong khoảng ngày đang chọn để xuất CSV.", "No orders in the selected date range to export.", true);
+        return;
+      }
+      const csvCell = v => {
+        let s = String(v ?? "").replace(/\r?\n/g, " ");
+        if (/^[=+\-@\t\r]/.test(s)) s = "'" + s;
+        return `"${s.replace(/"/g, '""')}"`;
+      };
+      const header = ["Mã đơn", "Ngày", "Trạng thái", "Thanh toán", "Phương thức", "Tổng tiền (VND)", "Địa chỉ & Người nhận", "Món", "Ghi chú", "Lý do hủy"];
+      const lines = [header.map(csvCell).join(",")];
+      rows.forEach(o => {
+        const itemsText = o.items.map(i => `${i.name_vi} x${i.quantity}`).join("; ");
+        lines.push([
+          o.number, o.date, statusLabel(o.status), paymentLabel(o.payment),
+          o.method, o.total, nbOrderAddress(o), itemsText, o.notes || "", nbOrderCancelReason(o)
+        ].map(csvCell).join(","));
+      });
+      const blob = new Blob(["\uFEFF" + lines.join("\r\n")], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `don-hang-${from}-den-${to}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    }
     function renderOrderCard(o, sellerView = false) {
       const commAmt = o.commission_bps_snapshot ? Math.round((o.total * o.commission_bps_snapshot) / 10000) : 0;
       const unpaid = o.payment === "unpaid";
@@ -2363,14 +2567,25 @@
       }).join("");
       const role = sellerView ? "seller" : "buyer";
       const orderAddr = nbOrderAddress(o);
+      const deadline = sellerView ? nbOrderDeadlineInfo(o) : null;
+      const cancelReason = nbOrderCancelReason(o);
 
       return `
     <article class="min-w-0 rounded-3xl border border-[#dce2d4] bg-white p-6 sm:p-8" data-order-id="${o.id}">
       <div class="flex flex-wrap items-center justify-between gap-3">
-        <h2 class="text-xl font-semibold text-[#234d38]">${esc(o.number)}</h2>
-        <span class="rounded-full border border-[#dce2d4] bg-[#edf2e7] px-4 py-1.5 text-xs font-semibold text-[#234d38]">${esc(statusLabel(o.status))}</span>
+        <div class="flex items-center gap-2.5">
+          ${sellerView ? `<input type="checkbox" ${State.printSelected[o.id] ? "checked" : ""} onchange="togglePrintOrder(${o.id})" class="size-4 cursor-pointer" title="${nbT("Chọn để in phiếu", "Select to print")}">` : ""}
+          <h2 class="text-xl font-semibold text-[#234d38]">${esc(o.number)}</h2>
+        </div>
+        <div class="flex flex-wrap items-center gap-2">
+          ${deadline ? (deadline.overdue
+          ? `<span class="rounded-full border border-red-200 bg-red-50 px-3 py-1 text-xs font-semibold text-red-700">⏰ ${nbT("Quá hạn", "Overdue")}</span>`
+          : `<span class="rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-800">⏳ ${deadline.hrs > 0 ? nbT(`Còn ${deadline.hrs} giờ ${deadline.mins}p để thanh toán`, `${deadline.hrs}h ${deadline.mins}m left to pay`) : nbT(`Còn ${deadline.mins} phút để thanh toán`, `${deadline.mins}m left to pay`)}</span>`) : ""}
+          <span class="rounded-full border border-[#dce2d4] bg-[#edf2e7] px-4 py-1.5 text-xs font-semibold text-[#234d38]">${esc(statusLabel(o.status))}</span>
+        </div>
       </div>
       <time class="mt-1 block text-xs text-[#626b5e]">${esc(o.date)}</time>
+      ${cancelReason ? `<p class="mt-2 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-xs font-medium text-red-800">ℹ️ ${nbT("Lý do hủy:", "Cancellation reason:")} ${esc(cancelReason === "quá hạn thanh toán" ? tr("Quá hạn thanh toán", "Payment overdue") : cancelReason)}</p>` : ""}
       <p class="mt-3 text-sm font-semibold text-[#30382e]">
         ${o.method === "cod" ? nbT("Thanh toán khi nhận hàng (COD)", "Pay on delivery") : nbT("Chuyển khoản ngân hàng", "Bank transfer")} ·
         <span class="${o.payment === "paid" ? "text-[#234d38]" : "text-amber-700"}">${esc(paymentLabel(o.payment))}</span>
@@ -2410,6 +2625,7 @@
           ${o.status === "pending" && unpaid ? nbBtn(nbT("Hủy đơn", "Cancel order"), `buyerCancelOrder(${o.id})`, "danger") : ""}
           ${nbBtn("🔁 " + nbT("Mua lại", "Buy again"), `reorderOrder(${o.id})`)}
         `}
+       ${sellerView ? nbBtn("🏷️ " + nbT("In phiếu giao hàng", "Print shipping slip"), `printShippingSlips([${o.id}])`) : ""}
         ${nbBtn("🖨️ " + nbT("In hóa đơn", "Print invoice"), `printInvoice(${o.id})`)}
       </div>
 
@@ -2455,6 +2671,91 @@
     </section>`;
     }
 
+    function renderSellerStatsBlock() {
+      const ranges = [["today", "Hôm nay", "Today"], ["7d", "7 ngày", "7 days"], ["30d", "30 ngày", "30 days"], ["month", "Tháng này", "This month"]];
+      const st = State.statsData;
+      const sum = (st && st.summary) || { revenue: 0, valid_orders: 0, avg_order_value: 0, cancel_rate: 0, pending_orders: 0 };
+      const daily = (st && st.daily) || [];
+      const top = (st && st.top_products) || [];
+      const maxRev = Math.max(1, ...daily.map(x => Number(x.revenue) || 0));
+      const statCard = (label, val) => `<div class="rounded-2xl border border-[#dce2d4] bg-white p-4"><p class="text-xs text-[#626b5e]">${label}</p><p class="mt-2 text-lg sm:text-xl font-semibold text-[#234d38]">${val}</p></div>`;
+      return `
+      <section class="mb-7 rounded-3xl border border-[#dce2d4] bg-[#f4f7ef] p-5 sm:p-6">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <h2 class="text-xl font-semibold text-[#234d38]">📊 ${nbT("Thống kê bán hàng", "Sales statistics")}</h2>
+          <div class="flex flex-wrap items-center gap-2">
+            ${ranges.map(([k, vi, en]) => `<button onclick="nbLoadStats('${k}')" class="inline-flex min-h-[40px] items-center rounded-full border px-3.5 py-1.5 text-xs font-medium transition-colors ${State.statsRange === k ? "border-[#234d38] bg-[#234d38] text-white" : "border-[#dce2d4] bg-white text-[#234d38]"}">${nbT(vi, en)}</button>`).join("")}
+            <button onclick="exportOrdersCsv()" class="inline-flex min-h-[40px] items-center rounded-full border border-[#234d38] bg-white px-4 py-1.5 text-xs font-semibold text-[#234d38] hover:bg-[#edf2e7]">📥 ${nbT("Xuất CSV", "Export CSV")}</button>
+          </div>
+        </div>
+        ${State.statsLoading ? `<p class="mt-4 text-xs text-[#626b5e]">${nbT("Đang tải thống kê...", "Loading statistics...")}</p>` : `
+          <div class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-5">
+            ${statCard(nbT("Tổng doanh thu", "Total revenue"), money(sum.revenue))}
+            ${statCard(nbT("Số đơn hợp lệ", "Valid orders"), Number(sum.valid_orders))}
+            ${statCard(nbT("Giá trị đơn TB", "Avg order value"), money(sum.avg_order_value))}
+            ${statCard(nbT("Tỷ lệ hủy", "Cancel rate"), Number(sum.cancel_rate) + "%")}
+            ${statCard(nbT("Đang chờ xử lý", "In progress"), Number(sum.pending_orders))}
+          </div>
+          <div class="mt-5 grid grid-cols-1 gap-5 lg:grid-cols-12">
+            <div class="lg:col-span-7 rounded-2xl border border-[#dce2d4] bg-white p-4 sm:p-5">
+              <h3 class="text-sm font-semibold text-[#234d38]">${nbT("Doanh thu theo ngày", "Daily revenue")}</h3>
+              <div class="mt-4 flex h-44 items-end gap-1.5 overflow-x-auto pb-2 no-scrollbar">
+                ${daily.map(d => {
+        const rev = Number(d.revenue) || 0;
+        const hPct = rev > 0 ? Math.max(6, Math.round(rev * 100 / maxRev)) : 2;
+        return `<div class="flex min-w-[24px] flex-1 flex-col items-center justify-end h-full" title="${esc(d.date)}: ${money(rev)} (${d.orders} đơn)">
+                    <div class="w-full max-w-[28px] rounded-t-md ${rev > 0 ? "bg-[#234d38]" : "bg-[#e3e7da]"}" style="height:${hPct}%"></div>
+                    <span class="mt-1.5 text-[10px] text-[#626b5e]">${esc(d.date.slice(5))}</span>
+                  </div>`;
+      }).join("")}
+              </div>
+            </div>
+            <div class="lg:col-span-5 rounded-2xl border border-[#dce2d4] bg-white p-4 sm:p-5">
+              <h3 class="text-sm font-semibold text-[#234d38]">🏆 ${nbT("Món bán chạy (Top 10)", "Top selling items")}</h3>
+              ${top.length ? `<div class="mt-3 max-h-48 overflow-y-auto"><table class="w-full text-left text-xs">
+                <thead class="text-[#626b5e]"><tr><th class="py-1.5">${nbT("Món", "Item")}</th><th class="text-right">${nbT("SL", "Qty")}</th><th class="text-right">${nbT("Doanh thu", "Revenue")}</th></tr></thead>
+                <tbody>${top.map(t => `<tr class="border-t border-[#eef2e8]"><td class="py-1.5 pr-2 font-medium text-[#234d38]">${esc(trf(t.name_vi, t.name_en))}</td><td class="text-right">${Number(t.qty)}</td><td class="text-right">${money(t.revenue)}</td></tr>`).join("")}</tbody>
+              </table></div>` : `<p class="mt-4 text-xs text-[#626b5e]">${nbT("Chưa có dữ liệu bán hàng trong kỳ.", "No sales data in this period.")}</p>`}
+            </div>
+          </div>
+          <p class="mt-3 text-[11px] text-[#626b5e]">ℹ️ ${nbT("Ghi chú: Thống kê doanh thu & món bán chạy tính từ các đơn hợp lệ chưa bị hủy (Chờ xác nhận, Đã xác nhận, Đang giao, Đã giao).", "Note: Revenue and top-selling figures include all non-cancelled orders (Pending, Confirmed, In transit, Delivered).")}</p>
+        `}
+      </section>`;
+    }
+
+    function renderPrepBox() {
+      const prepOrders = State.orders.filter(o => o.status === "pending" || o.status === "confirmed");
+      const prepIds = prepOrders.map(o => o.id);
+      const selectedIds = Object.keys(State.printSelected).filter(k => State.printSelected[k]).map(Number);
+      const counts = {};
+      prepOrders.forEach(o => o.items.forEach(i => {
+        const key = trf(i.name_vi, i.name_en);
+        counts[key] = (counts[key] || 0) + Number(i.quantity);
+      }));
+      const allChecked = prepIds.length > 0 && prepIds.every(id => State.printSelected[id]);
+      return `
+      <section class="mb-7 rounded-3xl border border-[#cfe8d5] bg-white p-5 sm:p-6">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 class="text-lg font-semibold text-[#234d38]">🧑‍🍳 ${nbT("Cần chuẩn bị hôm nay", "To prepare today")} (${prepOrders.length} ${nbT("đơn", "orders")})</h2>
+            <p class="text-xs text-[#626b5e]">${nbT("Gom các đơn ở trạng thái Chờ xác nhận và Đã xác nhận.", "Combines Pending and Confirmed orders.")}</p>
+          </div>
+          <div class="flex flex-wrap items-center gap-2">
+            ${prepIds.length ? `<button onclick="togglePrintAllPrep(${JSON.stringify(prepIds)}, ${!allChecked})" class="inline-flex min-h-[40px] items-center rounded-full border border-[#dce2d4] px-3.5 py-1.5 text-xs font-medium text-[#234d38] hover:bg-[#edf2e7]">${allChecked ? nbT("Bỏ chọn tất cả", "Deselect all") : nbT("Chọn tất cả đơn cần làm", "Select all prep orders")}</button>` : ""}
+            <button onclick="printShippingSlips(${JSON.stringify(selectedIds)})" ${selectedIds.length === 0 ? "disabled" : ""} class="inline-flex min-h-[40px] items-center rounded-full bg-[#234d38] px-4 py-1.5 text-xs font-semibold text-white disabled:opacity-40">🖨️ ${nbT("In tất cả đã chọn", "Print selected")} (${selectedIds.length})</button>
+          </div>
+        </div>
+        ${prepOrders.length ? `
+          <div class="mt-4 flex flex-wrap gap-2">
+            ${Object.entries(counts).map(([name, qty]) => `<span class="rounded-full bg-[#edf4e7] px-3.5 py-1.5 text-xs font-semibold text-[#234d38]">${esc(name)} × ${qty}</span>`).join("")}
+          </div>
+          <div class="mt-3 flex flex-wrap gap-2 text-xs text-[#626b5e]">
+            ${prepOrders.map(o => `<label class="inline-flex items-center gap-1.5 rounded-lg border border-[#e3e7da] px-2.5 py-1 cursor-pointer"><input type="checkbox" ${State.printSelected[o.id] ? "checked" : ""} onchange="togglePrintOrder(${o.id})" class="size-3.5"> <b>${esc(o.number)}</b> (${esc(statusLabel(o.status))})</label>`).join("")}
+          </div>
+        ` : `<p class="mt-3 text-xs text-[#626b5e]">${nbT("Hiện không có đơn nào cần chuẩn bị.", "No orders waiting to be prepared right now.")}</p>`}
+      </section>`;
+    }
+
     function renderSellerOrders() {
       const deliveredPaid = State.orders.filter(o => o.status === "delivered" && o.payment === "paid");
       const gross = deliveredPaid.reduce((s, o) => s + o.total, 0);
@@ -2466,7 +2767,12 @@
       const card = (label, value) => `<div class="rounded-2xl border border-[#dce2d4] bg-white p-5"><p class="text-xs text-[#626b5e]">${label}</p><div class="mt-3 text-xl font-semibold text-[#234d38]">${value}</div></div>`;
       return `
     <section class="mx-auto w-full max-w-[1440px] px-5 py-10 sm:px-8 lg:px-16">
-      <h1 class="text-3xl font-medium text-[#234d38] mb-6">${nbT("Đơn hàng & doanh thu", "Orders & revenue")}</h1>
+      <div class="mb-6 flex flex-wrap items-center justify-between gap-3">
+        <h1 class="text-3xl font-medium text-[#234d38]">${nbT("Đơn hàng & doanh thu", "Orders & revenue")}</h1>
+        <button onclick="runExpireUnpaidNow()" class="inline-flex min-h-[44px] items-center justify-center rounded-full border border-red-300 bg-red-50 px-4 py-2 text-xs font-semibold text-red-700 hover:bg-red-100 transition-colors">⏰ ${nbT("Hủy đơn quá hạn ngay", "Cancel overdue orders now")}</button>
+      </div>
+      ${renderSellerStatsBlock()}
+      ${renderPrepBox()}
       <div class="mb-5 grid w-full grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
         ${card(nbT("Đơn chờ xác nhận", "Pending orders"), pending)}
         ${card(nbT("Chờ nhận chuyển khoản", "Awaiting transfer"), awaitingMoney)}
@@ -2480,7 +2786,6 @@
           : `<div class="rounded-3xl border border-[#dce2d4] bg-white px-5 py-16 text-center text-[#626b5e]">${nbT("Chưa có đơn nào khớp.", "No matching orders.")}</div>`}
     </section>`;
     }
-
     // ---- Cài đặt cửa hàng + mã giảm giá (người bán) ---------------------------
     async function nbLoadCoupons() {
       if (!NB_SUPABASE_READY || NB_AUTH_ROLE !== "seller") return;
@@ -2499,6 +2804,8 @@
             bank_name: v("st_bank"), bank_account_no: v("st_acc"), bank_account_holder: v("st_holder")
           }
         });
+        const expMin = Math.max(1, Math.round(Number(v("st_expire_min") || 1440)));
+        await nbRpc("nb2_save_expire_minutes", { p_minutes: expMin });
         await nbLoadSettings();
         renderAll();
         showNotice("Đã lưu cài đặt cửa hàng.", "Store settings saved.");
@@ -2538,10 +2845,17 @@
       <h1 class="text-3xl font-medium text-[#234d38]">${nbT("Cài đặt cửa hàng", "Store settings")}</h1>
       <form onsubmit="saveStoreSettings(event)" class="mt-6 space-y-6 rounded-2xl border border-[#dce2d4] bg-white p-6 sm:p-8">
         <h2 class="text-lg font-semibold text-[#234d38]">🚚 ${nbT("Giao hàng & hoa hồng", "Delivery & commission")}</h2>
-        <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-4">
           ${inp("st_fee", nbT("Phí giao hàng (₫)", "Delivery fee (₫)"), s.shipping_fee, 'type="number" min="0" required')}
           ${inp("st_free", nbT("Miễn phí giao từ (₫)", "Free delivery from (₫)"), s.free_shipping_min, 'type="number" min="0" required')}
           ${inp("st_comm", nbT("Hoa hồng sàn (%) cho đơn mới", "Commission (%) for new orders"), (Number(s.commission_bps) / 100).toFixed(2), 'type="number" min="0" max="100" step="0.01" required')}
+          <div>
+            ${inp("st_expire_min", nbT("Hạn chuyển khoản (phút, mặc định 1440 = 24h)", "Transfer timeout (mins, default 1440 = 24h)"), s.bank_transfer_expire_minutes ?? 1440, 'type="number" min="1" max="43200" required')}
+            <div class="mt-1.5 flex gap-2 text-[11px]">
+              <button type="button" onclick="document.getElementById('st_expire_min').value=1440" class="underline text-[#234d38]">24h (1440p)</button>
+              <button type="button" onclick="document.getElementById('st_expire_min').value=60" class="underline text-[#234d38]">1h (60p)</button>
+            </div>
+          </div>
         </div>
         <h2 class="text-lg font-semibold text-[#234d38]">☎️ ${nbT("Liên hệ cửa hàng (hiện ở trang Chính sách & hóa đơn)", "Store contact (shown on the Policy page & invoices)")}</h2>
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
@@ -2753,7 +3067,8 @@
 
       const still = fn => () => { if (State.route === route) fn(); };
       if (route === "detail") nbLoadReviews(State.selectedProductId);
-      else if (route === "orders" || route === "seller_orders") nbLoadOrders().then(still(renderAll));
+      else if (route === "orders") nbLoadOrders().then(still(renderAll));
+      else if (route === "seller_orders") nbLoadSellerOrdersView().then(still(renderAll));
       else if (route === "manage") nbLoadProducts().then(still(renderAll));
       else if (route === "seller_settings") nbLoadSettings().then(still(renderAll)).then(nbLoadCoupons);
       else if (route === "diary") nbLoadDiary();
