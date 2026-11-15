@@ -45,6 +45,29 @@
       --nb-text-main: #232d20;    /* 9. Chữ chính */
       --nb-text-muted: #526348;   /* 10. Chữ phụ chuẩn tương phản >= 4.5:1 */
       --nb-border: #dce2d4;       /* Viền chuẩn */
+
+      /* CSS Motion & Easing Tokens */
+      --nb-ease: cubic-bezier(0.22, 1, 0.36, 1);
+      --nb-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+      --nb-ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --nb-ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
+      --nb-dur-fast: 150ms;
+      --nb-dur-normal: 250ms;
+      --nb-dur-slow: 400ms;
+    }
+
+    /* Hiển thị số liệu/giá tiền căn đều (tabular-nums) chống giật layout */
+    .tabular-nums, .nb-num, [data-numeric], time, input[type="number"], .font-mono {
+      font-variant-numeric: tabular-nums;
+      font-feature-settings: "tnum";
+    }
+
+    /* Micro-interactions: Nút bấm đàn hồi khi active */
+    .nb-btn-press, button:not(:disabled), a {
+      transition: transform 0.12s var(--nb-ease);
+    }
+    button:not(:disabled):active {
+      transform: scale(0.97);
     }
 
     h1, h2, h3, h4, h5, h6, .font-heading {
@@ -80,6 +103,20 @@
         transition-duration: 0.01ms !important;
         scroll-behavior: auto !important;
       }
+      .nb-img-reveal {
+        opacity: 1 !important;
+        filter: none !important;
+        transform: none !important;
+        transition: none !important;
+      }
+      .nb-bottom-sheet, .nb-bar-grow, .nb-freeship-glow, .nb-modal-pop, .nb-cart-bump, .nb-badge-pulse, .nb-skeleton-shimmer, .nb-badge-pop, .nb-btn-shine::after {
+        animation: none !important;
+        transform: none !important;
+        transition: none !important;
+      }
+      button:not(:disabled):active {
+        transform: none !important;
+      }
     }
 
     
@@ -90,8 +127,18 @@
     }
 
     @keyframes nbModalPop {
-      from { opacity: 0; transform: scale(0.96) translateY(8px); }
+      from { opacity: 0; transform: scale(0.95) translateY(10px); }
       to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    @keyframes nbBadgePop {
+      0% { transform: scale(1); }
+      40% { transform: scale(1.35); }
+      75% { transform: scale(0.9); }
+      100% { transform: scale(1); }
+    }
+    .nb-badge-pop {
+      animation: nbBadgePop 0.42s var(--nb-ease-spring) both;
     }
 
     @keyframes nbCartBump {
@@ -111,12 +158,13 @@
     }
 
     .nb-card-hover {
-      transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.28s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.2s ease;
+      transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.32s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.24s ease;
     }
 
     .nb-card-hover:hover {
       transform: translateY(-4px);
-      box-shadow: 0 14px 28px -10px rgba(35, 77, 56, 0.16);
+      box-shadow: 0 14px 28px -10px rgba(35, 77, 56, 0.2), 0 0 0 1px rgba(35, 77, 56, 0.15);
+      border-color: rgba(35, 77, 56, 0.4);
     }
 
     .nb-cart-bump {
@@ -147,9 +195,18 @@
       animation: nbShimmer 3.5s infinite linear;
     }
 
+        @keyframes nbFlashHighlight {
+      0% { background-color: rgba(35, 77, 56, 0.22); }
+      50% { background-color: rgba(35, 77, 56, 0.1); }
+      100% { background-color: transparent; }
+    }
+    .nb-flash-updated {
+      animation: nbFlashHighlight 1.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
     .nb-stagger-card {
       animation: nbFadeUp 0.32s cubic-bezier(0.22, 1, 0.36, 1) both;
-      animation-delay: calc(var(--nb-idx, 0) * 35ms);
+      animation-delay: calc(min(var(--nb-idx, 0), 8) * 30ms);
     }
     
     @keyframes nbSoftPulse {
@@ -159,10 +216,14 @@
     .nb-badge-pulse {
       animation: nbSoftPulse 2.4s ease-in-out infinite;
     }
+    @keyframes nbSkeletonShimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
     .nb-skeleton-shimmer {
-      background: linear-gradient(90deg, #e5edde 25%, #f2f6ee 50%, #e5edde 75%);
+      background: linear-gradient(90deg, #e5edde 20%, #f4f8f0 50%, #e5edde 80%);
       background-size: 200% 100%;
-      animation: nbShimmer 1.8s infinite linear;
+      animation: nbSkeletonShimmer 1.8s infinite linear;
     }
 
     /* Lớp hỗ trợ viền an toàn iPhone */
@@ -215,6 +276,85 @@
         break-after: auto;
       }
     }
+    .nb-btn-shine {
+      position: relative;
+      overflow: hidden;
+    }
+    .nb-btn-shine::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      transform: translateX(-100%);
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.22), transparent);
+      transition: transform 0.6s ease;
+    }
+    .nb-btn-shine:hover::after {
+      transform: translateX(100%);
+    }
+    .nb-carousel-mask {
+      -webkit-mask-image: linear-gradient(to right, black 92%, transparent 100%);
+      mask-image: linear-gradient(to right, black 92%, transparent 100%);
+    }
+
+    /* Hiệu ứng ảnh hiện mượt (Image Blur-Up Reveal) */
+    .nb-img-reveal {
+      opacity: 0;
+      filter: blur(6px);
+      transform: scale(1.03);
+      transition: opacity 0.35s ease, filter 0.35s ease, transform 0.45s ease;
+    }
+    .nb-img-loaded {
+      opacity: 1;
+      filter: blur(0);
+      transform: scale(1);
+    }
+
+    /* Kính mờ & Bottom-Sheet cho Modal trên di động (<640px) */
+    @keyframes nbSlideUp {
+      from {
+        transform: translateY(100%);
+        opacity: 0.7;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+    @media (max-width: 639px) {
+      .nb-bottom-sheet {
+        animation: nbSlideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
+    }
+
+    /* Hoạt ảnh thanh Macro & Thanh tiến trình Kcal */
+    @keyframes nbBarGrow {
+      from {
+        transform: scaleX(0);
+      }
+      to {
+        transform: scaleX(1);
+      }
+    }
+    .nb-bar-grow {
+      transform-origin: left;
+      animation: nbBarGrow 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    /* Hiệu ứng ăn mừng đạt Freeship */
+    @keyframes nbFreeshipGlow {
+      0%, 100% {
+        box-shadow: 0 0 0 0 rgba(35, 77, 56, 0.4);
+        border-color: rgba(35, 77, 56, 0.3);
+      }
+      50% {
+        box-shadow: 0 0 0 8px rgba(35, 77, 56, 0);
+        border-color: rgba(35, 77, 56, 0.8);
+      }
+    }
+    .nb-freeship-glow {
+      animation: nbFreeshipGlow 1.8s ease-in-out 3;
+      border-color: #234d38 !important;
+    }
   </style>
 </head>
 
@@ -225,19 +365,21 @@
 
   <!-- HEADER -->
   <header
-    class="sticky top-0 z-30 w-full relative overflow-hidden border-b border-[#e6e8de] bg-[#fafaf5]/95 backdrop-blur-md">
-    <!-- Họa tiết lá xanh nhạt tinh tế, không che chữ -->
-    <svg class="pointer-events-none select-none absolute -left-5 -top-5 size-24 text-[#88b394] opacity-25"
-      viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
-      <path d="M20 100 C20 45, 65 15, 105 15 C105 55, 75 100, 20 100 Z" fill="#e8f5e9" />
-      <path d="M20 100 L85 35" stroke="#88b394" stroke-width="2" stroke-linecap="round" />
-      <path d="M45 75 C60 70, 75 60, 85 45" stroke="#88b394" stroke-width="1.5" stroke-linecap="round" />
-    </svg>
-    <svg class="pointer-events-none select-none absolute -right-4 -bottom-5 size-24 text-[#88b394] opacity-20"
-      viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
-      <path d="M100 20 C100 75, 55 105, 15 105 C15 65, 45 20, 100 20 Z" fill="#e8f5e9" />
-      <path d="M100 20 L35 85" stroke="#88b394" stroke-width="2" stroke-linecap="round" />
-    </svg>
+    class="sticky top-0 z-30 w-full border-b border-[#234d38]/10 bg-[#fafaf5]/90 backdrop-blur-md shadow-xs transition-all duration-300">
+    <!-- Họa tiết lá xanh nhạt tinh tế, không che chữ và không làm cắt dropdown tìm kiếm -->
+    <div class="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+      <svg class="pointer-events-none select-none absolute -left-5 -top-5 size-24 text-[#88b394] opacity-25"
+        viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+        <path d="M20 100 C20 45, 65 15, 105 15 C105 55, 75 100, 20 100 Z" fill="#e8f5e9" />
+        <path d="M20 100 L85 35" stroke="#88b394" stroke-width="2" stroke-linecap="round" />
+        <path d="M45 75 C60 70, 75 60, 85 45" stroke="#88b394" stroke-width="1.5" stroke-linecap="round" />
+      </svg>
+      <svg class="pointer-events-none select-none absolute -right-4 -bottom-5 size-24 text-[#88b394] opacity-20"
+        viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+        <path d="M100 20 C100 75, 55 105, 15 105 C15 65, 45 20, 100 20 Z" fill="#e8f5e9" />
+        <path d="M100 20 L35 85" stroke="#88b394" stroke-width="2" stroke-linecap="round" />
+      </svg>
+    </div>
 
     <div
       class="relative z-10 mx-auto flex w-full max-w-[1440px] flex-wrap items-center justify-between gap-2.5 px-4 py-2.5 sm:py-3.5 sm:px-8 lg:px-16">
@@ -263,6 +405,7 @@
           <input id="headerSearch" type="search" oninput="handleHeaderSearch(this.value)"
             placeholder="Tìm món ăn, thành phần, dinh dưỡng..."
             class="min-h-[42px] w-full rounded-full border border-[#cfe8d5] bg-white/95 pl-10 pr-4 py-2 text-xs sm:text-sm text-[#30382e] placeholder:text-[#526348] shadow-sm focus:border-[#234d38] focus:outline-none focus:ring-2 focus:ring-[#cfe8d5]">
+          <div id="nbSearchDropdown" class="hidden absolute left-0 right-0 top-full mt-1.5 z-50 rounded-2xl border border-[#dce2d4] bg-white p-2 shadow-xl max-h-[380px] overflow-y-auto"></div>
         </div>
       </div>
 
@@ -290,7 +433,7 @@
             <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/>
           </svg>
           <span id="headerCartCount"
-            class="flex size-5 items-center justify-center rounded-full bg-[#ea580c] text-xs font-bold text-white shadow-xs">0</span>
+            class="flex size-5 items-center justify-center rounded-full bg-[#ea580c] text-xs font-bold text-white shadow-xs tabular-nums">0</span>
         </button>
       </div>
 
@@ -926,6 +1069,12 @@
     // ============================================================================
     const State = {
       language: localStorage.getItem("nourish_language") || "vi",
+      reviewStarFilter: "all",
+      allSellerReviews: [],
+      reviewsLoading: false,
+      sellerReviewsFilter: "all",
+      editingReviewKey: null,
+      deliverySlotManual: false,
       route: "shop",
       selectedProductId: 1,
       detailQuantity: 1,
@@ -937,6 +1086,8 @@
       loading: true,
       cart: JSON.parse(localStorage.getItem("nb_cart") || '{}'),
       cartSelection: JSON.parse(localStorage.getItem("nb_cart_sel") || '{}'),
+      cartNotes: JSON.parse(localStorage.getItem("nb_cart_notes") || '{}'),
+      recentViews: JSON.parse(localStorage.getItem("nb_recent_views") || '[]'),
       paymentMethod: "cod",
       commissionBps: Number(localStorage.getItem("nb_comm_bps") ?? 235),
       signedIn: false,
@@ -966,6 +1117,7 @@
       editorOpen: false,
       editorId: 0,
       quickPriceEditId: 0,
+      lastUpdatedProductId: 0,
       liveOrderWatch: false,
       quickViewQty: 1,
       ordersSlotFilter: "all",
@@ -3862,6 +4014,7 @@ const ZH_DICT = {
         sparkles: `<svg class="${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/></svg>`,
         share: `<svg class="${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></svg>`,
         copy: `<svg class="${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>`,
+        edit: `<svg class="${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>`,
         bowl: `<svg class="${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21a9 9 0 0 0 9-9H3a9 9 0 0 0 9 9Z"/><path d="M7 8v2"/><path d="M12 7v3"/><path d="M17 8v2"/></svg>`,
         pin: `<svg class="${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>`,
         phone: `<svg class="${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>`,
@@ -3921,16 +4074,21 @@ const ZH_DICT = {
       const container = document.getElementById("nbToastContainer");
       if (!container) return;
       const toast = document.createElement("div");
-      toast.className = `pointer-events-auto flex items-center gap-2.5 rounded-2xl border px-4 py-3 text-xs sm:text-sm font-semibold shadow-xl transition-all duration-300 transform translate-y-3 opacity-0 ${
-        type === "success" 
-          ? "border-[#234d38]/30 bg-[#234d38] text-white" 
-          : "border-red-300 bg-red-600 text-white"
+      const isErr = type === "error";
+      const isInfo = type === "info";
+      toast.className = `pointer-events-auto flex items-center gap-3 rounded-2xl border px-4 py-3 text-xs sm:text-sm font-semibold shadow-2xl shadow-black/15 backdrop-blur-sm transition-all duration-300 transform translate-y-3 opacity-0 select-none ${
+        isErr
+          ? "border-red-500/30 bg-red-600 text-white shadow-red-900/20"
+          : (isInfo ? "border-[#234d38]/30 bg-[#1e3a2f] text-white shadow-[#1e3a2f]/20" : "border-[#234d38]/20 bg-[#234d38] text-white shadow-[#234d38]/20")
       }`;
+      const toastIcon = isErr
+        ? `<span class="flex size-6 shrink-0 items-center justify-center rounded-full bg-white/20 text-white">${nbSvg("warn", "size-3.5")}</span>`
+        : (isInfo 
+          ? `<span class="flex size-6 shrink-0 items-center justify-center rounded-full bg-white/20 text-white">${nbSvg("info", "size-3.5")}</span>` 
+          : `<span class="flex size-6 shrink-0 items-center justify-center rounded-full bg-white/20 text-white"><svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></span>`);
       toast.innerHTML = `
-        <svg class="size-4 shrink-0 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-          <polyline points="20 6 9 17 4 12"/>
-        </svg>
-        <span>${esc(message)}</span>
+        ${toastIcon}
+        <span class="leading-snug">${esc(message)}</span>
       `;
       container.appendChild(toast);
       requestAnimationFrame(() => {
@@ -3940,7 +4098,7 @@ const ZH_DICT = {
       setTimeout(() => {
         toast.classList.add("opacity-0", "translate-y-2");
         setTimeout(() => toast.remove(), 300);
-      }, 2500);
+      }, 2600);
     }
 
     function showNotice(vi, en, isError = false) {
@@ -3979,6 +4137,51 @@ const ZH_DICT = {
     // ============================================================================
     function handleHeaderSearch(val) {
       State.search = val;
+      const dd = document.getElementById("nbSearchDropdown");
+      const q = (val || "").trim().toLowerCase();
+      if (dd) {
+        if (q.length < 2) {
+          dd.classList.add("hidden");
+          dd.innerHTML = "";
+        } else {
+          const matches = State.products.filter(p => {
+            if (!p.is_active || isSample(p)) return false;
+            const text = [p.name_vi, p.name_en, p.name_zh, p.name_ko, p.name_ja, p.ingredients_vi, p.ingredients_en, p.description_vi].filter(Boolean).join(" ").toLowerCase();
+            return text.includes(q);
+          }).slice(0, 5);
+
+          if (!matches.length) {
+            dd.innerHTML = `<div class="p-3 text-center text-xs text-[#526348]">${tr("Không tìm thấy món phù hợp", "No matching items", "未找到匹配餐品", "일치하는 메뉴가 없습니다", "該当する商品が見つかりません")}</div>`;
+          } else {
+            dd.innerHTML = `
+              <div class="px-2.5 py-1 text-[11px] font-bold text-[#526348] uppercase tracking-wider">${tr("Gợi ý nhanh (5 món)", "Quick matches (5)", "快捷推荐 (5道)", "추천 메뉴 (5개)", "おすすめ (5件)")}</div>
+              <div class="divide-y divide-[#f0f3ea]">
+                ${matches.map(p => {
+                  const exp = nbExpiryInfo(p);
+                  const sellPrice = exp.effectivePrice;
+                  return `
+                    <div onclick="openQuickView(${p.id});const d=document.getElementById('nbSearchDropdown');if(d)d.classList.add('hidden')" class="flex items-center justify-between gap-3 p-2 rounded-xl hover:bg-[#f4f7ef] transition-colors cursor-pointer">
+                      <div class="flex items-center gap-2.5 min-w-0">
+                        <img src="${imgSrc(p, 'card')}" alt="${pname(p)}" class="size-11 rounded-lg object-cover shrink-0">
+                        <div class="min-w-0">
+                          <p class="text-xs font-semibold text-[#234d38] truncate">${pname(p)}</p>
+                          <p class="text-[11px] text-[#526348]">${fmtNum(p.calories_kcal)} kcal · <span class="font-bold text-[#ea580c]">${money(sellPrice)}</span></p>
+                        </div>
+                      </div>
+                      <div class="flex items-center gap-1.5 shrink-0" onclick="event.stopPropagation()">
+                        <button type="button" onclick="addToCart(${p.id}, 1);const d=document.getElementById('nbSearchDropdown');if(d)d.classList.add('hidden')" class="inline-flex min-h-[30px] items-center gap-1 rounded-lg bg-[#234d38] px-2.5 py-1 text-[11px] font-bold text-white hover:bg-[#173a29] cursor-pointer" title="${tr("Thêm vào giỏ", "Add to Bag")}">
+                          + ${tr("Giỏ", "Bag", "加购", "담기", "カート")}
+                        </button>
+                      </div>
+                    </div>
+                  `;
+                }).join("")}
+              </div>
+            `;
+          }
+          dd.classList.remove("hidden");
+        }
+      }
       if (State.route !== "shop") {
         navigate("shop");
       } else {
@@ -4016,9 +4219,16 @@ const ZH_DICT = {
       const isStaff = isLoggedIn && NB_AUTH_ROLE === "staff";
 
       const nav = document.getElementById("mainNav");
-      const navItem = (route, vi, en, zh, ko, ja) => `
-        <a href="#/${route === 'shop' ? '' : route}" onclick="navigate('${route}')" class="inline-flex min-h-[40px] items-center rounded-full px-3.5 py-2 text-xs sm:text-sm font-semibold whitespace-nowrap transition-colors ${State.route === route ? 'bg-[#234d38] text-white shadow-xs' : 'text-[#234d38] hover:bg-[#e8f5e9]'}">${tr(vi, en, zh, ko, ja)}</a>
-      `;
+      const navItem = (route, vi, en, zh, ko, ja) => {
+        const active = State.route === route;
+        return `
+          <a href="#/${route === 'shop' ? '' : route}" onclick="navigate('${route}')" class="inline-flex min-h-[40px] items-center rounded-full px-3.5 py-1.5 text-xs sm:text-sm whitespace-nowrap transition-all duration-200 cursor-pointer select-none ${
+            active 
+              ? 'bg-[#234d38] text-white font-bold shadow-xs scale-[1.02]' 
+              : 'text-[#234d38] hover:bg-[#e8f5e9] font-medium'
+          }">${tr(vi, en, zh, ko, ja)}</a>
+        `;
+      };
 
       const shopLink = navItem('shop', "Cửa hàng", "The shop", "商城首页", "상점", "ショップ");
 
@@ -4448,7 +4658,7 @@ const ZH_DICT = {
               </button>
             </div>
           </div>
-          <div id="${id}" class="flex gap-4 overflow-x-auto pb-4 pt-1 no-scrollbar scroll-smooth snap-x">
+          <div id="${id}" class="flex gap-4 overflow-x-auto pb-4 pt-1 no-scrollbar scroll-smooth snap-x nb-carousel-mask">
             ${products.map(p => `
               <div class="w-[230px] sm:w-[250px] flex-shrink-0 snap-start">
                 ${renderProductCard(p)}
@@ -4564,7 +4774,7 @@ const ZH_DICT = {
                       <span>${nbSvg('bicep', 'size-3 text-[#234d38] inline-block')} <b>${totPro.toFixed(0)}g</b> ${tr("đạm", "protein", "蛋白", "단백질", "タンパク質")}</span>
                       <span>${cb.items.length} ${tr("món", "items", "道", "개", "品")}</span>
                     </div>
-                    <button type="button" onclick="nbAddPlan([${ids.join(',')}]); nbTriggerCartBump();" class="inline-flex min-h-[40px] w-full items-center justify-center gap-1.5 rounded-xl bg-[#234d38] px-3 py-2 text-xs font-bold text-white hover:bg-[#173727] shadow-xs active:scale-98 transition-all cursor-pointer">
+                    <button type="button" onclick="nbAddPlan([${ids.join(',')}]); nbTriggerCartBump();" class="nb-btn-shine inline-flex min-h-[40px] w-full items-center justify-center gap-1.5 rounded-xl bg-[#234d38] px-3 py-2 text-xs font-bold text-white hover:bg-[#173727] shadow-xs active:scale-[0.98] transition-all cursor-pointer">
                       ${nbSvg('bag')} ${tr("+ Thêm trọn bộ", "+ Add whole combo", "+ 一键加购整套", "+ 세트 일괄 담기", "+ セットをまとめて追加")}
                     </button>
                   </div>
@@ -4581,6 +4791,7 @@ const ZH_DICT = {
       State.search = "";
       State.vitaminQuery = "";
       State.maxCalories = "";
+      State.sort = "default";
       State.diet = [];
       State.avoid = [];
       State.inStock = false;
@@ -4588,6 +4799,8 @@ const ZH_DICT = {
       State.onlyFit = false;
       const searchInput = document.getElementById("headerSearch");
       if (searchInput) searchInput.value = "";
+      const sdd = document.getElementById("nbSearchDropdown");
+      if (sdd) sdd.classList.add("hidden");
       renderAll();
     }
 
@@ -4640,16 +4853,16 @@ const ZH_DICT = {
       const todayDeals = activeValid.filter(p => (p.original_price_vnd && p.original_price_vnd > p.price_vnd) || p.tag_badge === 'near_expiry' || nbExpiryInfo(p).discountPct > 0 || [2, 5, 7].includes(p.id));
       const newArrivals = activeValid.filter(p => p.tag_badge === 'new' || [4, 6, 9].includes(p.id));
 
-      const hasExtraFilters = (State.diet && State.diet.length > 0) || (State.avoid && State.avoid.length > 0) || !!State.inStock || !!State.onlyWish || !!State.onlyFit;
+      const hasExtraFilters = (State.diet && State.diet.length > 0) || (State.avoid && State.avoid.length > 0) || !!State.inStock || !!State.onlyWish || !!State.onlyFit || (State.sort && State.sort !== "default");
       const isDefaultView = State.category === "all" && !hasNutrientFilter && !hasExtraFilters;
 
       return `
     <section id="catalog" class="relative overflow-hidden mx-auto w-full max-w-[1440px] scroll-mt-28 px-4 pb-12 pt-4 sm:px-8 sm:pt-6 lg:px-16">
       <!-- Họa tiết lá xanh nhạt nền nhẹ nhàng, không che chữ -->
-      <svg class="pointer-events-none select-none absolute -right-6 top-2 size-36 text-[#88b394] opacity-20" viewBox="0 0 180 180" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+      <svg class="nb-leaf-bg pointer-events-none select-none absolute -right-6 top-2 size-36 text-[#88b394] opacity-20 transition-transform duration-75 will-change-transform" viewBox="0 0 180 180" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
         <path d="M150 25 C85 25, 35 75, 35 145 C105 145, 150 95, 150 25 Z" fill="#e8f5e9"/>
       </svg>
-      <svg class="pointer-events-none select-none absolute -left-6 top-32 size-32 text-[#88b394] opacity-20" viewBox="0 0 160 160" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+      <svg class="nb-leaf-bg pointer-events-none select-none absolute -left-6 top-32 size-32 text-[#88b394] opacity-20 transition-transform duration-75 will-change-transform" viewBox="0 0 160 160" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
         <path d="M20 140 C20 60, 80 20, 140 20 C140 80, 100 140, 20 140 Z" fill="#e8f5e9"/>
       </svg>
 
@@ -4657,13 +4870,13 @@ const ZH_DICT = {
       <div id="nbPromoBannerBox">${renderSlimPromoBanner()}</div>
 
       <!-- Hàng biểu tượng danh mục tròn màu pastel với hình bên trong -->
-      <div class="relative z-10 mb-6 flex items-center justify-start sm:justify-center gap-4 sm:gap-8 overflow-x-auto pb-2 no-scrollbar">
+      <div class="relative z-10 my-6 sm:my-8 flex items-center justify-start sm:justify-center gap-4 sm:gap-8 overflow-x-auto pb-3 pt-1 no-scrollbar">
         ${CATEGORY_CIRCLES.map(cat => {
           const active = State.category === cat.id;
           return `
             <button type="button" onclick="State.category='${cat.id}';renderAll()" 
                     class="group flex flex-col items-center gap-2 focus:outline-none flex-shrink-0 cursor-pointer">
-              <div class="size-16 sm:size-20 rounded-full flex items-center justify-center transition-all duration-300 border-2 ${active ? 'border-[#234d38] ring-4 ring-[#e8f5e9] shadow-md scale-105' : 'border-transparent hover:scale-105 shadow-xs'}" 
+              <div class="size-16 sm:size-20 rounded-full flex items-center justify-center transition-all duration-300 border-2 ${active ? 'border-[#234d38] ring-4 ring-[#234d38]/15 shadow-md scale-105' : 'border-transparent hover:scale-105 hover:shadow-xs'}" 
                    style="background-color: ${cat.bg};">
                 ${cat.icon}
               </div>
@@ -4685,7 +4898,7 @@ const ZH_DICT = {
       </div>
 
       <!-- Thanh chọn nhanh Mục tiêu ăn lành 1 chạm (Quick Diet Goal Pills) -->
-      <div class="relative z-10 mb-6 flex flex-wrap items-center justify-center gap-2 sm:gap-2.5">
+      <div class="relative z-10 mb-6 sm:mb-8 flex flex-wrap items-center justify-center gap-2 sm:gap-2.5 py-1">
         <span class="text-xs font-bold text-[#234d38] flex items-center gap-1.5 mr-1 font-heading">
           ${nbSvg('bowl', 'size-4 text-[#234d38]')}
           <span>${tr("Mục tiêu ăn lành:", "Diet goals:", "健康目标：", "식단 목표:", "健康目標:")}</span>
@@ -4697,7 +4910,7 @@ const ZH_DICT = {
           { key: 'lowsugar', vi: 'Ít đường (≤5g Sugar)', en: 'Low sugar (≤5g Sugar)', zh: '低糖轻负担 (≤5g 糖)', ko: '저당 식단 (≤5g 당류)', ja: '低糖質 (≤5g 糖)', on: State.diet.includes('lowsugar'), act: "nbToggle('diet', 'lowsugar')" },
           { key: 'wish', vi: `Món yêu thích ♥ (${State.wishlist.length})`, en: `Favorites ♥ (${State.wishlist.length})`, zh: `我的收藏 ♥ (${State.wishlist.length})`, ko: `관심 메뉴 ♥ (${State.wishlist.length})`, ja: `お気に入り ♥ (${State.wishlist.length})`, on: State.onlyWish, act: "State.onlyWish = !State.onlyWish; renderAll()" }
         ].map(p => `
-          <button type="button" onclick="${p.act}" class="inline-flex min-h-[36px] items-center gap-1.5 rounded-full border px-3 sm:px-3.5 py-1.5 text-xs font-semibold transition-all ${p.on ? 'border-[#234d38] bg-[#234d38] text-white shadow-xs scale-102' : 'border-[#dce2d4] bg-white text-[#434f3d] hover:border-[#648358] hover:bg-[#f9faf7]'}">
+          <button type="button" onclick="${p.act}" class="inline-flex min-h-[36px] items-center gap-1.5 rounded-full border px-3 sm:px-3.5 py-1.5 text-xs font-semibold transition-all ${p.on ? 'border-[#234d38] bg-[#234d38] text-white shadow-xs scale-[1.02]' : 'border-[#dce2d4] bg-white text-[#434f3d] hover:border-[#648358] hover:bg-[#f9faf7]'}">
             ${p.on ? '<span class="text-xs">✓</span>' : ''}
             <span>${tr(p.vi, p.en, p.zh, p.ko, p.ja)}</span>
           </button>
@@ -4739,7 +4952,7 @@ const ZH_DICT = {
                     <p class="text-xs font-semibold text-[#234d38] truncate" title="${pname(p)}">${pname(p)}</p>
                     <p class="text-xs font-bold text-[#ea580c]">${money(nbExpiryInfo(p).effectivePrice)}</p>
                   </div>
-                  <button type="button" onclick="addToCart(${p.id}, 1)" class="inline-flex min-h-[34px] items-center justify-center gap-1 rounded-full bg-[#234d38] px-3 py-1 text-xs font-semibold text-white hover:bg-[#193a2a] transition-transform active:scale-95 shrink-0 shadow-xs" title="${tr("Thêm vào giỏ", "Add to bag", "加入购物车")}">
+                  <button type="button" onclick="nbAddToCartWithFeedback(this, ${p.id}, '${imgSrc(p, 'thumb')}')" class="inline-flex min-h-[36px] min-w-[44px] items-center justify-center gap-1 rounded-full bg-[#234d38] px-3.5 py-1.5 text-xs font-semibold text-white hover:bg-[#193a2a] transition-transform active:scale-95 shrink-0 shadow-xs cursor-pointer" title="${tr("Thêm vào giỏ", "Add to bag", "加入购物车")}">
                     + ${tr("Thêm", "Add", "加购")}
                   </button>
                 </div>
@@ -4749,8 +4962,16 @@ const ZH_DICT = {
         `;
       })()}
 
+      <!-- Hàng từ khóa tìm kiếm nhanh 1 chạm -->
+      <div class="relative z-10 mb-4 flex flex-wrap items-center justify-center gap-1.5 text-xs">
+        <span class="text-[#526348] font-medium mr-1">${tr("Tìm nhanh:", "Quick search:", "热门搜索：", "인기 검색어:", "人気キーワード:")}</span>
+        ${["Quinoa", "Cá hồi", "Ức gà", "Granola", "Bơ", "Sinh tố"].map(kw => `
+          <button type="button" onclick="State.search='${kw}';const s=document.getElementById('headerSearch');if(s)s.value='${kw}';renderAll()" class="rounded-full border border-[#dce2d4] bg-white px-2.5 py-0.5 text-[11px] font-medium text-[#234d38] hover:border-[#234d38] hover:bg-[#e8f5e9] transition-colors cursor-pointer">${kw}</button>
+        `).join("")}
+      </div>
+
       <!-- Bộ lọc gọn (thu gọn dạng dropdown) -->
-      <details class="relative z-10 mb-6 rounded-2xl border border-[#dce2d4] bg-white px-4 py-3 shadow-xs">
+      <details class="relative z-10 mb-6 sm:mb-8 rounded-2xl border border-[#dce2d4] bg-white px-4 py-3.5 shadow-xs transition-shadow hover:shadow-sm">
         <summary class="cursor-pointer list-none flex flex-wrap items-center justify-between gap-2 text-xs sm:text-sm font-bold text-[#234d38] font-heading">
           <span class="flex items-center gap-2">
             <svg class="size-4 text-[#234d38]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" x2="4" y1="21" y2="14"/><line x1="4" x2="4" y1="10" y2="3"/><line x1="12" x2="12" y1="21" y2="12"/><line x1="12" x2="12" y1="8" y2="3"/><line x1="20" x2="20" y1="21" y2="16"/><line x1="20" x2="20" y1="12" y2="3"/><line x1="1" x2="7" y1="14" y2="14"/><line x1="9" x2="15" y1="8" y2="8"/><line x1="17" x2="23" y1="16" y2="16"/></svg>
@@ -4808,7 +5029,7 @@ const ZH_DICT = {
 
       <!-- Thanh tóm tắt Bộ lọc đang bật (Active Filter Summary Bar) -->
       ${(() => {
-        const hasFilters = State.category !== 'all' || !!State.search || !!State.vitaminQuery || !!State.maxCalories || (State.diet && State.diet.length > 0) || (State.avoid && State.avoid.length > 0) || !!State.inStock || !!State.onlyWish || !!State.onlyFit;
+        const hasFilters = State.category !== 'all' || !!State.search || !!State.vitaminQuery || !!State.maxCalories || hasExtraFilters;
         if (!hasFilters) return "";
         return `
           <div class="relative z-10 mb-4 flex flex-wrap items-center justify-between gap-2.5 rounded-2xl border border-emerald-200 bg-emerald-50/90 px-4 py-3 text-xs text-[#234d38] shadow-xs">
@@ -4828,6 +5049,7 @@ const ZH_DICT = {
                 if (State.inStock) chips.push({ label: tr("Còn hàng", "In stock", "有现货", "재고 있음", "在庫あり"), act: "State.inStock=false;renderAll()" });
                 if (State.onlyWish) chips.push({ label: tr("Yêu thích", "Wishlist", "心愿单", "위시리스트", "お気に入り"), act: "State.onlyWish=false;renderAll()" });
                 if (State.onlyFit) chips.push({ label: tr("Phù hợp TDEE", "Fit TDEE", "契合目标", "맞춤 식단", "目標適合"), act: "State.onlyFit=false;renderAll()" });
+                if (State.sort && State.sort !== "default") chips.push({ label: `${tr("Sắp xếp:", "Sort:", "排序：", "정렬:", "並び替え:")} ${State.sort}`, act: "State.sort='default';renderAll()" });
                 return chips.map(c => `<button type="button" onclick="${c.act}" class="inline-flex items-center gap-1 rounded-full bg-white border border-emerald-300 px-2.5 py-0.5 text-[11px] font-medium text-[#234d38] hover:border-[#ea580c] hover:text-[#ea580c] shadow-2xs transition-colors cursor-pointer" title="${tr("Bấm để gỡ lọc", "Click to remove filter")}">${c.label} <span class="font-bold">×</span></button>`).join("");
               })()}
             </div>
@@ -4894,6 +5116,23 @@ const ZH_DICT = {
       </div>
     </section>
 
+    <!-- Món bạn vừa xem gần đây (Hiển thị khi có >= 2 món) -->
+    ${(() => {
+      const recentProducts = (State.recentViews || [])
+        .map(id => State.products.find(p => p.id === Number(id)))
+        .filter(p => p && p.is_active && !isSample(p) && nbExpiryInfo(p).status !== "expired");
+      if (recentProducts.length >= 2) {
+        return renderProductCarousel(
+          "carousel_recentviews",
+          tr("Món bạn vừa xem", "Recently Viewed", "最近浏览", "최근 본 상품", "最近見た商品"),
+          tr("Dễ dàng tìm lại các món dinh dưỡng bạn đã quan tâm", "Quickly review meals and snacks you previously checked out", "快速回顾您之前看过的健康餐品"),
+          nbSvg("clock", "size-4 text-[#234d38]"),
+          recentProducts
+        );
+      }
+      return "";
+    })()}
+
     <!-- Dải giao hàng chân trang tinh gọn -->
     <div class="flex flex-wrap items-center justify-center gap-2 border-y border-[#dce2d4] bg-[#e8f5e9]/40 px-5 py-3 text-xs font-semibold text-[#234d38]">
       <svg class="size-4 text-[#234d38]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 18H3c-.6 0-1-.4-1-1V7c0-.6.4-1 1-1h10c.6 0 1 .4 1 1v11"/><path d="M14 9h4l4 4v4c0 .6-.4 1-1 1h-2"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg>
@@ -4937,9 +5176,11 @@ const ZH_DICT = {
       <a href="#/" onclick="navigate('shop')" class="mb-7 inline-flex min-h-[44px] items-center gap-2 text-sm text-[#557448] hover:underline">
         ← ${tr("Quay lại cửa hàng", "Back to the shop")}
       </a>
-      <div class="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-14">
-        <div>
-          <img src="${imgSrc(p, 'detail')}" alt="${pname(p)}" loading="lazy" decoding="async" class="aspect-square max-h-[540px] w-full rounded-3xl object-cover border border-[#dce2d4]">
+      <div class="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-12 items-start">
+        <div class="lg:sticky lg:top-24">
+          <div class="group relative overflow-hidden rounded-3xl border border-[#dce2d4] bg-[#f4f6f0] shadow-sm">
+            <img src="${imgSrc(p, 'detail')}" alt="${pname(p)}" loading="lazy" decoding="async" class="aspect-square max-h-[540px] w-full object-cover transition-transform duration-500 ease-[var(--nb-ease)] group-hover:scale-105">
+          </div>
           <p class="mt-3 text-center text-xs text-[#526348]">${tr("Hình minh họa; sản phẩm thực tế có thể khác đôi chút.", "Illustrative image; the actual product may differ.")}</p>
         </div>
         <div>
@@ -5003,7 +5244,7 @@ const ZH_DICT = {
                 <span class="font-extrabold text-[#ea580c]">${Math.min(100, Math.round(((Number(p.calories_kcal) || 0) / Number(State.health.target)) * 100))}% (${fmtNum(p.calories_kcal)} / ${fmtNum(State.health.target)} kcal)</span>
               </div>
               <div class="mt-2 h-2.5 w-full overflow-hidden rounded-full bg-[#e5eadf]">
-                <div class="h-full rounded-full bg-[#234d38] transition-all duration-300" style="width: ${Math.min(100, Math.round(((Number(p.calories_kcal) || 0) / Number(State.health.target)) * 100))}%"></div>
+                <div class="h-full rounded-full bg-[#234d38] transition-all duration-300 nb-bar-grow" style="width: ${Math.min(100, Math.round(((Number(p.calories_kcal) || 0) / Number(State.health.target)) * 100))}%"></div>
               </div>
               <p class="mt-1.5 text-[11px] text-[#526348]">
                 ${tr(`Món này chiếm ${Math.min(100, Math.round(((Number(p.calories_kcal) || 0) / Number(State.health.target)) * 100))}% mục tiêu năng lượng ${fmtNum(State.health.target)} kcal/ngày của bạn.`, `This item accounts for ${Math.min(100, Math.round(((Number(p.calories_kcal) || 0) / Number(State.health.target)) * 100))}% of your ${fmtNum(State.health.target)} kcal/day target.`, `该餐品占您每日 ${fmtNum(State.health.target)} kcal 目标的 ${Math.min(100, Math.round(((Number(p.calories_kcal) || 0) / Number(State.health.target)) * 100))}％。`)}
@@ -5024,6 +5265,47 @@ const ZH_DICT = {
           ${nbReviewsHtml(p)}
         </div>
       </div>
+
+      <!-- Gợi ý món dùng kèm hoàn hảo -->
+      ${(() => {
+        const otherItems = State.products.filter(x => 
+          x.id !== p.id && x.is_active && !isSample(x) && x.stock_quantity > 0 && nbExpiryInfo(x).status !== "expired"
+        );
+        const snacks = otherItems.filter(x => x.category === "snacks" || x.category !== p.category);
+        const pairs = (snacks.length >= 2 ? snacks : otherItems).slice(0, 3);
+        if (!pairs.length) return "";
+        return `
+          <div class="mt-14 pt-10 border-t border-[#dce2d4]">
+            <div class="mb-5 flex items-center justify-between">
+              <div>
+                <h3 class="text-lg sm:text-xl font-bold text-[#234d38] font-heading flex items-center gap-2">
+                  ${nbSvg("sparkles", "size-5 text-[#ea580c]")}
+                  <span>${tr("Thường dùng kèm hoàn hảo", "Perfect Pairings", "最佳搭配推荐", "함께 즐기기 좋은 메뉴", "おすすめの組み合わせ")}</span>
+                </h3>
+                <p class="mt-0.5 text-xs text-[#526348]">${tr("Gợi ý các món nhẹ và thức uống thanh lành kết hợp trọn vẹn dinh dưỡng", "Suggested sides and snacks for a complete, balanced meal", "推荐搭配点心与饮品，营养更均衡")}</p>
+              </div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+              ${pairs.map(item => {
+                const exp = nbExpiryInfo(item);
+                return `
+                  <div class="flex items-center gap-3.5 rounded-2xl border border-[#dce2d4] bg-white p-3 hover:border-[#234d38]/30 transition-all shadow-xs">
+                    <img src="${imgSrc(item, 'thumb')}" alt="${pname(item)}" class="size-16 rounded-xl object-cover border border-[#e3e7da] shrink-0 cursor-pointer" onclick="navigate('detail', ${item.id})">
+                    <div class="min-w-0 flex-1">
+                      <h4 onclick="navigate('detail', ${item.id})" class="text-xs sm:text-sm font-bold text-[#234d38] truncate hover:text-[#ea580c] transition-colors cursor-pointer">${pname(item)}</h4>
+                      <p class="text-[11px] text-[#526348] mt-0.5">${item.calories_kcal ? `${item.calories_kcal} kcal · ` : ""}<span class="font-bold text-[#ea580c]">${money(exp.effectivePrice)}</span></p>
+                      <button type="button" onclick="nbFlyToCart(this, '${imgSrc(item, 'card')}'); addToCart(${item.id}, 1)" class="mt-1.5 inline-flex items-center gap-1 rounded-lg bg-[#234d38] px-2.5 py-1 text-[11px] font-bold text-white hover:bg-[#173a29] transition-all cursor-pointer">
+                        ${nbSvg("plus", "size-3")}
+                        <span>${tr("Thêm", "Add", "加入", "추가", "追加")}</span>
+                      </button>
+                    </div>
+                  </div>
+                `;
+              }).join("")}
+            </div>
+          </div>
+        `;
+      })()}
     </div>
   `;
     }
@@ -5143,7 +5425,15 @@ const ZH_DICT = {
                 </span>
                 <span>${tr("Chọn / Bỏ chọn tất cả", "Select / Deselect all", "全选 / 取消全选")}</span>
               </button>
-              <span class="text-xs text-[#526348]">${selected.length}/${items.length} ${tr("món đã chọn", "selected", "已选中")}</span>
+              <div class="flex items-center gap-2.5">
+                ${selected.length > 0 ? `
+                  <button type="button" onclick="deleteSelectedCartItems()" class="inline-flex min-h-[36px] items-center gap-1.5 rounded-xl border border-red-200 bg-red-50/70 px-3 py-1.5 text-xs font-semibold text-red-700 hover:bg-red-100 transition-colors cursor-pointer" title="${tr("Xóa các món đang được tick chọn", "Delete selected items", "删除已选商品")}">
+                    ${nbSvg("trash", "size-3.5")}
+                    <span>${tr("Xóa món đã chọn", "Delete selected", "删除已选", "선택 삭제", "選択削除")} (${selected.length})</span>
+                  </button>
+                ` : ""}
+                <span class="text-xs text-[#526348]">${selected.length}/${items.length} ${tr("món đã chọn", "selected", "已选中")}</span>
+              </div>
             </div>
 
             ${items.map(item => `
@@ -5166,10 +5456,37 @@ const ZH_DICT = {
                       <span class="min-w-8 text-center text-xs font-bold text-[#234d38]">${item.quantity}</span>
                       <button onclick="updateCartQty(${item.id}, 1)" class="inline-flex size-9 items-center justify-center text-sm font-bold text-[#234d38] hover:bg-[#f4f6f0] rounded-r-xl transition-colors" aria-label="increase">+</button>
                     </div>
-                    <button onclick="delete State.cart[${item.id}];saveStorage();renderAll()" class="inline-flex min-h-[36px] items-center gap-1 px-2.5 text-xs text-[#526348] hover:text-red-700 transition-colors">
+                    <button onclick="delete State.cart[${item.id}];delete State.cartSelection[${item.id}];if(State.cartNotes)delete State.cartNotes[${item.id}];saveStorage();renderAll()" class="inline-flex min-h-[36px] items-center gap-1 px-2.5 text-xs text-[#526348] hover:text-red-700 transition-colors">
                       <svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
                       <span>${tr("Xóa", "Remove", "删除")}</span>
                     </button>
+                  </div>
+
+                  <!-- Ghi chú chế biến từng món -->
+                  <div class="mt-2.5 pt-2 border-t border-[#f0f3ea]">
+                    <div class="flex items-center gap-1.5 flex-wrap">
+                      <span class="text-[11px] text-[#526348] font-medium flex items-center gap-1">
+                        ${nbSvg("note", "size-3 text-[#234d38]")}
+                        <span>${tr("Ghi chú chế biến:", "Cooking note:", "定制备注：", "조리 요청:", "調理リクエスト:")}</span>
+                      </span>
+                      ${[
+                        { vi: "Ít sốt", en: "Less sauce", zh: "少酱", ko: "소스 적게", ja: "ソース少なめ" },
+                        { vi: "Không hành/tỏi", en: "No onion/garlic", zh: "去葱蒜", ko: "파/마늘 제외", ja: "ネギ・ニンニク抜き" },
+                        { vi: "Để riêng sốt", en: "Sauce on side", zh: "酱料分装", ko: "소스 따로", ja: "ソース別添え" }
+                      ].map(pill => {
+                        const curNote = (State.cartNotes && State.cartNotes[item.id]) || "";
+                        const isActive = curNote.split(", ").includes(pill.vi);
+                        return `
+                          <button type="button" onclick="nbToggleCartNote(${item.id}, '${esc(pill.vi)}')" class="inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-medium border transition-all cursor-pointer ${
+                            isActive
+                              ? 'bg-[#234d38] border-[#234d38] text-white shadow-xs font-semibold'
+                              : 'bg-white border-[#dce2d4] text-[#526348] hover:border-[#234d38] hover:text-[#234d38]'
+                          }">
+                            ${isActive ? '✓ ' : ''}${tr(pill.vi, pill.en, pill.zh, pill.ko, pill.ja)}
+                          </button>
+                        `;
+                      }).join("")}
+                    </div>
                   </div>
                 </div>
                 <div class="w-full sm:w-auto text-right sm:text-left text-sm font-bold text-[#ea580c] pt-1 sm:pt-0">${money(item.price_vnd * item.quantity)}</div>
@@ -5180,9 +5497,10 @@ const ZH_DICT = {
           <aside class="h-fit w-full rounded-2xl border border-[#dce2d4] bg-[#f0f3e8] p-5 sm:p-6 shadow-xs">
             <!-- Thanh tiến trình Miễn phí giao hàng & Gợi ý mua kèm thông minh -->
             ${(() => {
-              const freeMin = Number(State.settings.free_shipping_min || 300000);
-              const missing = Math.max(0, freeMin - subtotal);
-              const freePct = Math.min(100, Math.round((subtotal / freeMin) * 100));
+              const freeMin = Number(State.settings.free_shipping_min ?? 300000);
+              const shipFee = Number(State.settings.shipping_fee ?? 30000);
+              const missing = (shipFee === 0 || freeMin <= 0) ? 0 : Math.max(0, freeMin - subtotal);
+              const freePct = freeMin > 0 ? Math.min(100, Math.round((subtotal / freeMin) * 100)) : 100;
               const inCartIds = new Set(Object.keys(State.cart).map(Number));
               const upsells = State.products
                 .filter(p => p.is_active && !isSample(p) && p.stock_quantity > 0 && !inCartIds.has(p.id) && nbExpiryInfo(p).status !== "expired")
@@ -5190,17 +5508,27 @@ const ZH_DICT = {
                 .slice(0, 2);
 
               if (missing === 0 && subtotal > 0) {
+                if (!State._freeshipCelebrated) {
+                  State._freeshipCelebrated = true;
+                  setTimeout(() => {
+                    const el = document.getElementById("nbFreeshipBanner");
+                    if (el) nbSparkleBurst(el);
+                  }, 60);
+                }
                 return `
-                  <div class="mb-5 rounded-2xl border border-[#234d38]/20 bg-[#edf4e7] p-4 shadow-xs">
+                  <div id="nbFreeshipBanner" class="mb-5 rounded-2xl border border-[#234d38]/30 bg-[#edf4e7] p-4 shadow-xs nb-freeship-glow relative">
                     <div class="flex items-center gap-2 text-xs font-bold text-[#234d38]">
                       <span class="flex size-6 items-center justify-center rounded-full bg-[#234d38] text-white">✓</span>
                       <span>${nbSvg('check', 'size-4 inline-block mr-1')} ${tr("Đơn hàng của bạn đã đủ điều kiện MIỄN PHÍ GIAO HÀNG!", "You have unlocked FREE SHIPPING!", "您的订单已享免费包邮优惠！", "무료 배송 혜택이 적용되었습니다!", "送料無料が適用されました！")}</span>
                     </div>
                     <div class="mt-2.5 h-2 w-full overflow-hidden rounded-full bg-[#d4dfcb]">
-                      <div class="h-full rounded-full bg-[#234d38] w-full"></div>
+                      <div class="h-full rounded-full bg-[#234d38] w-full transition-all duration-500 ease-out"></div>
                     </div>
                   </div>
                 `;
+              }
+              if (missing > 0) {
+                State._freeshipCelebrated = false;
               }
 
               return `
@@ -5208,12 +5536,12 @@ const ZH_DICT = {
                   <div class="flex items-center justify-between gap-2 text-xs font-semibold">
                     <span class="flex items-center gap-1.5 text-[#234d38]">
                       ${nbSvg('truck', 'size-4 text-[#ea580c]')}
-                      <span>${tr(`Mua thêm ${money(missing)} để được MIỄN PHÍ GIAO HÀNG (${money(State.settings.shipping_fee || 25000)})`, `Add ${money(missing)} more for FREE SHIPPING (${money(State.settings.shipping_fee || 25000)})`, `再凑单 ${money(missing)} 即可享受免费包邮 (${money(State.settings.shipping_fee || 25000)})`, `무료 배송까지 ${money(missing)} 더 담기 (${money(State.settings.shipping_fee || 25000)} 절약)`, `あと ${money(missing)} で送料無料 (${money(State.settings.shipping_fee || 25000)} お得)`)}</span>
+                      <span>${tr(`Mua thêm ${money(missing)} để được MIỄN PHÍ GIAO HÀNG (${money(shipFee)})`, `Add ${money(missing)} more for FREE SHIPPING (${money(shipFee)})`, `再凑单 ${money(missing)} 即可享受免费包邮 (${money(shipFee)})`, `무료 배송까지 ${money(missing)} 더 담기 (${money(shipFee)} 절약)`, `あと ${money(missing)} で送料無料 (${money(shipFee)} お得)`)}</span>
                     </span>
                     <span class="text-[#ea580c] font-bold">${freePct}%</span>
                   </div>
                   <div class="mt-2.5 h-2 w-full overflow-hidden rounded-full bg-[#e3e7da]">
-                    <div class="h-full rounded-full nb-shimmer-bar transition-all duration-500" style="width: ${freePct}%"></div>
+                    <div class="h-full rounded-full nb-shimmer-bar transition-all duration-500 ease-out" style="width: ${freePct}%"></div>
                   </div>
                   ${upsells.length ? `
                     <div class="mt-3 border-t border-[#f0f3eb] pt-2.5">
@@ -5253,7 +5581,7 @@ const ZH_DICT = {
               <span>${nbT("Phí giao hàng " + money(State.settings.shipping_fee) + "; miễn phí từ " + money(State.settings.free_shipping_min) + ".", money(State.settings.shipping_fee) + " delivery; free over " + money(State.settings.free_shipping_min) + ".", "运费 " + money(State.settings.shipping_fee) + "；满 " + money(State.settings.free_shipping_min) + " 享包邮。")}</span>
             </p>
             <button onclick="navigate('checkout')" ${selected.length === 0 ? 'disabled' : ''} 
-                    class="mt-5 inline-flex min-h-[46px] w-full items-center justify-center rounded-xl bg-[#234d38] px-6 py-3 text-sm font-bold text-white shadow-md hover:bg-[#193a2a] active:scale-98 transition-all disabled:opacity-40 disabled:cursor-not-allowed">
+                    class="nb-btn-shine mt-5 inline-flex min-h-[46px] w-full items-center justify-center rounded-xl bg-[#234d38] px-6 py-3 text-sm font-bold text-white shadow-md hover:bg-[#193a2a] active:scale-[0.98] transition-all disabled:opacity-40 disabled:cursor-not-allowed">
               ${tr("Tiến hành thanh toán", "Continue to checkout", "前往结算")} →
             </button>
 
@@ -5263,7 +5591,7 @@ const ZH_DICT = {
         </div>
 
         <!-- Sticky bottom bar khi xem trên điện thoại -->
-        <div class="fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur-md border-t border-[#dce2d4] px-4 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))] shadow-[0_-4px_16px_rgba(0,0,0,0.08)] sm:hidden flex items-center justify-between gap-3" style="padding-bottom: max(12px, env(safe-area-inset-bottom, 12px));">
+        <div class="fixed bottom-0 inset-x-0 z-40 bg-[#fafaf5]/90 backdrop-blur-md border-t border-[#234d38]/10 px-4 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))] shadow-[0_-8px_24px_rgba(35,77,56,0.12)] sm:hidden flex items-center justify-between gap-3" style="padding-bottom: max(12px, env(safe-area-inset-bottom, 12px));">
           <div>
             <span class="text-xs text-[#526348] block">${tr("Tổng cộng (" + selected.length + " món):", "Total (" + selected.length + " items):", "合计 (" + selected.length + " 件)：")}</span>
             <span class="text-lg font-extrabold text-[#ea580c] leading-tight">${money(subtotal + fee)}</span>
@@ -5301,6 +5629,20 @@ const ZH_DICT = {
       Object.keys(State.cart).forEach(k => State.cartSelection[k] = val);
       saveStorage();
       renderAll();
+    }
+
+    function deleteSelectedCartItems() {
+      const items = getCartItems().filter(i => i.selected);
+      if (!items.length) return;
+      if (!confirm(tr(`Bạn có chắc muốn xóa ${items.length} món đã chọn khỏi giỏ hàng?`, `Remove ${items.length} selected items from your bag?`, `确定从购物车中删除选中的 ${items.length} 件餐品吗？`, `선택한 ${items.length}개 메뉴를 장바구니에서 삭제하시겠습니까?`, `選択した ${items.length} 件の商品をカートから削除しますか？`))) return;
+      items.forEach(i => {
+        delete State.cart[i.id];
+        delete State.cartSelection[i.id];
+        if (State.cartNotes) delete State.cartNotes[i.id];
+      });
+      saveStorage();
+      renderAll();
+      showToast(tr("Đã xóa các món đã chọn khỏi giỏ hàng", "Selected items removed from bag", "已删除选中的餐品", "선택한 상품이 삭제되었습니다", "選択した商品を削除しました"), "info");
     }
 
     // ============================================================================
@@ -5396,6 +5738,54 @@ const ZH_DICT = {
           ${isSeller ? tr("Chủ cửa hàng (Seller)", "Seller") : (NB_AUTH_ROLE === "staff" ? tr("Nhân viên (Staff)", "Staff") : tr("Người mua (Buyer)", "Buyer"))}
         </span>
       </div>
+
+      ${(!isSeller && NB_AUTH_ROLE !== "staff") ? (() => {
+        const totalOrders = (State.orders || []).length;
+        const totalItemsPurchased = (State.orders || []).reduce((acc, o) => {
+          return acc + (o.items || []).reduce((sum, item) => sum + (Number(item.quantity) || 1), 0);
+        }, 0);
+        const joinDate = p.created_at ? nbFormatDateDMY(p.created_at) : (State.orders && State.orders.length ? nbFormatDateDMY(State.orders[State.orders.length - 1].created_at || State.orders[State.orders.length - 1].date) : tr("Gần đây", "Recent"));
+        const goalLabel = (State.health && State.health.goal)
+          ? ({ lose: tr("Giảm cân", "Fat loss"), keep: tr("Giữ cân", "Maintain"), gain: tr("Tăng cơ", "Build muscle") }[State.health.goal] || State.health.goal)
+          : (State.health && State.health.target ? `${State.health.target} kcal/ngày` : tr("Chưa đặt", "Not set"));
+
+        return `
+          <div class="mt-6">
+            <h2 class="text-sm font-bold uppercase tracking-wider text-[#526348] mb-3 font-heading flex items-center gap-2">
+              ${nbSvg("trophy", "size-4 text-[#ea580c]")}
+              <span>${tr("Hành trình ăn lành cùng NourishBitfe", "Healthy Journey with NourishBitfe", "健康饮食之旅", "건강한 식습관 여정", "健康的な食生活ジャーニー")}</span>
+            </h2>
+            <div class="rounded-3xl border border-[#234d38]/10 bg-[#fafaf5] p-3.5 sm:p-4 shadow-xs">
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div class="rounded-2xl border border-[#234d38]/10 bg-white p-4 shadow-xs hover:border-[#234d38]/30 transition-all">
+                  <div class="flex items-center justify-between text-xs text-[#526348] mb-1">
+                    <span>${tr("Tổng đơn đã đặt", "Total orders", "已下订单", "총 주문 수", "注文総数")}</span>
+                    <span class="flex size-7 items-center justify-center rounded-xl bg-[#e8f5e9] text-[#234d38]">${nbSvg("bag", "size-3.5")}</span>
+                  </div>
+                  <p class="text-2xl font-bold text-[#234d38] font-heading tabular-nums">${totalOrders} <span class="text-xs font-normal text-[#526348]">${tr("đơn", "orders", "单")}</span></p>
+                </div>
+
+                <div class="rounded-2xl border border-[#234d38]/10 bg-white p-4 shadow-xs hover:border-[#234d38]/30 transition-all">
+                  <div class="flex items-center justify-between text-xs text-[#526348] mb-1">
+                    <span>${tr("Tổng món đã mua", "Items purchased", "已购菜品", "총 구매 메뉴", "購入品数")}</span>
+                    <span class="flex size-7 items-center justify-center rounded-xl bg-[#fff3e0] text-[#ea580c]">${nbSvg("bowl", "size-3.5")}</span>
+                  </div>
+                  <p class="text-2xl font-bold text-[#ea580c] font-heading tabular-nums">${totalItemsPurchased} <span class="text-xs font-normal text-[#526348]">${tr("phần ăn", "items", "份")}</span></p>
+                </div>
+
+                <div class="rounded-2xl border border-[#234d38]/10 bg-white p-4 shadow-xs hover:border-[#234d38]/30 transition-all">
+                  <div class="flex items-center justify-between text-xs text-[#526348] mb-1">
+                    <span>${tr("Mục tiêu hiện tại", "Current goal", "当前健康目标", "현재 목표", "現在の目標")}</span>
+                    <span class="flex size-7 items-center justify-center rounded-xl bg-[#edf2e7] text-[#234d38]">${nbSvg("target", "size-3.5")}</span>
+                  </div>
+                  <p class="text-base sm:text-lg font-bold text-[#234d38] font-heading truncate">${esc(goalLabel)}</p>
+                  <p class="text-[11px] text-[#526348] mt-0.5">${tr("Tham gia:", "Joined:", "加入：")} ${esc(joinDate)}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      })() : ""}
 
       <form onsubmit="saveProfile(event)" class="mt-7 rounded-2xl border border-[#dce2d4] bg-white p-6 sm:p-8 space-y-5">
         <h2 class="text-xl font-semibold text-[#234d38]">${tr("Hồ sơ & địa chỉ", "Profile & address")}</h2>
@@ -5753,6 +6143,7 @@ const ZH_DICT = {
 
     if (typeof window !== "undefined" && !window._nbScrollListener) {
       window._nbScrollListener = true;
+      let _nbParallaxTicking = false;
       window.addEventListener("scroll", () => {
         const docH = document.documentElement.scrollHeight - window.innerHeight;
         const pct = docH > 0 ? Math.min(100, Math.round((window.scrollY / docH) * 100)) : 0;
@@ -5760,21 +6151,54 @@ const ZH_DICT = {
         if (sp) sp.style.width = pct + "%";
 
         const btt = document.getElementById("nbBackToTop");
-        if (!btt) return;
-        if (window.scrollY > 450) {
-          btt.classList.remove("opacity-0", "pointer-events-none", "translate-y-2");
-          btt.classList.add("opacity-100", "pointer-events-auto", "translate-y-0");
-        } else {
-          btt.classList.add("opacity-0", "pointer-events-none", "translate-y-2");
-          btt.classList.remove("opacity-100", "pointer-events-auto", "translate-y-0");
+        if (btt) {
+          if (window.scrollY > 450) {
+            btt.classList.remove("opacity-0", "pointer-events-none", "translate-y-2");
+            btt.classList.add("opacity-100", "pointer-events-auto", "translate-y-0");
+          } else {
+            btt.classList.add("opacity-0", "pointer-events-none", "translate-y-2");
+            btt.classList.remove("opacity-100", "pointer-events-auto", "translate-y-0");
+          }
+        }
+
+        // Parallax nhẹ cho họa tiết lá nền renderShop (dùng requestAnimationFrame tối ưu hiệu năng)
+        if (!_nbParallaxTicking) {
+          _nbParallaxTicking = true;
+          requestAnimationFrame(() => {
+            _nbParallaxTicking = false;
+            if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+            const leaves = document.querySelectorAll(".nb-leaf-bg");
+            if (!leaves.length) return;
+            const offset = window.scrollY * 0.04;
+            leaves.forEach((el, i) => {
+              const dir = (i % 2 === 0 ? 1 : -0.7);
+              el.style.transform = `translate3d(0, ${offset * dir}px, 0)`;
+            });
+          });
         }
       }, { passive: true });
     }
 
-    if (typeof window !== "undefined" && !window._nbKeyListener) {
+if (typeof window !== "undefined" && !window._nbSearchClickAttached) {
+    window._nbSearchClickAttached = true;
+    document.addEventListener("click", (e) => {
+      const box = document.getElementById("headerSearch")?.parentElement;
+      if (box && !box.contains(e.target)) {
+        const sdd = document.getElementById("nbSearchDropdown");
+        if (sdd) sdd.classList.add("hidden");
+      }
+    });
+  }
+
+  if (typeof window !== "undefined" && !window._nbKeyListener) {
       window._nbKeyListener = true;
       window.addEventListener("keydown", (e) => {
         if (e.key === "Escape") {
+          const sdd = document.getElementById("nbSearchDropdown");
+          if (sdd && !sdd.classList.contains("hidden")) {
+            sdd.classList.add("hidden");
+            return;
+          }
           const qv = document.getElementById("nbQuickViewModal");
           if (qv && !qv.classList.contains("hidden")) {
             closeQuickView();
@@ -5890,9 +6314,9 @@ const ZH_DICT = {
             <span class="text-[#526348] font-normal">${proPct}% P · ${carbPct}% C · ${fatPct}% F</span>
           </div>
           <div class="flex h-2 w-full overflow-hidden rounded-full bg-[#e5eadf] gap-0.5">
-            <div class="h-full bg-[#234d38] transition-all duration-500" style="width:${proPct}%" title="Protein: ${proPct}%"></div>
-            <div class="h-full bg-[#ea580c] transition-all duration-500" style="width:${carbPct}%" title="Carbs: ${carbPct}%"></div>
-            <div class="h-full bg-[#ca8a04] transition-all duration-500" style="width:${fatPct}%" title="Fat: ${fatPct}%"></div>
+            <div class="h-full bg-[#234d38] transition-all duration-500 nb-bar-grow" style="width:${proPct}%" title="Protein: ${proPct}%"></div>
+            <div class="h-full bg-[#ea580c] transition-all duration-500 nb-bar-grow" style="width:${carbPct}%" title="Carbs: ${carbPct}%"></div>
+            <div class="h-full bg-[#ca8a04] transition-all duration-500 nb-bar-grow" style="width:${fatPct}%" title="Fat: ${fatPct}%"></div>
           </div>
           <div class="mt-1.5 flex items-center justify-between text-[10px] text-[#526348]">
             <span class="inline-flex items-center gap-1"><span class="size-2 rounded-full bg-[#234d38]"></span>${tr("Đạm", "Protein", "蛋白质", "단백질", "タンパク質")} ${proPct}%</span>
@@ -5906,6 +6330,7 @@ const ZH_DICT = {
     function openQuickView(id) {
       State.quickViewId = id;
       State.quickViewQty = 1;
+      nbTrackRecentView(id);
       const p = State.products.find(x => x.id === id);
       if (!p) return;
       const modal = document.getElementById("nbQuickViewModal");
@@ -5920,15 +6345,15 @@ const ZH_DICT = {
       const al = nbAllergens(p);
 
       modal.innerHTML = `
-        <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-3 sm:p-6" onclick="if(event.target===this)closeQuickView()">
-          <div class="relative w-full max-w-2xl max-h-[92vh] overflow-y-auto rounded-3xl bg-white p-5 sm:p-8 shadow-2xl nb-modal-pop">
-            <button onclick="closeQuickView()" class="absolute right-4 top-4 z-10 flex size-9 items-center justify-center rounded-full bg-[#f4f6f0] text-[#526348] hover:bg-[#e8f5e9] hover:text-[#234d38] transition-colors" aria-label="Close">
+        <div class="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/55 backdrop-blur-md p-0 sm:p-6" onclick="if(event.target===this)closeQuickView()">
+          <div class="nb-bottom-sheet relative w-full max-w-2xl max-h-[90vh] sm:max-h-[92vh] overflow-y-auto rounded-t-3xl sm:rounded-3xl bg-white p-5 sm:p-8 shadow-2xl nb-modal-pop">
+            <button onclick="closeQuickView()" class="absolute right-4 top-4 z-10 flex size-10 items-center justify-center rounded-full border border-[#e3e7da]/70 bg-[#f4f6f0] text-[#526348] hover:bg-[#e8f5e9] hover:text-[#234d38] hover:rotate-90 active:scale-90 transition-all duration-200 cursor-pointer shadow-xs" aria-label="Close">
               <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
             </button>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-7 items-start">
               <div>
-                <div class="relative overflow-hidden rounded-2xl border border-[#e3e7db] bg-[#f4f6f0]">
-                  <img src="${imgSrc(p, 'detail')}" alt="${pname(p)}" loading="lazy" decoding="async" class="aspect-[4/3] w-full object-cover">
+                <div class="group relative overflow-hidden rounded-2xl border border-[#e3e7db] bg-[#f4f6f0]">
+                  <img src="${imgSrc(p, 'detail')}" alt="${pname(p)}" loading="lazy" decoding="async" class="aspect-[4/3] w-full object-cover transition-transform duration-500 ease-[var(--nb-ease)] group-hover:scale-105">
                   ${sample ? `<span class="absolute left-3 top-3 rounded-lg bg-[#4b5563] px-2 py-0.5 text-xs font-bold text-white shadow-xs">${tr("SẢN PHẨM MẪU", "SAMPLE", "样品展示")}</span>` : ''}
                   ${hasOrig ? `<span class="absolute right-3 top-3 rounded-lg bg-[#7c3aed] px-2 py-0.5 text-xs font-bold text-white shadow-xs">-${Math.round((1 - sellPrice / crossedPrice) * 100)}%</span>` : ''}
                 </div>
@@ -5976,7 +6401,7 @@ const ZH_DICT = {
                           <span class="text-[#ea580c] font-bold">${pct}% TDEE (${kcal}/${target} kcal)</span>
                         </div>
                         <div class="h-1.5 w-full overflow-hidden rounded-full bg-[#d8e2d2]">
-                          <div class="h-full rounded-full bg-gradient-to-r from-[#ea580c] to-[#234d38]" style="width: ${Math.min(100, pct)}%"></div>
+                          <div class="h-full rounded-full bg-gradient-to-r from-[#ea580c] to-[#234d38] nb-bar-grow" style="width: ${Math.min(100, pct)}%"></div>
                         </div>
                       </div>
                     `;
@@ -6024,8 +6449,8 @@ const ZH_DICT = {
                   </div>
 
                   <!-- Nút thêm vào giỏ -->
-                  <button onclick="addToCart(${p.id}, State.quickViewQty || 1); closeQuickView();" ${unavailable ? 'disabled' : ''} 
-                          class="flex-1 min-w-[130px] inline-flex min-h-[44px] items-center justify-center gap-2 rounded-xl bg-[#234d38] px-4 py-2.5 text-xs sm:text-sm font-bold text-white shadow-md hover:bg-[#193a2a] active:scale-98 transition-all disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer">
+                  <button onclick="nbFlyToCart(this, '${imgSrc(p, 'card')}'); addToCart(${p.id}, State.quickViewQty || 1); closeQuickView();" ${unavailable ? 'disabled' : ''} 
+                          class="flex-1 min-w-[130px] inline-flex min-h-[44px] items-center justify-center gap-2 rounded-xl bg-[#234d38] px-4 py-2.5 text-xs sm:text-sm font-bold text-white shadow-md hover:bg-[#193a2a] active:scale-[0.98] transition-all disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer">
                     <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
                     <span>${tr("Thêm vào giỏ", "Add to Bag", "加入购物车", "장바구니 담기", "カートに追加")}</span>
                   </button>
@@ -6077,14 +6502,14 @@ const ZH_DICT = {
       const low = !sample && p.stock_quantity > 0 && p.stock_quantity <= 5;
 
       // Badges logic: Bán chạy (orange), Mới (green), Sắp hết hạn (red), Giảm giá (purple)
-      const isBestSeller = p.tag_badge === 'bestseller' || [1, 3, 8].includes(p.id);
-      const isNew = p.tag_badge === 'new' || [4, 6, 9].includes(p.id);
+      const isBestSeller = p.tag_badge === 'bestseller';
+      const isNew = p.tag_badge === 'new';
       const isNearExpiry = exp.status === "near" || p.tag_badge === 'near_expiry';
 
       return `
-        <article class="nb-card-hover nb-stagger-card group relative min-w-0 overflow-hidden rounded-2xl border border-[#e3e7db] bg-white flex flex-col cursor-pointer" style="--nb-idx:${Math.min(idx || 0, 12)}" data-product-id="${p.id}" onclick="openQuickView(${p.id})">
+        <article class="nb-card-hover nb-stagger-card group relative min-w-0 overflow-hidden rounded-2xl border border-[#e3e7db] bg-white flex flex-col cursor-pointer" style="--nb-idx:${Math.min(idx || 0, 8)}" data-product-id="${p.id}" onclick="openQuickView(${p.id})">
           <div class="relative block overflow-hidden aspect-[4/3] bg-[#f4f6f0]">
-            <img src="${imgSrc(p, 'card')}" alt="${pname(p)}" loading="lazy" decoding="async" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+            <img src="${imgSrc(p, 'card')}" alt="${pname(p)}" loading="lazy" decoding="async" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 nb-img-reveal" onload="this.classList.add('nb-img-loaded')">
             
             <!-- Badges top-left -->
             <div class="absolute left-2.5 top-2.5 flex flex-col gap-1 items-start pointer-events-none">
@@ -6125,7 +6550,7 @@ const ZH_DICT = {
               </div>
             </div>
 
-            <h3 onclick="event.stopPropagation(); navigate('detail', ${p.id})" class="text-xs sm:text-base font-bold text-[#234d38] font-heading line-clamp-2 min-h-[2.2rem] sm:min-h-[2.5rem] leading-snug hover:text-[#ea580c] hover:underline transition-colors cursor-pointer">${pname(p)}</h3>
+            <h3 onclick="event.stopPropagation(); navigate('detail', ${p.id})" class="text-xs sm:text-base font-bold text-[#234d38] font-heading line-clamp-2 h-[2.5rem] sm:h-[2.75rem] leading-snug hover:text-[#ea580c] hover:underline transition-colors cursor-pointer overflow-hidden">${pname(p)}</h3>
             
             <p class="mt-1 text-xs text-[#526348] line-clamp-2 leading-relaxed">${pdesc(p)}</p>
 
@@ -6152,13 +6577,22 @@ const ZH_DICT = {
                 ${hasOrig ? `<span class="text-xs font-medium text-[#526348] line-through leading-tight">${money(crossedPrice)}</span>` : ''}
                 <span class="text-base sm:text-lg font-extrabold text-[#ea580c] tracking-tight leading-none">${money(sellPrice)}</span>
               </div>
-              <button type="button" onclick="event.stopPropagation(); addToCart(${p.id}, 1)" ${unavailable ? 'disabled' : ''} 
-                      class="inline-flex min-h-[36px] sm:min-h-[40px] items-center justify-center gap-1 rounded-xl bg-[#234d38] px-2.5 py-1.5 sm:px-3.5 sm:py-2 text-[11px] sm:text-sm font-bold text-white shadow-xs hover:bg-[#193a2a] active:scale-95 transition-all disabled:opacity-40 disabled:cursor-not-allowed">
+              <button type="button" onclick="event.stopPropagation(); nbAddToCartWithFeedback(this, ${p.id}, '${imgSrc(p, 'card')}')" ${unavailable ? 'disabled' : ''} 
+                      class="inline-flex min-h-[44px] min-w-[44px] sm:min-h-[40px] items-center justify-center gap-1 rounded-xl bg-[#234d38] px-3 py-2 text-xs sm:text-sm font-bold text-white shadow-xs hover:bg-[#193a2a] active:scale-95 transition-all disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer" title="${tr("Thêm vào giỏ", "Add to bag")}">
                 ${nbSvg("plus", "size-3.5 sm:size-4")}
                 <span>${tr("Thêm", "Add", "加入")}</span>
               </button>
             </div>
-            ${unavailable ? `<p class="mt-1.5 text-xs text-red-700">${sample ? nbT("Mẫu minh họa · không thể mua", "Sample only · not for sale", "仅供样品展示") : (p.stock_quantity <= 0 ? nbT("Hết hàng", "Out of stock", "已售罄") : nbT("Chế độ xem thử", "Preview mode", "预览模式"))}</p>` : (low ? `<p class="mt-1.5 text-xs text-amber-700">${nbT("Chỉ còn " + p.stock_quantity + " món", "Only " + p.stock_quantity + " left", "仅剩 " + p.stock_quantity + " 份")}</p>` : "")}
+            ${unavailable ? `<p class="mt-1.5 text-xs text-red-700">${sample ? nbT("Mẫu minh họa · không thể mua", "Sample only · not for sale", "仅供样品展示") : (p.stock_quantity <= 0 ? nbT("Hết hàng", "Out of stock", "已售罄") : nbT("Chế độ xem thử", "Preview mode", "预览模式"))}</p>` : (low ? `
+              <div class="mt-2">
+                <div class="flex items-center justify-between text-[11px] font-semibold text-amber-700 mb-0.5">
+                  <span>${nbT("Sắp hết · còn " + p.stock_quantity + " phần", "Low stock · " + p.stock_quantity + " left", "仅剩 " + p.stock_quantity + " 份")}</span>
+                </div>
+                <div class="h-1.5 w-full overflow-hidden rounded-full bg-amber-100">
+                  <div class="h-full rounded-full bg-amber-500" style="width:${Math.min(100, p.stock_quantity * 18)}%"></div>
+                </div>
+              </div>
+            ` : "")}
           </div>
         </article>`;
     }
@@ -6182,7 +6616,7 @@ const ZH_DICT = {
       }
       const items = State.compare.map(id => State.products.find(p => p.id === id)).filter(Boolean);
       box.innerHTML = `
-        <div class="fixed inset-x-0 bottom-[68px] sm:bottom-0 z-40 border-t border-[#dce2d4] bg-white/95 px-4 pt-3 pb-3 sm:pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))] shadow-[0_-8px_24px_rgba(0,0,0,.08)] backdrop-blur-md" style="padding-bottom: max(12px, env(safe-area-inset-bottom, 12px));">
+        <div class="fixed inset-x-0 bottom-[68px] sm:bottom-0 z-40 border-t border-[#234d38]/10 bg-[#fafaf5]/90 px-4 pt-3 pb-3 sm:pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))] shadow-[0_-8px_24px_rgba(35,77,56,0.12)] backdrop-blur-md" style="padding-bottom: max(12px, env(safe-area-inset-bottom, 12px));">
           <div class="mx-auto flex max-w-[1440px] flex-wrap items-center justify-between gap-2 sm:gap-3">
             <div class="flex flex-wrap items-center gap-2">
               <span class="text-xs sm:text-sm font-semibold text-[#234d38]">${nbSvg('scale')} ${nbT("So sánh", "Compare")} (${items.length}/3):</span>
@@ -6327,10 +6761,72 @@ const ZH_DICT = {
     function nbReviewsHtml(p) {
       const list = State.reviews[p.id] || [];
       const isSeller = NB_AUTH_ROLE === "seller";
-      return `<section class="mt-8"><h2 class="text-lg font-semibold text-[#234d38]">${nbSvg('star')} ${nbT("Đánh giá của khách hàng", "Customer reviews")}</h2>
+      const totalRev = list.length;
+      const counts = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
+      list.forEach(r => {
+        const star = Math.min(5, Math.max(1, Math.round(Number(r.rating) || 5)));
+        counts[star] = (counts[star] || 0) + 1;
+      });
+      const filterMode = State.reviewStarFilter || "all";
+      const filteredList = list.filter(r => {
+        const star = Math.min(5, Math.max(1, Math.round(Number(r.rating) || 5)));
+        if (filterMode === "5") return star === 5;
+        if (filterMode === "4") return star === 4;
+        if (filterMode === "le3") return star <= 3;
+        if (filterMode === "has_comment") return !!(r.comment && r.comment.trim());
+        return true;
+      });
+
+      return `<section class="mt-8">
+        <h2 class="text-lg font-semibold text-[#234d38]">${nbSvg('star')} ${nbT("Đánh giá của khách hàng", "Customer reviews")}</h2>
         <div class="mt-2">${nbRatingHtml(p)}</div>
-        ${list.length ? `<ul class="mt-4 space-y-3">${list.map(r => `<li class="rounded-xl border border-[#dce2d4] bg-white p-4 text-sm">
-            <div class="flex items-center justify-between gap-3"><span class="font-semibold text-[#30382e]">${esc(r.buyer_name || tr("Khách", "Guest"))}</span><span class="text-xs text-[#526348]">${esc(nbDateVN(r.created_at))}</span></div>
+
+        ${totalRev > 0 ? `
+          <!-- Thanh tóm tắt phân bố số sao 5★ đến 1★ -->
+          <div class="mt-4 rounded-2xl border border-[#dce2d4] bg-[#f9faf6] p-4">
+            <h3 class="text-xs font-bold uppercase tracking-wider text-[#526348] mb-2.5">${tr("Phân bố đánh giá", "Rating breakdown", "评分分布", "평점 분포", "評価の内訳")}</h3>
+            <div class="space-y-1.5 max-w-md">
+              ${[5, 4, 3, 2, 1].map(star => {
+                const count = counts[star] || 0;
+                const pct = totalRev > 0 ? Math.round((count / totalRev) * 100) : 0;
+                return `
+                  <div class="flex items-center gap-2.5 text-xs">
+                    <span class="w-7 font-bold text-amber-600 flex items-center justify-end">${star}★</span>
+                    <div class="flex-1 h-2 rounded-full bg-[#e3e8dc] overflow-hidden">
+                      <div class="h-full rounded-full bg-amber-500 transition-all duration-500" style="width: ${pct}%"></div>
+                    </div>
+                    <span class="w-14 text-right text-[11px] text-[#526348] font-medium">${count} (${pct}%)</span>
+                  </div>
+                `;
+              }).join("")}
+            </div>
+
+            <!-- Bộ lọc đánh giá nhanh -->
+            <div class="mt-4 pt-3 border-t border-[#dce2d4]/70 flex flex-wrap items-center gap-1.5">
+              <span class="text-xs font-semibold text-[#526348] mr-1">${tr("Lọc:", "Filter:", "筛选：", "필터:", "絞り込み:")}</span>
+              ${[
+                ["all", tr("Tất cả", "All", "全部", "전체", "すべて") + ` (${totalRev})`],
+                ["5", `5★ (${counts[5] || 0})`],
+                ["4", `4★ (${counts[4] || 0})`],
+                ["le3", `≤3★ (${(counts[3] || 0) + (counts[2] || 0) + (counts[1] || 0)})`],
+                ["has_comment", tr("Có nhận xét", "With comment", "有文字评价", "후기 있음", "コメントあり") + ` (${list.filter(r => r.comment && r.comment.trim()).length})`]
+              ].map(([mode, label]) => `
+                <button type="button" onclick="State.reviewStarFilter='${mode}';renderAll()" class="inline-flex min-h-[32px] items-center rounded-lg border px-2.5 py-1 text-xs transition-colors cursor-pointer ${filterMode === mode ? 'border-[#234d38] bg-[#234d38] text-white font-bold shadow-2xs' : 'border-[#dce2d4] bg-white text-[#234d38] hover:bg-[#edf2e7]'}">
+                  ${label}
+                </button>
+              `).join("")}
+            </div>
+          </div>
+        ` : ""}
+
+        ${filteredList.length ? `<ul class="mt-4 space-y-3">${filteredList.map(r => `<li class="rounded-xl border border-[#dce2d4] bg-white p-4 text-sm">
+            <div class="flex items-center justify-between gap-3">
+              <span class="font-semibold text-[#30382e] flex items-center gap-1.5 flex-wrap">
+                <span>${esc(r.buyer_name || tr("Khách", "Guest", "访客", "고객", "お客様"))}</span>
+                <span class="inline-flex items-center gap-1 rounded-full bg-[#edf4e7] px-2 py-0.5 text-[10px] font-bold text-[#234d38]">${tr("✓ Đã mua hàng", "✓ Verified Purchase", "✓ 已购买", "✓ 구매 인증", "✓ 購入済み")}</span>
+              </span>
+              <span class="text-xs text-[#526348]">${esc(nbDateVN(r.created_at))}</span>
+            </div>
             <div class="mt-1 text-sm font-bold text-amber-600">${nbStars(r.rating)}</div>
             ${r.comment ? `<p class="mt-1 text-[#434f3d]">${esc(r.comment)}</p>` : ""}
             ${r.seller_reply ? `<div class="mt-3 rounded-xl border border-[#cfe8d5] bg-[#f4f7ef] p-3 text-xs">
@@ -6347,15 +6843,14 @@ const ZH_DICT = {
                 <button type="button" onclick="State.replyEditId=0;renderAll()" class="inline-flex min-h-[40px] items-center px-3 text-xs text-[#526348]">${nbT("Hủy", "Cancel")}</button>
               </form>` : `
               <div class="mt-2 flex gap-3 text-xs">
-                <button type="button" onclick="State.replyEditId=${r.id};renderAll()" class="underline font-semibold text-[#234d38]">${r.seller_reply ? nbT("Sửa trả lời", "Edit reply") : nbT("Trả lời", "Reply")}</button>
-                ${r.seller_reply ? `<button type="button" onclick="deleteSellerReviewReply(${r.id}, ${p.id})" class="underline text-red-700">${nbT("Xóa trả lời", "Delete reply")}</button>` : ""}
+                <button type="button" onclick="State.replyEditId=${r.id};renderAll()" class="underline font-semibold text-[#234d38] cursor-pointer">${r.seller_reply ? nbT("Sửa trả lời", "Edit reply") : nbT("Trả lời", "Reply")}</button>
+                ${r.seller_reply ? `<button type="button" onclick="deleteSellerReviewReply(${r.id}, ${p.id})" class="underline text-red-700 cursor-pointer">${nbT("Xóa trả lời", "Delete reply")}</button>` : ""}
               </div>`) : ""}
           </li>`).join("")}</ul>`
-          : `<p class="mt-3 text-sm text-[#526348]">${nbT("Chưa có đánh giá. Sau khi nhận hàng, bạn có thể đánh giá món này trong mục Đơn mua.", "No reviews yet. After delivery you can review this item under Your orders.")}</p>`}
+          : `<p class="mt-4 text-xs text-[#526348]">${totalRev > 0 ? tr("Không có đánh giá nào phù hợp với bộ lọc.", "No reviews match the current filter.", "没有符合当前筛选条件的评价。") : nbT("Chưa có đánh giá nào. Hãy là người đầu tiên trải nghiệm và chia sẻ cảm nhận!", "No reviews yet. Be the first to share your experience!")}</p>`}
       </section>`;
     }
 
-    // ---- BMI / TDEE / mục tiêu / dị ứng + lưu hồ sơ ---------------------------
     function nbCandidates(avoid, usage) {
       return State.products.filter(p => !isSample(p) && p.is_active && p.stock_quantity > 0
         && nbExpiryInfo(p).status !== "expired"
@@ -6398,9 +6893,10 @@ const ZH_DICT = {
         const p = State.products.find(x => x.id === Number(id));
         if (!p || !p.is_active || isSample(p) || p.stock_quantity <= 0 || nbExpiryInfo(p).status === "expired") return;
         const next = Math.min(p.stock_quantity, (State.cart[id] || 0) + qty);
+        const isNewInCart = !(id in State.cart) || !State.cart[id];
         added += Math.max(0, next - (State.cart[id] || 0));
         State.cart[id] = next;
-        if (State.cartSelection[id] === undefined) State.cartSelection[id] = true;
+        if (isNewInCart || State.cartSelection[id] === undefined) State.cartSelection[id] = true;
       });
       saveStorage(); renderAll();
       showNotice(`Đã thêm ${added} sản phẩm vào giỏ hàng.`, `Added ${added} items to your bag.`);
@@ -6472,11 +6968,13 @@ const ZH_DICT = {
 
         <div class="lg:col-span-7">
           ${res ? `
-            <div class="grid grid-cols-2 gap-4 sm:grid-cols-4">
-              <div class="rounded-2xl border border-[#dce2d4] bg-white p-5"><p class="text-xs text-[#526348]">BMI</p><p class="mt-2 text-2xl font-semibold text-[#234d38]">${res.bmi}</p><p class="text-xs text-[#648358]">${esc(res.bmiLabel)}</p></div>
-              <div class="rounded-2xl border border-[#dce2d4] bg-white p-5"><p class="text-xs text-[#526348]">BMR</p><p class="mt-2 text-2xl font-semibold text-[#234d38]">${res.bmr} <span class="text-xs font-normal">kcal</span></p></div>
-              <div class="rounded-2xl border border-[#dce2d4] bg-white p-5"><p class="text-xs text-[#526348]">TDEE</p><p class="mt-2 text-2xl font-semibold text-[#234d38]">${res.tdee} <span class="text-xs font-normal">kcal</span></p></div>
-              <div class="rounded-2xl border border-[#dce2d4] bg-white p-5"><p class="text-xs text-[#526348]">${nbT("Cân nặng lý tưởng", "Ideal weight")}</p><p class="mt-2 text-lg font-semibold text-[#234d38]">${res.idealMin}–${res.idealMax} kg</p></div>
+            <div class="rounded-3xl border border-[#234d38]/10 bg-[#fafaf5] p-5 sm:p-6 shadow-xs">
+              <div class="grid grid-cols-2 gap-3.5 sm:grid-cols-4">
+                <div class="rounded-2xl border border-[#234d38]/10 bg-white p-4 sm:p-5 shadow-xs hover:border-[#234d38]/30 transition-all"><p class="text-xs font-medium text-[#526348]">BMI</p><p class="mt-1.5 text-2xl font-bold font-heading text-[#234d38] tabular-nums">${res.bmi}</p><p class="text-xs font-semibold text-[#648358]">${esc(res.bmiLabel)}</p></div>
+                <div class="rounded-2xl border border-[#234d38]/10 bg-white p-4 sm:p-5 shadow-xs hover:border-[#234d38]/30 transition-all"><p class="text-xs font-medium text-[#526348]">BMR</p><p class="mt-1.5 text-2xl font-bold font-heading text-[#234d38] tabular-nums">${res.bmr} <span class="text-xs font-normal">kcal</span></p></div>
+                <div class="rounded-2xl border border-[#234d38]/10 bg-white p-4 sm:p-5 shadow-xs hover:border-[#234d38]/30 transition-all"><p class="text-xs font-medium text-[#526348]">TDEE</p><p class="mt-1.5 text-2xl font-bold font-heading text-[#234d38] tabular-nums">${res.tdee} <span class="text-xs font-normal">kcal</span></p></div>
+                <div class="rounded-2xl border border-[#234d38]/10 bg-white p-4 sm:p-5 shadow-xs hover:border-[#234d38]/30 transition-all"><p class="text-xs font-medium text-[#526348]">${nbT("Cân nặng lý tưởng", "Ideal weight")}</p><p class="mt-1.5 text-lg sm:text-xl font-bold font-heading text-[#234d38] tabular-nums">${res.idealMin}–${res.idealMax} kg</p></div>
+              </div>
             </div>
             <div class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-3">
               <div class="rounded-2xl border border-[#dce2d4] bg-white p-5"><p class="text-xs text-[#526348]">${nbSvg("target", "size-3.5 inline-block align-middle")} ${nbT("Mục tiêu năng lượng", "Calorie target")}</p><p class="mt-2 text-xl font-semibold text-[#234d38]">${res.target} kcal</p>${res.floored ? `<p class="mt-1 text-xs text-amber-700">${nbT("Đã nâng lên mức tối thiểu an toàn.", "Raised to a safe minimum.")}</p>` : ""}</div>
@@ -6780,13 +7278,27 @@ const ZH_DICT = {
       } catch (e) { nbFail(e); }
     }
 
-        const DELIVERY_SLOTS = [
+        function nbDefaultDeliverySlotByHour() {
+      const d = new Date();
+      const utc = d.getTime() + (d.getTimezoneOffset() * 60000);
+      const vnDate = new Date(utc + (7 * 3600000));
+      const h = vnDate.getHours();
+      if (h < 9) return "morning";
+      if (h < 13) return "lunch";
+      if (h < 18) return "evening";
+      return "morning";
+    }
+
+    const DELIVERY_SLOTS = [
       { id: "morning", vi: "Sáng (08:00 – 10:00)", en: "Morning (08:00 – 10:00)", zh: "早间 (08:00 – 10:00)", ko: "오전 (08:00 – 10:00)", ja: "午前 (08:00 – 10:00)" },
       { id: "lunch", vi: "Trưa (11:00 – 13:00)", en: "Lunch (11:00 – 13:00)", zh: "午间 (11:00 – 13:00)", ko: "점심 (11:00 – 13:00)", ja: "昼 (11:00 – 13:00)" },
       { id: "evening", vi: "Chiều tối (17:00 – 19:00)", en: "Evening (17:00 – 19:00)", zh: "晚间 (17:00 – 19:00)", ko: "저녁 (17:00 – 19:00)", ja: "夕方・夜 (17:00 – 19:00)" }
     ];
 
     function renderCheckout() {
+      if (!State.deliverySlotManual) {
+        State.deliverySlot = nbDefaultDeliverySlotByHour();
+      }
       const selected = getCartItems().filter(i => i.selected);
       if (!selected.length) return renderCart();
       const pr = nbPricing(selected);
@@ -6821,12 +7333,15 @@ const ZH_DICT = {
               ${field("ck_postal", nbT("Mã bưu chính", "Postal code"), prof.shipping_postal_code, "maxlength=10")}
               <div class="sm:col-span-2">
                 <label class="mb-2 block text-xs font-semibold text-[#234d38]">${nbSvg("clock", "size-3.5 inline-block mr-1 text-[#234d38]")} ${tr("Chọn khung giờ nhận hàng", "Preferred delivery time slot", "选择期望配送时段")}</label>
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
                   ${DELIVERY_SLOTS.map(s => {
                     const active = (State.deliverySlot || "lunch") === s.id;
                     return `
-                      <button type="button" onclick="State.deliverySlot='${s.id}';renderAll()" class="inline-flex min-h-[44px] items-center justify-center rounded-xl border px-3 py-2 text-xs transition-colors ${active ? 'border-[#234d38] bg-[#234d38] text-white font-bold shadow-xs' : 'border-[#d8dfcf] bg-[#f9faf6] text-[#434f3d] hover:border-[#648358]'}">
-                        ${active ? "✓ " : ""}${tr(s.vi, s.en, s.zh, s.ko, s.ja)}
+                      <button type="button" onclick="State.deliverySlot='${s.id}';State.deliverySlotManual=true;renderAll()" class="group relative flex min-h-[50px] items-center justify-between rounded-2xl border px-3.5 py-2.5 text-left transition-all cursor-pointer ${active ? 'border-[#234d38] bg-[#edf4e7] ring-2 ring-[#234d38]/20 shadow-xs' : 'border-[#dce2d4] bg-[#fafaf6] hover:border-[#648358] hover:bg-white'}">
+                        <span class="text-xs font-semibold ${active ? 'text-[#234d38] font-bold' : 'text-[#434f3d]'}">${tr(s.vi, s.en, s.zh, s.ko, s.ja)}</span>
+                        <span class="flex size-5 shrink-0 items-center justify-center rounded-full border transition-colors ${active ? 'border-[#234d38] bg-[#234d38] text-white' : 'border-[#bac5b3] bg-white'}">
+                          ${active ? `<svg class="size-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>` : ''}
+                        </span>
                       </button>
                     `;
                   }).join("")}
@@ -6838,9 +7353,38 @@ const ZH_DICT = {
           </section>
           <section class="rounded-2xl border border-[#dce2d4] bg-white p-6">
             <h2 class="mb-4 text-lg font-semibold text-[#234d38]">03. ${nbT("Phương thức thanh toán", "Payment method")}</h2>
-            <div class="mb-4 flex flex-wrap gap-3">
-              ${payBtn("cod", nbT("Thanh toán khi nhận hàng (COD)", "Pay on delivery (COD)"))}
-              ${payBtn("bank_transfer", nbSvg("bank") + " " + nbT("Chuyển khoản ngân hàng", "Bank transfer"))}
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+              <div onclick="State.paymentMethod='cod';renderAll()" 
+                   class="group relative flex items-center justify-between gap-3 p-4 rounded-2xl border cursor-pointer transition-all duration-200 ${pm === 'cod' ? 'border-[#234d38] bg-[#edf4e7] ring-2 ring-[#234d38]/20 shadow-xs' : 'border-[#dce2d4] bg-[#fafaf6] hover:border-[#648358] hover:bg-white'}">
+                <div class="flex items-center gap-3">
+                  <div class="flex size-10 items-center justify-center rounded-xl ${pm === 'cod' ? 'bg-[#234d38] text-white' : 'bg-[#e9eee2] text-[#234d38]'} transition-colors">
+                    <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg>
+                  </div>
+                  <div>
+                    <div class="text-xs sm:text-sm font-bold ${pm === 'cod' ? 'text-[#234d38]' : 'text-[#333e2f]'}">${nbT("Thanh toán khi nhận hàng (COD)", "Pay on delivery (COD)")}</div>
+                    <div class="text-[11px] text-[#526348] mt-0.5">${nbT("Trả tiền mặt khi shipper giao", "Cash payment upon delivery")}</div>
+                  </div>
+                </div>
+                <div class="flex size-5 shrink-0 items-center justify-center rounded-full border transition-colors ${pm === 'cod' ? 'border-[#234d38] bg-[#234d38] text-white' : 'border-[#bac5b3] bg-white'}">
+                  ${pm === 'cod' ? `<svg class="size-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>` : ''}
+                </div>
+              </div>
+
+              <div onclick="State.paymentMethod='bank_transfer';renderAll()" 
+                   class="group relative flex items-center justify-between gap-3 p-4 rounded-2xl border cursor-pointer transition-all duration-200 ${pm === 'bank_transfer' ? 'border-[#234d38] bg-[#edf4e7] ring-2 ring-[#234d38]/20 shadow-xs' : 'border-[#dce2d4] bg-[#fafaf6] hover:border-[#648358] hover:bg-white'}">
+                <div class="flex items-center gap-3">
+                  <div class="flex size-10 items-center justify-center rounded-xl ${pm === 'bank_transfer' ? 'bg-[#234d38] text-white' : 'bg-[#e9eee2] text-[#234d38]'} transition-colors">
+                    ${nbSvg("bank", "size-5")}
+                  </div>
+                  <div>
+                    <div class="text-xs sm:text-sm font-bold ${pm === 'bank_transfer' ? 'text-[#234d38]' : 'text-[#333e2f]'}">${nbT("Chuyển khoản ngân hàng", "Bank transfer")}</div>
+                    <div class="text-[11px] text-[#526348] mt-0.5">${nbT("Quét mã VietQR tức thì", "Instant VietQR scan")}</div>
+                  </div>
+                </div>
+                <div class="flex size-5 shrink-0 items-center justify-center rounded-full border transition-colors ${pm === 'bank_transfer' ? 'border-[#234d38] bg-[#234d38] text-white' : 'border-[#bac5b3] bg-white'}">
+                  ${pm === 'bank_transfer' ? `<svg class="size-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>` : ''}
+                </div>
+              </div>
             </div>
             <p class="text-xs leading-6 text-[#526348]">${pm === "cod"
           ? nbT("Trả tiền mặt cho người giao hàng. Kho được giữ ngay khi bạn đặt; cửa hàng sẽ xác nhận đơn.", "Pay the courier in cash. Stock is reserved as soon as you order; the shop will confirm your order.")
@@ -6906,7 +7450,7 @@ const ZH_DICT = {
       </div>
 
       <!-- Sticky bottom bar cho checkout trên điện thoại -->
-      <div class="fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur-md border-t border-[#dce2d4] px-4 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))] shadow-[0_-4px_16px_rgba(0,0,0,0.08)] sm:hidden flex items-center justify-between gap-3" style="padding-bottom: max(12px, env(safe-area-inset-bottom, 12px));">
+      <div class="fixed bottom-0 inset-x-0 z-40 bg-[#fafaf5]/90 backdrop-blur-md border-t border-[#234d38]/10 px-4 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))] shadow-[0_-8px_24px_rgba(35,77,56,0.12)] sm:hidden flex items-center justify-between gap-3" style="padding-bottom: max(12px, env(safe-area-inset-bottom, 12px));">
         <div>
           <span class="text-xs text-[#526348] block">${tr("Tổng thanh toán:", "Total:", "应付总额：")}</span>
           <span class="text-lg font-extrabold text-[#ea580c] leading-tight">${money(pr.total)}</span>
@@ -6933,8 +7477,15 @@ const ZH_DICT = {
       const saveToProfile = !!(document.getElementById("ck_save") || {}).checked;
       const curSlot = DELIVERY_SLOTS.find(s => s.id === (State.deliverySlot || "lunch")) || DELIVERY_SLOTS[1];
       const slotTag = `[Giao hàng: ${curSlot.vi}]`;
+      const itemNotesList = selected
+        .map(i => {
+          const note = State.cartNotes && State.cartNotes[i.id];
+          return note ? `${pname(i)}: ${note}` : null;
+        })
+        .filter(Boolean);
+      const itemNotesTag = itemNotesList.length ? `[Bếp: ${itemNotesList.join("; ")}]` : "";
       const rawNotes = v("ck_notes");
-      const deliveryNotes = rawNotes ? `${slotTag} ${rawNotes}` : slotTag;
+      const deliveryNotes = [slotTag, itemNotesTag, rawNotes].filter(Boolean).join(" ");
       try {
         const order = await nbRpc("nb2_place_order", {
           p_items: selected.map(i => ({ id: i.id, qty: i.quantity })),
@@ -6944,7 +7495,11 @@ const ZH_DICT = {
           p_method: State.paymentMethod === "bank_transfer" ? "bank_transfer" : "cod",
           p_coupon: (State.coupon && State.couponInfo && State.couponInfo.ok) ? State.coupon : null
         });
-        selected.forEach(i => { delete State.cart[i.id]; delete State.cartSelection[i.id]; });
+        selected.forEach(i => {
+          delete State.cart[i.id];
+          delete State.cartSelection[i.id];
+          if (State.cartNotes) delete State.cartNotes[i.id];
+        });
         State.coupon = null; State.couponInfo = null;
         saveStorage();
         if (saveToProfile) {
@@ -7037,6 +7592,7 @@ const ZH_DICT = {
           rows.push({
             user_id: NB_AUTH_USER.id,
             log_date: logDate,
+            meal_type: nbDefaultMealByHour(),
             name: trf(p.name_vi, p.name_en, p.name_zh, p.name_ko, p.name_ja) || p.name_vi || "Món ăn",
             product_id: p.id,
             quantity: qty,
@@ -7136,16 +7692,40 @@ const ZH_DICT = {
 
     async function submitProductReview(e, orderId, productId) {
       e.preventDefault();
-      const rating = Number(document.getElementById(`rv_star_${orderId}_${productId}`).value);
-      const text = (document.getElementById(`rv_text_${orderId}_${productId}`).value || "").trim();
+      const starEl = document.getElementById(`rv_star_${orderId}_${productId}`) || document.getElementById(`rv_rate_${orderId}_${productId}`);
+      const textEl = document.getElementById(`rv_text_${orderId}_${productId}`) || document.getElementById(`rv_txt_${orderId}_${productId}`);
+      const rating = Number(starEl ? starEl.value : 5);
+      const text = (textEl ? textEl.value : "").trim();
       try {
         const o = await nbRpc("nb2_submit_review", { p_order_id: orderId, p_product_id: productId, p_rating: rating, p_comment: text });
         nbReplaceOrder(o);
         await nbLoadProducts();
         delete State.reviews[productId];
+        State.editingReviewKey = null;
         renderAll();
         showNotice("Cảm ơn bạn! Đã lưu đánh giá.", "Thank you! Review saved.");
+        showToast(tr("Đã lưu đánh giá thành công", "Review saved successfully", "评价已保存"), "success");
       } catch (err) { nbFail(err); }
+    }
+
+    async function deleteProductReview(orderId, productId) {
+      if (!confirm(tr("Bạn có chắc muốn xóa đánh giá này?", "Are you sure you want to delete this review?", "您确定要删除此评价吗？", "이 후기를 삭제하시겠습니까?", "このレビューを削除しますか？"))) return;
+      try {
+        try {
+          await nbRpc("nb2_delete_review", { p_order_id: orderId, p_product_id: productId });
+        } catch (rpcErr) {
+          const { error } = await NB_SUPABASE.from("nb2_reviews").delete().eq("order_id", orderId).eq("product_id", productId);
+          if (error) throw new Error(tr("Hệ thống chưa hỗ trợ RPC xóa đánh giá và không thể xóa trực tiếp: " + error.message, "Delete review RPC not available: " + error.message));
+        }
+        await nbLoadOrders();
+        await nbLoadProducts();
+        delete State.reviews[productId];
+        State.editingReviewKey = null;
+        renderAll();
+        showToast(tr("Đã xóa đánh giá thành công", "Review deleted successfully", "已成功删除评价", "후기가 삭제되었습니다", "レビューを削除しました"), "success");
+      } catch (err) {
+        nbFail(err);
+      }
     }
 
     async function sendOrderMessage(e, orderId, role) {
@@ -7191,7 +7771,32 @@ const ZH_DICT = {
         "timo": "TIMO", "cake": "CAKE"
       };
       const key = s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]/g, "");
-      return map[key] || clean || s;
+      if (map[key]) return map[key];
+      // Kiểm tra chứa từ khóa (substring)
+      if (key.includes("vietcombank")) return "VCB";
+      if (key.includes("techcombank")) return "TCB";
+      if (key.includes("vietinbank")) return "ICB";
+      if (key.includes("mbbank") || key.includes("quandoi") || key === "mb") return "MB";
+      if (key.includes("bidv")) return "BIDV";
+      if (key.includes("acb")) return "ACB";
+      if (key.includes("tpbank") || key.includes("tienphong")) return "TPB";
+      if (key.includes("vpbank")) return "VPB";
+      if (key.includes("sacombank")) return "STB";
+      if (key.includes("hdbank")) return "HDB";
+      if (key.includes("agribank")) return "VBA";
+      if (key.includes("seabank")) return "SEAB";
+      if (key.includes("lpbank") || key.includes("lienviet")) return "LPB";
+      if (key.includes("pvcombank")) return "PVCB";
+      if (key.includes("eximbank")) return "EIB";
+      if (key.includes("baoviet")) return "BVB";
+      if (key.includes("bacabank")) return "BAB";
+      if (key.includes("namabank")) return "NAB";
+      if (key.includes("vietabank")) return "VAB";
+      if (key.includes("shb")) return "SHB";
+      if (key.includes("msb")) return "MSB";
+      if (key.includes("ocb")) return "OCB";
+      if (key.includes("vib")) return "VIB";
+      return clean || s;
     }
 
     function nbVietQRUrl(bankId, accountNo, amount, memo, holderName) {
@@ -7205,10 +7810,22 @@ const ZH_DICT = {
     }
     function nbCopyText(txt, labelVi, labelEn) {
       if (!txt) return;
+      const val = String(txt);
+      const done = () => showToast(tr(`Đã sao chép ${labelVi}: ${val}`, `Copied ${labelEn}: ${val}`, `已复制: ${val}`, `복사 완료: ${val}`, `コピーしました: ${val}`), "success");
       if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(String(txt)).then(() => {
-          showToast(tr(`Đã sao chép ${labelVi}: ${txt}`, `Copied ${labelEn}: ${txt}`, `已复制: ${txt}`, `복사 완료: ${txt}`, `コピーしました: ${txt}`), "success");
+        navigator.clipboard.writeText(val).then(done).catch(() => {
+          const ta = document.createElement("textarea");
+          ta.value = val; ta.style.position = "fixed"; ta.style.opacity = "0";
+          document.body.appendChild(ta); ta.select();
+          try { document.execCommand("copy"); done(); } catch (e) {}
+          ta.remove();
         });
+      } else {
+        const ta = document.createElement("textarea");
+        ta.value = val; ta.style.position = "fixed"; ta.style.opacity = "0";
+        document.body.appendChild(ta); ta.select();
+        try { document.execCommand("copy"); done(); } catch (e) {}
+        ta.remove();
       }
     }
 
@@ -7225,18 +7842,18 @@ const ZH_DICT = {
             <div class="flex-1 space-y-1">
               <p>${nbT("Ngân hàng", "Bank")}: <b>${esc(b.bank_name)}</b></p>
               <p class="flex flex-wrap items-center gap-1.5">${nbT("Số tài khoản", "Account no.")}: <b>${esc(b.bank_account_no)}</b>
-                <button type="button" onclick="nbCopyText('${esc(b.bank_account_no)}', 'số tài khoản', 'account number')" class="inline-flex items-center gap-1 rounded-md border border-[#d9c58a] bg-white px-2 py-0.5 text-[11px] font-semibold text-[#234d38] hover:bg-[#f5eac2] transition-colors cursor-pointer">${nbSvg('copy', 'size-3')}${tr("Sao chép", "Copy", "复制", "복사", "コピー")}</button>
+                <button type="button" data-copy="${esc(b.bank_account_no)}" onclick="nbCopyText(this.dataset.copy, 'số tài khoản', 'account number')" class="inline-flex items-center gap-1 rounded-md border border-[#d9c58a] bg-white px-2 py-0.5 text-[11px] font-semibold text-[#234d38] hover:bg-[#f5eac2] transition-colors cursor-pointer">${nbSvg('copy', 'size-3')}${tr("Sao chép", "Copy", "复制", "복사", "コピー")}</button>
               </p>
               ${b.bank_account_holder ? `<p>${nbT("Chủ tài khoản", "Account holder")}: <b>${esc(b.bank_account_holder)}</b></p>` : ""}
               <p>${nbT("Số tiền", "Amount")}: <b class="text-sm font-bold text-[#234d38]">${money(o.total)}</b></p>
               <p class="flex flex-wrap items-center gap-1.5">${nbT("Nội dung chuyển khoản", "Transfer note")}: <b class="rounded bg-[#f5eac2] px-2 py-0.5 font-mono text-sm font-bold text-[#234d38]">${esc(o.number)}</b>
-                <button type="button" onclick="nbCopyText('${esc(o.number)}', 'nội dung CK', 'transfer note')" class="inline-flex items-center gap-1 rounded-md border border-[#d9c58a] bg-white px-2 py-0.5 text-[11px] font-semibold text-[#234d38] hover:bg-[#f5eac2] transition-colors cursor-pointer">${nbSvg('copy', 'size-3')}${tr("Sao chép", "Copy", "复制", "복사", "コピー")}</button>
+                <button type="button" data-copy="${esc(o.number)}" onclick="nbCopyText(this.dataset.copy, 'nội dung CK', 'transfer note')" class="inline-flex items-center gap-1 rounded-md border border-[#d9c58a] bg-white px-2 py-0.5 text-[11px] font-semibold text-[#234d38] hover:bg-[#f5eac2] transition-colors cursor-pointer">${nbSvg('copy', 'size-3')}${tr("Sao chép", "Copy", "复制", "복사", "コピー")}</button>
               </p>
               <p class="mt-2 text-xs text-[#7a6428]">${nbSvg("check", "size-3.5 inline-block align-middle")} ${nbT("Quét mã VietQR hoặc chuyển khoản đúng số tiền và nội dung. Cửa hàng sẽ xác nhận khi nhận được tiền.", "Scan the VietQR code or transfer the exact amount and note. The shop will confirm once the money arrives.")}</p>
             </div>
             ${qrUrl ? `
               <div class="flex flex-col items-center rounded-xl border border-[#e5d5a3] bg-white p-3 shadow-sm">
-                <img src="${esc(qrUrl)}" alt="VietQR" class="w-48 sm:w-52 max-w-full rounded-lg object-contain" loading="lazy">
+                <img src="${esc(qrUrl)}" alt="VietQR" class="w-48 sm:w-52 max-w-full rounded-lg object-contain" loading="lazy" onerror="this.style.display='none'">
                 <p class="mt-1.5 text-center text-xs font-semibold text-[#234d38]">${nbSvg("phone", "size-3.5 inline-block align-middle")} ${nbT("Mã VietQR thanh toán", "Scan VietQR to pay")}</p>
                 <p class="text-xs text-[#7a6428]">${nbT("Tự động điền số tiền & mã đơn", "Auto-fills amount & memo")}</p>
               </div>
@@ -7711,15 +8328,57 @@ const ZH_DICT = {
       const reviewBlock = o.items.filter(i => i.id !== null && i.id !== undefined).map(i => {
         const r = reviewsByProduct[i.id];
         const pid = Number(i.id);
-        if (r) return `<div class="mt-2 rounded-xl bg-[#f0f3e8] p-3 text-xs"><b>${esc(trf(i.name_vi, i.name_en))}</b><div class="font-bold text-amber-600">${nbStars(r.rating)} (${Number(r.rating)}/5)</div>${r.text ? `<p class="mt-1 text-sm text-[#30382e]">${esc(r.text)}</p>` : ""}</div>`;
-        if (sellerView || o.status !== "delivered") return "";
-        return `<form onsubmit="submitProductReview(event, ${o.id}, ${pid})" class="mt-2 flex flex-wrap items-center gap-2">
-      <span class="w-full text-xs font-semibold text-[#234d38]">${esc(trf(i.name_vi, i.name_en))}</span>
-      <select id="rv_star_${o.id}_${pid}" class="min-h-[44px] rounded-xl border border-[#dce2d4] bg-white px-3 py-2 text-xs font-semibold text-[#234d38]">
-        <option value="5">★★★★★ (5)</option><option value="4">★★★★☆ (4)</option><option value="3">★★★☆☆ (3)</option><option value="2">★★☆☆☆ (2)</option><option value="1">★☆☆☆☆ (1)</option></select>
-      <input id="rv_text_${o.id}_${pid}" maxlength="500" placeholder="${nbT("Cảm nhận về món này...", "Your thoughts on this item...")}" class="min-h-[44px] min-w-0 flex-1 rounded-xl border border-[#dce2d4] px-3 py-2 text-xs">
-      <button class="inline-flex min-h-[44px] items-center justify-center rounded-full bg-[#234d38] px-4 py-2 text-xs font-semibold text-white hover:bg-[#173a29] transition-colors">${nbT("Gửi", "Send")}</button></form>`;
-      }).join("");
+        const isEditing = !sellerView && State.editingReviewKey === `${o.id}_${pid}`;
+        if (r && !isEditing) {
+          return `
+            <div class="mt-2 rounded-xl bg-[#f0f3e8] p-3 text-xs">
+              <div class="flex items-center justify-between gap-2">
+                <b>${esc(trf(i.name_vi, i.name_en))}</b>
+                ${!sellerView ? `
+                  <div class="flex items-center gap-2">
+                    <button type="button" onclick="State.editingReviewKey='${o.id}_${pid}';renderAll()" class="inline-flex items-center gap-1 text-[11px] font-semibold text-[#234d38] hover:underline cursor-pointer">
+                      ${nbSvg('edit', 'size-3')} ${tr("Sửa", "Edit", "编辑", "수정", "編集")}
+                    </button>
+                    <button type="button" onclick="deleteProductReview(${o.id}, ${pid})" class="inline-flex items-center gap-1 text-[11px] font-semibold text-red-600 hover:underline cursor-pointer">
+                      ${nbSvg('trash', 'size-3')} ${tr("Xóa", "Delete", "删除", "삭제", "削除")}
+                    </button>
+                  </div>
+                ` : ""}
+              </div>
+              <div class="font-bold text-amber-600">${nbStars(r.rating)} (${Number(r.rating)}/5)</div>
+              ${r.text ? `<p class="mt-1 text-sm text-[#30382e]">${esc(r.text)}</p>` : ""}
+            </div>
+          `;
+        }
+        if (sellerView && !r) return "";
+        if (o.status !== "delivered" && !r) return "";
+        const curStar = r ? Math.round(Number(r.rating)) : 5;
+        const curText = r ? (r.text || "") : "";
+        return `
+          <form onsubmit="submitProductReview(event, ${o.id}, ${pid})" class="mt-2 rounded-xl border border-[#dce2d4] bg-[#fdfdfa] p-3">
+            <div class="flex items-center justify-between gap-2 mb-1.5">
+              <span class="text-xs font-semibold text-[#234d38]">${esc(trf(i.name_vi, i.name_en))}</span>
+              ${isEditing ? `<span class="rounded bg-[#edf4e7] px-1.5 py-0.5 text-[10px] font-bold text-[#234d38]">${tr("Đang sửa đánh giá", "Editing review", "正在修改评价")}</span>` : ""}
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+              <select id="rv_star_${o.id}_${pid}" class="rounded-lg border border-[#dce2d4] px-2 py-1.5 text-xs bg-white">
+                <option value="5" ${curStar === 5 ? "selected" : ""}>5 ★★★★★</option>
+                <option value="4" ${curStar === 4 ? "selected" : ""}>4 ★★★★☆</option>
+                <option value="3" ${curStar === 3 ? "selected" : ""}>3 ★★★☆☆</option>
+                <option value="2" ${curStar === 2 ? "selected" : ""}>2 ★★☆☆☆</option>
+                <option value="1" ${curStar === 1 ? "selected" : ""}>1 ★☆☆☆☆</option>
+              </select>
+              <input id="rv_text_${o.id}_${pid}" value="${esc(curText)}" placeholder="${nbT("Cảm nhận của bạn về món ăn...", "Your thoughts...")}" class="min-h-[36px] flex-1 min-w-[140px] rounded-lg border border-[#dce2d4] px-3 py-1 text-xs">
+              <button type="submit" class="inline-flex min-h-[36px] items-center rounded-lg bg-[#234d38] px-3 py-1 text-xs font-semibold text-white hover:bg-[#173a29] cursor-pointer">
+                ${isEditing ? tr("Cập nhật", "Update", "更新", "수정 완료", "更新") : nbT("Gửi đánh giá", "Submit")}
+              </button>
+              ${isEditing ? `
+                <button type="button" onclick="State.editingReviewKey=null;renderAll()" class="inline-flex min-h-[36px] items-center rounded-lg border border-[#dce2d4] px-2.5 py-1 text-xs text-[#526348] hover:bg-[#edf2e7] cursor-pointer">${tr("Hủy", "Cancel", "取消", "취소", "キャンセル")}</button>
+              ` : ""}
+            </div>
+          </form>
+        `;
+      }).join("")
       const role = sellerView ? "seller" : "buyer";
       const orderAddr = nbOrderAddress(o);
       const deadline = sellerView ? nbOrderDeadlineInfo(o) : null;
@@ -7727,19 +8386,31 @@ const ZH_DICT = {
 
       return `
     <article class="min-w-0 rounded-3xl border border-[#dce2d4] bg-white p-6 sm:p-8" data-order-id="${o.id}">
-      <div class="flex flex-wrap items-center justify-between gap-3">
-        <div class="flex items-center gap-2.5">
-          ${sellerView ? `<input type="checkbox" ${State.printSelected[o.id] ? "checked" : ""} onchange="togglePrintOrder(${o.id})" class="size-4 cursor-pointer" title="${nbT("Chọn để in phiếu", "Select to print")}">` : ""}
-          <h2 class="text-xl font-semibold text-[#234d38]">${esc(o.number)}</h2>
-        </div>
-        <div class="flex flex-wrap items-center gap-2">
-          ${deadline ? (deadline.overdue
-          ? `<span class="rounded-full border border-red-200 bg-red-50 px-3 py-1 text-xs font-semibold text-red-700">${nbSvg('clock')} ${nbT("Quá hạn", "Overdue")}</span>`
-          : `<span class="rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-800">${nbSvg('clock')} ${deadline.hrs > 0 ? nbT(`Còn ${deadline.hrs} giờ ${deadline.mins}p để thanh toán`, `${deadline.hrs}h ${deadline.mins}m left to pay`) : nbT(`Còn ${deadline.mins} phút để thanh toán`, `${deadline.mins}m left to pay`)}</span>`) : ""}
-          <span class="rounded-full border border-[#dce2d4] bg-[#edf2e7] px-4 py-1.5 text-xs font-semibold text-[#234d38]">${esc(statusLabel(o.status))}</span>
-        </div>
-      </div>
-      <time class="mt-1 block text-xs text-[#526348]">${esc(o.date)}</time>
+      ${(() => {
+        const statusBadgeCls = {
+          pending: "border-amber-200 bg-amber-50 text-amber-800",
+          confirmed: "border-sky-200 bg-sky-50 text-sky-800",
+          shipped: "border-indigo-200 bg-indigo-50 text-indigo-800",
+          delivered: "border-emerald-200 bg-emerald-50 text-emerald-800",
+          cancelled: "border-rose-200 bg-rose-50 text-rose-700"
+        }[o.status] || "border-[#dce2d4] bg-[#edf2e7] text-[#234d38]";
+
+        return `
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center gap-2.5">
+              ${sellerView ? `<input type="checkbox" ${State.printSelected[o.id] ? "checked" : ""} onchange="togglePrintOrder(${o.id})" class="size-4 cursor-pointer" title="${nbT("Chọn để in phiếu", "Select to print")}">` : ""}
+              <h2 class="text-lg sm:text-xl font-bold font-heading text-[#234d38] tracking-tight tabular-nums flex items-center gap-1.5">${esc(o.number)}</h2>
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+              ${deadline ? (deadline.overdue
+              ? `<span class="rounded-full border border-red-200 bg-red-50 px-3 py-1 text-xs font-semibold text-red-700">${nbSvg('clock')} ${nbT("Quá hạn", "Overdue")}</span>`
+              : `<span class="rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-800">${nbSvg('clock')} ${deadline.hrs > 0 ? nbT(`Còn ${deadline.hrs} giờ ${deadline.mins}p để thanh toán`, `${deadline.hrs}h ${deadline.mins}m left to pay`) : nbT(`Còn ${deadline.mins} phút để thanh toán`, `${deadline.mins}m left to pay`)}</span>`) : ""}
+              <span class="rounded-full border ${statusBadgeCls} px-3.5 py-1 text-xs font-semibold shadow-2xs">${esc(statusLabel(o.status))}</span>
+            </div>
+          </div>
+        `;
+      })()}
+      <time class="mt-1 block text-xs text-[#526348] tabular-nums">${esc(o.date)}</time>
       ${o.status !== "cancelled" ? (() => {
         const steps = [
           { id: "pending", vi: "Chờ xác nhận", en: "Pending", zh: "待确认", ko: "확인 대기", ja: "確認待ち" },
@@ -7851,8 +8522,10 @@ const ZH_DICT = {
     }
 
     function nbOrderFilterBar() {
+      const isSellerRoute = State.route === "seller_orders";
       const chips = [
         ["all", "Tất cả", "All", "全部", "전체", "すべて"],
+        ...(isSellerRoute ? [["unpaid_transfer", "Chưa thanh toán CK", "Unpaid Transfer", "未付转账", "미입금 계좌이체", "未払い振込"]] : []),
         ["pending", "Chờ xác nhận", "Pending", "待确认", "확인 대기", "確認待ち"],
         ["confirmed", "Đã xác nhận", "Confirmed", "已确认", "확인 완료", "確認済み"],
         ["shipped", "Đang giao", "In transit", "配送中", "배송 중", "配送中"],
@@ -7897,7 +8570,12 @@ const ZH_DICT = {
       const q = State.orderSearch.trim().toLowerCase();
       const slot = State.ordersSlotFilter || "all";
       return State.orders.filter(o => {
-        const matchStatus = State.orderFilter === "all" || o.status === State.orderFilter;
+        let matchStatus = true;
+        if (State.orderFilter === "unpaid_transfer") {
+          matchStatus = (o.payment === "unpaid" && o.status !== "cancelled" && o.method === "bank_transfer");
+        } else if (State.orderFilter !== "all") {
+          matchStatus = (o.status === State.orderFilter);
+        }
         const matchQuery = !q || String(o.number).toLowerCase().includes(q) || String(o.address).toLowerCase().includes(q) || String(o.customer_name || "").toLowerCase().includes(q);
         if (!matchStatus || !matchQuery) return false;
         if (State.route === "seller_orders" && State.ordersSlotFilter !== "all") {
@@ -7949,7 +8627,7 @@ const ZH_DICT = {
       const daily = (st && st.daily) || [];
       const top = (st && st.top_products) || [];
       const maxRev = Math.max(1, ...daily.map(x => Number(x.revenue) || 0));
-      const statCard = (label, val) => `<div class="rounded-2xl border border-[#dce2d4] bg-white p-4"><p class="text-xs text-[#526348]">${label}</p><p class="mt-2 text-lg sm:text-xl font-semibold text-[#234d38]">${val}</p></div>`;
+      const statCard = (label, val) => `<div class="rounded-2xl border border-[#dce2d4] bg-white p-4 shadow-xs hover:border-[#234d38]/30 transition-all"><p class="text-xs text-[#526348] font-medium">${label}</p><p class="mt-1.5 text-lg sm:text-2xl font-bold text-[#234d38] font-heading tabular-nums">${val}</p></div>`;
       return `
       <section class="mb-7 rounded-3xl border border-[#dce2d4] bg-[#f4f7ef] p-5 sm:p-6">
         <div class="flex flex-wrap items-center justify-between gap-3">
@@ -7977,7 +8655,7 @@ const ZH_DICT = {
                 ${daily.map(d => {
         const rev = Number(d.revenue) || 0;
         const hPct = rev > 0 ? Math.max(6, Math.round(rev * 100 / maxRev)) : 2;
-        return `<div class="flex min-w-[24px] flex-1 flex-col items-center justify-end h-full" title="${esc(d.date)}: ${money(rev)} (${d.orders} đơn)">
+        return `<div class="flex min-w-[24px] flex-1 flex-col items-center justify-end h-full" title="${esc(d.date)}: ${money(rev)} (${d.orders} ${tr("đơn", "orders", "单", "건", "件")})">
                     <div class="w-full max-w-[28px] rounded-t-md ${rev > 0 ? "bg-[#234d38]" : "bg-[#e3e7da]"}" style="height:${hPct}%"></div>
                     <span class="mt-1.5 text-xs text-[#526348]">${esc(d.date.slice(5))}</span>
                   </div>`;
@@ -8060,7 +8738,40 @@ const ZH_DICT = {
     }
 
 
-        function copyKitchenPrepSummary() {
+        function copyShipperDeliveryList() {
+      const selectedIds = Object.keys(State.printSelected).filter(k => State.printSelected[k]).map(Number);
+      if (!selectedIds.length) {
+        showNotice("Vui lòng chọn ít nhất một đơn hàng.", "Please select at least one order.", true);
+        return;
+      }
+      const orders = State.orders.filter(o => selectedIds.includes(Number(o.id)));
+      if (!orders.length) return;
+
+      const lines = [
+        `📦 DANH SÁCH GIAO HÀNG CHO SHIPPER - NOURISHBITFE ORGANICS (${orders.length} đơn)`,
+        `Thời gian xuất: ${new Date().toLocaleString("vi-VN", { timeZone: "Asia/Ho_Chi_Minh" })}`,
+        `----------------------------------------`
+      ];
+      orders.forEach((o, idx) => {
+        const cod = (o.method === "cod" && o.payment === "unpaid") ? `${money(o.total)} (Thu COD)` : `0 ₫ (Đã thanh toán / CK)`;
+        const itemsSummary = (o.items || []).map(i => `${trf(i.name_vi, i.name_en)} x${i.quantity}`).join(", ");
+        const custName = o.customer_name || (o.shipping && o.shipping.name) || "Khách hàng";
+        const custPhone = o.phone || (o.shipping && o.shipping.phone) || "";
+        const custAddr = nbOrderAddress(o);
+        lines.push(
+          `${idx + 1}. [${o.number}] Khách: ${custName}${custPhone ? ` - SĐT: ${custPhone}` : ""}`,
+          `   📍 Đ/C: ${custAddr}`,
+          `   🍱 Món: ${itemsSummary}`,
+          `   💰 Tiền thu: ${cod}`,
+          `   📝 Ghi chú: ${o.notes || "Không"}`,
+          `----------------------------------------`
+        );
+      });
+      const text = lines.join("\n");
+      nbCopyText(text, "danh sách giao cho Shipper", "delivery list for Shipper");
+    }
+
+    function copyKitchenPrepSummary() {
       const prepOrders = State.orders.filter(o => o.status === "pending" || o.status === "confirmed");
       if (!prepOrders.length) {
         showNotice("Hiện không có đơn nào cần chuẩn bị bếp.", "No pending/confirmed orders to prep.", true);
@@ -8129,6 +8840,9 @@ const ZH_DICT = {
             </button>
             <button type="button" onclick="copyKitchenPrepSummary()" class="inline-flex min-h-[38px] items-center rounded-full border border-[#234d38] bg-[#f4f7f0] px-3.5 py-1.5 text-xs font-bold text-[#234d38] hover:bg-[#e4ecdd] transition-colors cursor-pointer">
               ${nbSvg('copy', 'size-3.5 inline-block mr-1')}${tr("Sao chép gửi Bếp", "Copy for Kitchen", "复制给后厨", "주방 전달용 복사", "厨房用にコピー")}
+            </button>
+            <button type="button" onclick="copyShipperDeliveryList()" ${selectedIds.length === 0 ? "disabled" : ""} class="inline-flex min-h-[38px] items-center rounded-full border border-[#ea580c] bg-[#fff7ed] px-3.5 py-1.5 text-xs font-bold text-[#ea580c] hover:bg-[#ffedd5] disabled:opacity-40 transition-colors cursor-pointer">
+              ${nbSvg('truck', 'size-3.5 inline-block mr-1')}${tr("Sao chép DS giao cho Shipper", "Copy list for Shipper", "复制配送员清单", "배송원 전달용 복사", "配達員用リストをコピー")}
             </button>
             <button onclick="printShippingSlips(${JSON.stringify(selectedIds)})" ${selectedIds.length === 0 ? "disabled" : ""} class="inline-flex min-h-[38px] items-center rounded-full bg-[#234d38] px-4 py-1.5 text-xs font-semibold text-white disabled:opacity-40">
               ${nbSvg('printer')} ${nbT("In tất cả đã chọn", "Print selected")} (${selectedIds.length})
@@ -8338,7 +9052,14 @@ const ZH_DICT = {
           p_reason: "Nhập bổ sung nhanh (+10)"
         });
         await Promise.all([nbLoadProducts(), nbLoadStockLogs()]);
+        State.lastUpdatedProductId = productId;
         renderAll();
+        setTimeout(() => {
+          if (State.lastUpdatedProductId === productId) {
+            State.lastUpdatedProductId = 0;
+            renderAll();
+          }
+        }, 2000);
         showToast(tr("Đã nhập bổ sung +10 sản phẩm vào kho!", "Restocked +10 items successfully!", "已快速补货 +10 件！", "재고 +10개 빠른 입고 완료!", "在庫を+10点クイック補充しました！"), "success");
       } catch (e) {
         showToast(tr("Lỗi khi nhập kho: ", "Restock error: ", "补货出错: ", "입고 오류: ", "入庫エラー: ") + (e.message || e), "error");
@@ -8354,13 +9075,13 @@ const ZH_DICT = {
       const awaitingMoney = State.orders.filter(o => o.payment === "unpaid" && o.status !== "cancelled" && o.method === "bank_transfer").length;
       const low = State.products.filter(p => p.is_active && !isSample(p) && p.stock_quantity <= 5);
       const list = nbFilteredOrders();
-      const card = (label, value) => `<div class="rounded-2xl border border-[#dce2d4] bg-white p-5"><p class="text-xs text-[#526348]">${label}</p><div class="mt-3 text-xl font-semibold text-[#234d38]">${value}</div></div>`;
+      const card = (label, value) => `<div class="rounded-2xl border border-[#dce2d4] bg-white p-4 sm:p-5 shadow-xs hover:border-[#234d38]/30 transition-all"><p class="text-xs text-[#526348] font-medium">${label}</p><div class="mt-2 text-lg sm:text-2xl font-bold text-[#234d38] font-heading tabular-nums">${value}</div></div>`;
       return `
     <section class="mx-auto w-full max-w-[1440px] px-5 py-10 sm:px-8 lg:px-16">
       <div class="mb-6 flex flex-wrap items-center justify-between gap-3">
         <div class="flex flex-wrap items-center gap-3">
           <h1 class="text-3xl font-medium text-[#234d38]">${nbT("Đơn hàng & doanh thu", "Orders & revenue")}</h1>
-      ${isOwner ? `<div class="flex gap-2">
+      ${isOwner ? `<div class="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar w-full sm:w-auto">
             <button onclick="State.sellerOrdersTab='orders';renderAll()" class="inline-flex min-h-[40px] items-center rounded-full border px-4 py-1.5 text-xs font-semibold ${State.sellerOrdersTab !== 'customers' ? 'border-[#234d38] bg-[#234d38] text-white' : 'border-[#dce2d4] bg-white text-[#234d38]'}">${nbSvg('box')} ${nbT("Đơn & thống kê", "Orders & stats")}</button>
             <button onclick="State.sellerOrdersTab='customers';nbLoadCustomers()" class="inline-flex min-h-[40px] items-center rounded-full border px-4 py-1.5 text-xs font-semibold ${State.sellerOrdersTab === 'customers' ? 'border-[#234d38] bg-[#234d38] text-white' : 'border-[#dce2d4] bg-white text-[#234d38]'}">${nbSvg('users')} ${nbT("Khách quen", "Regular customers")}</button>
           </div>` : ""}
@@ -8397,7 +9118,7 @@ const ZH_DICT = {
                     `${pendingOrders.length}건의 주문이 확인 대기 중입니다`,
                     `${pendingOrders.length}件の注文が確認待ちです`
                   )}
-                  ${over15mOrders.length ? `<span class="ml-1.5 inline-flex items-center rounded-full bg-red-600 px-2.5 py-0.5 text-xs font-extrabold text-white">${tr(`Cảnh báo: ${over15mOrders.length} đơn chờ quá 15 phút!`, `Warning: ${over15mOrders.length} orders pending >15m!`, `警告：${over15mOrders.length} 个订单等待超15分钟！`, `경고: ${over15mOrders.length}건 15분 이상 대기!`, `警告: ${over15mOrders.length}件が15分以上待機中！`)}</span>` : ""}
+                  ${over15mOrders.length ? `<button type="button" onclick="State.orderFilter='pending';renderAll()" class="ml-1.5 inline-flex items-center rounded-full bg-red-600 hover:bg-red-700 px-2.5 py-0.5 text-xs font-extrabold text-white cursor-pointer transition-colors" title="${tr('Bấm để lọc đơn chờ xác nhận', 'Click to filter pending orders')}">${tr(`Cảnh báo: ${over15mOrders.length} đơn chờ quá 15 phút!`, `Warning: ${over15mOrders.length} orders pending >15m!`, `警告：${over15mOrders.length} 个订单等待超15分钟！`, `경고: ${over15mOrders.length}건 15분 이상 대기!`, `警告: ${over15mOrders.length}件が15分以上待機中！`)}</button>` : ""}
                 </p>
                 <p class="text-xs ${over15mOrders.length ? "text-red-800" : "text-amber-800"}">
                   ${tr("Xác nhận sớm để chuyển bếp chế biến và giao hàng đúng hẹn.", "Confirm quickly to send orders to the kitchen for on-time prep.", "尽快确认以通知后厨出餐并准时配送。", "정시 조리 및 배송을 위해 빠른 확인을 권장합니다.", "定刻通りの調理と配達のため、早めの確認をおすすめします。")}
@@ -8804,6 +9525,188 @@ const ZH_DICT = {
       </form>`;
     }
 
+    
+    async function nbLoadAllSellerReviews() {
+      if (!NB_SUPABASE_READY || State.demo) return;
+      State.reviewsLoading = true;
+      try {
+        const { data, error } = await NB_SUPABASE.from("nb2_reviews")
+          .select("id,order_id,product_id,rating,comment,buyer_name,created_at,seller_reply,seller_replied_at")
+          .order("created_at", { ascending: false })
+          .limit(100);
+        if (error) throw error;
+        State.allSellerReviews = data || [];
+      } catch (err) {
+        console.error("Lỗi tải bình luận:", err);
+      } finally {
+        State.reviewsLoading = false;
+      }
+    }
+
+    async function sellerDeleteCustomerReview(reviewId, productId) {
+      if (!confirm(tr("Bạn có chắc muốn xóa vĩnh viễn bình luận này của khách hàng?", "Are you sure you want to permanently delete this customer review?", "确定要永久删除此客户评价吗？", "이 고객 후기를 영구 삭제하시겠습니까?", "この顧客レビューを完全に削除しますか？"))) return;
+      try {
+        try {
+          await nbRpc("nb2_seller_delete_review", { p_review_id: reviewId });
+        } catch (e) {
+          const res = await NB_SUPABASE.from("nb2_reviews").delete().eq("id", reviewId);
+          if (res.error) throw res.error;
+        }
+        await nbLoadAllSellerReviews();
+        if (productId) delete State.reviews[productId];
+        await nbLoadProducts();
+        renderAll();
+        showToast(tr("Đã xóa bình luận thành công", "Review deleted successfully", "已删除评价", "후기가 삭제되었습니다", "レビューを削除しました"), "success");
+      } catch (err) {
+        nbFail(err);
+      }
+    }
+
+    async function handleSellerTabReply(e, reviewId, productId) {
+      e.preventDefault();
+      const inp = document.getElementById(`mng_reply_${reviewId}`);
+      const text = (inp ? inp.value : "").trim();
+      if (!text) return;
+      try {
+        await nbRpc("nb2_reply_review", { p_review_id: reviewId, p_reply: text });
+        State.replyEditId = 0;
+        await nbLoadAllSellerReviews();
+        if (productId) await nbLoadReviews(productId);
+        renderAll();
+        showToast(tr("Đã gửi phản hồi thành công!", "Reply sent successfully!", "回复已发送！", "답글이 등록되었습니다!", "返信を送信しました！"), "success");
+      } catch (err) {
+        nbFail(err);
+      }
+    }
+
+    function renderSellerReviewsTab() {
+      const list = State.allSellerReviews || [];
+      const filter = State.sellerReviewsFilter || "all";
+      const unrepliedCount = list.filter(r => !r.seller_reply).length;
+      
+      const filtered = list.filter(r => {
+        if (filter === "unreplied") return !r.seller_reply;
+        if (filter === "low") return Math.round(Number(r.rating)) <= 3;
+        return true;
+      });
+
+      return `
+        <div class="mt-6 rounded-2xl border border-[#dce2d4] bg-white p-5 sm:p-7 shadow-xs">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#e3e7da] pb-4">
+            <div>
+              <h2 class="text-lg font-bold text-[#234d38] font-heading flex items-center gap-2">
+                ${nbSvg('star')} <span>${tr("Quản lý bình luận & đánh giá", "Customer Reviews Management", "客户评价与评论管理", "고객 후기 관리", "顧客レビュー管理")}</span>
+                <span class="rounded-full bg-[#edf4e7] px-2.5 py-0.5 text-xs font-semibold text-[#234d38]">${list.length}</span>
+              </h2>
+              <p class="mt-1 text-xs text-[#526348]">${tr("Theo dõi phản hồi từ người mua, trả lời nhanh theo mẫu câu hoặc xóa bình luận khi cần.", "Track customer feedback, reply quickly with suggestions or delete reviews if needed.", "查看买家反馈，使用预设话术快捷回复，或在必要时删除评价。")}</p>
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+              <button type="button" onclick="State.sellerReviewsFilter='all';renderAll()" class="inline-flex min-h-[36px] items-center rounded-xl border px-3 py-1.5 text-xs font-semibold transition-colors cursor-pointer ${filter === 'all' ? 'border-[#234d38] bg-[#234d38] text-white' : 'border-[#dce2d4] bg-[#f9faf6] text-[#234d38] hover:bg-[#edf2e7]'}">
+                ${tr("Tất cả", "All", "全部")} (${list.length})
+              </button>
+              <button type="button" onclick="State.sellerReviewsFilter='unreplied';renderAll()" class="inline-flex min-h-[36px] items-center rounded-xl border px-3 py-1.5 text-xs font-semibold transition-colors cursor-pointer ${filter === 'unreplied' ? 'border-[#ea580c] bg-[#ea580c] text-white' : 'border-[#dce2d4] bg-[#f9faf6] text-[#ea580c] hover:bg-[#fff7ed]'}">
+                ${tr("Chưa trả lời", "Unreplied", "未回复")} (${unrepliedCount})
+              </button>
+              <button type="button" onclick="State.sellerReviewsFilter='low';renderAll()" class="inline-flex min-h-[36px] items-center rounded-xl border px-3 py-1.5 text-xs font-semibold transition-colors cursor-pointer ${filter === 'low' ? 'border-amber-600 bg-amber-600 text-white' : 'border-[#dce2d4] bg-[#f9faf6] text-amber-700 hover:bg-amber-50'}">
+                ${tr("1–3 sao", "1–3 stars", "1–3星")} (${list.filter(r => Math.round(Number(r.rating)) <= 3).length})
+              </button>
+              <button type="button" onclick="nbLoadAllSellerReviews().then(renderAll)" class="inline-flex min-h-[36px] items-center gap-1 rounded-xl border border-[#dce2d4] bg-white px-3 py-1.5 text-xs font-semibold text-[#234d38] hover:bg-[#edf2e7] transition-colors cursor-pointer" title="${tr("Tải lại", "Reload")}">
+                ${nbSvg('refresh', 'size-3.5')}
+              </button>
+            </div>
+          </div>
+
+          ${State.reviewsLoading ? `<p class="py-8 text-center text-xs text-[#526348]">${tr("Đang tải danh sách bình luận...", "Loading reviews...", "正在加载评价列表...")}</p>` :
+            !filtered.length ? `<div class="py-12 text-center text-xs text-[#526348]">${tr("Không có bình luận nào trong mục này.", "No reviews found in this view.", "暂无符合条件的评价。")}</div>` : `
+            <div class="mt-4 space-y-4">
+              ${filtered.map(r => {
+                const prod = State.products.find(p => p.id === r.product_id) || {};
+                const isEditingThis = State.replyEditId === r.id;
+                return `
+                  <article class="rounded-2xl border border-[#e3e7da] bg-[#fdfdfa] p-4 sm:p-5 text-sm transition-all hover:border-[#234d38]/30">
+                    <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+                      <!-- Thông tin sản phẩm & Người mua -->
+                      <div class="flex items-start gap-3 min-w-0">
+                        <img src="${imgSrc(prod, 'card')}" alt="${pname(prod)}" class="size-12 rounded-xl object-cover border border-[#e3e7da] shrink-0">
+                        <div class="min-w-0">
+                          <p class="font-bold text-[#234d38] truncate">${pname(prod)}</p>
+                          <div class="mt-0.5 flex flex-wrap items-center gap-2 text-xs text-[#526348]">
+                            <span class="font-semibold text-[#30382e]">${esc(r.buyer_name || tr("Khách hàng", "Customer", "顾客"))}</span>
+                            <span>·</span>
+                            <span>${esc(nbDateVN(r.created_at))}</span>
+                            ${r.order_id ? `<span>·</span><span>${tr("Đơn", "Order", "订单")} #${r.order_id}</span>` : ""}
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <!-- Đánh giá sao & nút xóa bình luận -->
+                      <div class="flex items-center gap-3 shrink-0">
+                        <span class="font-bold text-amber-600 text-sm">${nbStars(r.rating)} (${Number(r.rating)}/5)</span>
+                        <button type="button" onclick="sellerDeleteCustomerReview(${r.id}, ${r.product_id})" class="inline-flex min-h-[32px] items-center gap-1 rounded-lg border border-red-200 bg-red-50/60 px-2.5 py-1 text-xs font-semibold text-red-600 hover:bg-red-100 transition-colors cursor-pointer" title="${tr("Xóa bình luận này của khách", "Delete customer review", "删除该客户评价")}">
+                          ${nbSvg('trash', 'size-3')} ${tr("Xóa bình luận", "Delete review", "删除评价", "후기 삭제", "レビュー削除")}
+                        </button>
+                      </div>
+                    </div>
+
+                    <!-- Nội dung nhận xét -->
+                    ${r.comment ? `
+                      <div class="mt-3 rounded-xl bg-white border border-[#e8ece0] p-3 text-xs sm:text-sm text-[#30382e]">
+                        <p class="leading-relaxed">${esc(r.comment)}</p>
+                      </div>
+                    ` : `<p class="mt-2 text-xs italic text-[#8c9488]">${tr("(Khách không để lại nhận xét chữ)", "(No written comment)", "(无文字评价)")}</p>`}
+
+                    <!-- Phản hồi của Shop -->
+                    ${r.seller_reply ? `
+                      <div class="mt-3 rounded-xl border border-[#cfe8d5] bg-[#f4f7ef] p-3 text-xs">
+                        <div class="flex items-center justify-between gap-2 font-semibold text-[#234d38]">
+                          <span class="flex items-center gap-1">${nbSvg('leaf', 'size-3.5')} ${tr("Phản hồi của Shop", "Shop reply", "店铺回复", "상점 답글", "ショップの返信")}</span>
+                          <div class="flex items-center gap-2">
+                            ${r.seller_replied_at ? `<span class="font-normal text-[#526348]">${esc(nbDateVN(r.seller_replied_at))}</span>` : ""}
+                            <button type="button" onclick="State.replyEditId=${r.id};renderAll()" class="underline font-semibold text-[#234d38] cursor-pointer">${tr("Sửa", "Edit")}</button>
+                            <button type="button" onclick="deleteSellerReviewReply(${r.id}, ${r.product_id}).then(() => nbLoadAllSellerReviews().then(renderAll))" class="underline text-red-700 cursor-pointer">${tr("Xóa trả lời", "Delete reply")}</button>
+                          </div>
+                        </div>
+                        <p class="mt-1 text-[#30382e]">${esc(r.seller_reply)}</p>
+                      </div>
+                    ` : ""}
+
+                    <!-- Form trả lời hoặc nút mở form trả lời -->
+                    ${!r.seller_reply || isEditingThis ? `
+                      <div class="mt-3 pt-3 border-t border-[#e3e7da]/70">
+                        <!-- 3 mẫu câu trả lời nhanh -->
+                        <div class="mb-2 flex flex-wrap items-center gap-1.5">
+                          <span class="text-xs text-[#526348] font-medium mr-1">${tr("Mẫu câu gợi ý:", "Quick suggestions:", "快捷回复：", "추천 답변:", "おすすめ返信:")}</span>
+                          ${[
+                            "Cảm ơn bạn đã ủng hộ!",
+                            "Shop đã ghi nhận góp ý ạ.",
+                            "Rất mong được phục vụ bạn lần sau!"
+                          ].map(tpl => `
+                            <button type="button" onclick="const inp=document.getElementById('mng_reply_${r.id}');if(inp){inp.value='${tpl}';inp.focus();}" class="inline-flex items-center rounded-lg border border-[#d8dfcf] bg-white px-2.5 py-1 text-[11px] text-[#234d38] hover:bg-[#edf2e7] transition-colors cursor-pointer">
+                              "${tpl}"
+                            </button>
+                          `).join("")}
+                        </div>
+
+                        <form onsubmit="handleSellerTabReply(event, ${r.id}, ${r.product_id})" class="flex flex-wrap gap-2">
+                          <input id="mng_reply_${r.id}" required maxlength="500" value="${esc(r.seller_reply || "")}" placeholder="${tr("Nhập câu trả lời phản hồi khách hàng...", "Type shop reply to customer...", "输入回复客户内容...")}" class="min-h-[38px] min-w-0 flex-1 rounded-xl border border-[#d8dfcf] px-3.5 py-1.5 text-xs bg-white">
+                          <button type="submit" class="inline-flex min-h-[38px] items-center rounded-xl bg-[#234d38] px-4 py-1.5 text-xs font-semibold text-white hover:bg-[#173a29] transition-colors cursor-pointer">
+                            ${r.seller_reply ? tr("Cập nhật phản hồi", "Update reply", "更新回复") : tr("Gửi phản hồi", "Send reply", "发送回复", "답글 등록", "返信を送信")}
+                          </button>
+                          ${isEditingThis ? `
+                            <button type="button" onclick="State.replyEditId=0;renderAll()" class="inline-flex min-h-[38px] items-center rounded-xl border border-[#d8dfcf] px-3 text-xs text-[#526348] hover:bg-[#edf2e7] cursor-pointer">${tr("Hủy", "Cancel")}</button>
+                          ` : ""}
+                        </form>
+                      </div>
+                    ` : ""}
+                  </article>
+                `;
+              }).join("")}
+            </div>
+          `}
+        </div>
+      `;
+    }
+
     function renderManage() {
       const blank = { id: 0, name_vi: "", name_en: "", category: "meals", image_url: "", price_vnd: "", original_price_vnd: null, stock_quantity: 0, is_active: true, allergens_declared: null, manufactured_at: "", expires_at: "", near_expiry_days: 2, near_expiry_discount_pct: 20, near_expiry_discount_enabled: true };
       const e = State.editorId ? (State.products.find(x => x.id === State.editorId) || blank) : blank;
@@ -8816,11 +9719,12 @@ const ZH_DICT = {
     <div class="mx-auto w-full max-w-[1440px] px-5 py-10 sm:px-8 lg:px-16">
       <div class="flex flex-wrap items-center justify-between gap-4">
         <h1 class="text-3xl font-medium text-[#234d38]">${nbT("Quản lý sản phẩm", "Manage products")}</h1>
-       <div class="flex flex-wrap gap-2">
+       <div class="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar w-full sm:w-auto">
           ${NB_AUTH_ROLE === "seller" ? `
             <button onclick="State.manageTab='products';renderAll()" class="inline-flex min-h-[44px] items-center rounded-full border px-4 py-2 text-xs font-semibold ${State.manageTab === 'products' ? 'border-[#234d38] bg-[#234d38] text-white' : 'border-[#dce2d4] bg-white text-[#234d38]'}">${nbSvg('bag')} ${nbT("Sản phẩm", "Products")}</button>
             <button onclick="State.manageTab='stock';nbLoadStockLogs().then(renderAll)" class="inline-flex min-h-[44px] items-center rounded-full border px-4 py-2 text-xs font-semibold ${State.manageTab === 'stock' ? 'border-[#234d38] bg-[#234d38] text-white' : 'border-[#dce2d4] bg-white text-[#234d38]'}">${nbSvg('box')} ${nbT("Nhật ký kho", "Stock log")}</button>
             <button onclick="State.manageTab='ingredients';nbLoadIngredients().then(renderAll)" class="inline-flex min-h-[44px] items-center rounded-full border px-4 py-2 text-xs font-semibold ${State.manageTab === 'ingredients' ? 'border-[#234d38] bg-[#234d38] text-white' : 'border-[#dce2d4] bg-white text-[#234d38]'}">${nbT("Kho nguyên liệu", "Ingredients")}</button>
+            <button onclick="State.manageTab='reviews';nbLoadAllSellerReviews().then(renderAll)" class="inline-flex min-h-[44px] items-center gap-1.5 rounded-full border px-4 py-2 text-xs font-semibold ${State.manageTab === 'reviews' ? 'border-[#234d38] bg-[#234d38] text-white' : 'border-[#dce2d4] bg-white text-[#234d38]'}">${nbSvg('star')} ${tr("Bình luận", "Reviews", "评价管理", "후기 관리", "レビュー管理")}</button>
             ${State.products.length === 0 ? `<button onclick="importSampleProducts()" class="inline-flex min-h-[44px] items-center justify-center rounded-full border border-[#234d38] bg-white px-5 py-2.5 text-sm font-semibold text-[#234d38] hover:bg-[#edf2e7] transition-colors">${nbT("Nạp sản phẩm mẫu ban đầu", "Import starter products")}</button>` : ""}
             <button onclick="State.manageTab='products';State.editorOpen=true;State.editorId=0;renderAll()" class="inline-flex min-h-[44px] items-center justify-center rounded-full bg-[#234d38] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#173a29] transition-colors">+ ${nbT("Thêm sản phẩm mới", "Add new product")}</button>
           ` : `<span class="rounded-full bg-[#edf4e7] px-4 py-2 text-xs font-semibold text-[#234d38]">${nbSvg('box')} ${nbT("Cập nhật tồn kho (Nhân viên)", "Stock management (Staff)")}</span>`}
@@ -8835,7 +9739,7 @@ const ZH_DICT = {
       }).join("")}
       </div>` : ""}
 
-     ${State.manageTab === "ingredients" ? renderIngredientsTab() : State.manageTab === "stock" ? renderStockTab() : `
+     ${State.manageTab === "ingredients" ? renderIngredientsTab() : State.manageTab === "stock" ? renderStockTab() : State.manageTab === "reviews" ? renderSellerReviewsTab() : `
       ${renderRecipeEditorModal()}
       ${State.editorOpen ? `
         <form onsubmit="saveManagedProduct(event)" class="my-8 space-y-5 rounded-2xl border border-[#dce2d4] bg-white p-6">
@@ -8849,10 +9753,18 @@ const ZH_DICT = {
             ${text("ed_name_en", nbT("Tên tiếng Anh", "English name"), e.name_en === e.name_vi ? "" : e.name_en, "maxlength=200")}
             ${text("ed_name_zh", nbT("Tên tiếng Trung", "Chinese name", "商品中文名"), e.name_zh || "", "maxlength=200")}
           </div>
-          <!-- Hàng danh mục, giá & kho: 5 cột thẳng hàng -->
-          <div class="grid grid-cols-2 gap-4 sm:grid-cols-5">
+          <!-- Hàng danh mục, huy hiệu, giá & kho -->
+          <div class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
             <div><label class="mb-1 block text-xs font-medium">${nbT("Nhóm sản phẩm", "Category")}</label>
               <select id="ed_cat" class="w-full rounded-xl border border-[#d8dfcf] px-3 py-2 text-sm">${["meals", "snacks", "supplements", "ingredients"].map(c => `<option value="${c}" ${e.category === c ? "selected" : ""}>${esc(categoryName(c))}</option>`).join("")}</select></div>
+            <div><label class="mb-1 block text-xs font-medium">${nbT("Huy hiệu nhãn", "Tag badge", "标签徽章", "태그 배지", "タグバッジ")}</label>
+              <select id="ed_tag_badge" class="w-full rounded-xl border border-[#d8dfcf] px-3 py-2 text-sm">
+                <option value="" ${!e.tag_badge ? "selected" : ""}>${tr("-- Không gắn --", "-- None --", "-- 无标签 --", "-- 없음 --", "-- なし --")}</option>
+                <option value="bestseller" ${e.tag_badge === "bestseller" ? "selected" : ""}>🔥 ${tr("Bán chạy", "Best Seller", "热销", "베스트셀러", "ベストセラー")}</option>
+                <option value="new" ${e.tag_badge === "new" ? "selected" : ""}>✨ ${tr("Món mới", "New Arrival", "新品", "신메뉴", "新商品")}</option>
+                <option value="near_expiry" ${e.tag_badge === "near_expiry" ? "selected" : ""}>⏳ ${tr("Sắp hết hạn", "Near Expiry", "临期特惠", "마감 임박", "賞味期限間近")}</option>
+                <option value="discount" ${e.tag_badge === "discount" ? "selected" : ""}>🏷️ ${tr("Giảm giá", "Discount", "特价优惠", "할인", "割引")}</option>
+              </select></div>
             ${num("ed_price", nbT("Giá bán (₫) *", "Price (₫) *"), e.price_vnd, "1")}
             ${num("ed_orig", nbT("Giá gốc (₫)", "Original price (₫)"), e.original_price_vnd, "1")}
             ${State.editorId === 0
@@ -8967,7 +9879,7 @@ const ZH_DICT = {
           }
           if (!prods.length) return `<div class="rounded-2xl border border-[#dce2d4] bg-white p-8 text-center text-sm text-[#526348]">${nbT("Không tìm thấy sản phẩm nào khớp bộ lọc.", "No products match your filter criteria.", "未找到符合条件的商品。")}</div>`;
           return prods.map(p => `
-          <article class="flex flex-col flex-wrap justify-between gap-4 rounded-2xl border border-[#dce2d4] bg-white p-5 sm:flex-row sm:items-center">
+          <article class="flex flex-col flex-wrap justify-between gap-4 rounded-2xl border ${State.lastUpdatedProductId === p.id ? 'nb-flash-updated ring-2 ring-emerald-500/50' : 'border-[#dce2d4]'} bg-white p-5 sm:flex-row sm:items-center transition-all">
             <div class="flex items-center gap-4">
               <img src="${imgSrc(p, 'thumb')}" alt="" loading="lazy" decoding="async" class="size-16 rounded-xl object-cover">
               <div>
@@ -8993,6 +9905,12 @@ const ZH_DICT = {
                   <span>${tr("+10 Kho", "+10 Stock", "+10 库存", "+10 재고", "+10 在庫")}</span>
                 </button>
               ` : ''}
+              ${p.stock_quantity > 0 && !isSample(p) ? `
+                <button type="button" onclick="markProductSoldOutToday(${p.id})" class="inline-flex min-h-[44px] items-center justify-center gap-1 rounded-full border border-red-200 bg-red-50/70 px-3 py-2 text-xs font-semibold text-red-700 hover:bg-red-100 transition-colors cursor-pointer" title="${tr("Đánh dấu hết món hôm nay", "Mark sold out today", "今日售罄", "오늘 품절 처리", "本日売切")}">
+                  ${nbSvg('warn', 'size-3.5 text-red-600')}
+                  <span>${tr("Hết hôm nay", "Sold Out Today", "今日售罄", "오늘 품절", "本日売切")}</span>
+                </button>
+              ` : ''}
               <button onclick="State.manageTab='stock';State.stockModalProdId=${p.id};nbLoadStockLogs().then(renderAll);window.scrollTo({top:0,behavior:'smooth'})" class="inline-flex min-h-[44px] items-center justify-center rounded-full border border-[#234d38] px-4 py-2 text-xs font-medium text-[#234d38] hover:bg-[#edf2e7]">${nbSvg('box')} ${nbT("Kho", "Stock")}</button>
               <button onclick="openRecipeModal(${p.id});window.scrollTo({top:0,behavior:'smooth'})" class="inline-flex min-h-[44px] items-center justify-center rounded-full border border-[#234d38] px-4 py-2 text-xs font-medium text-[#234d38] hover:bg-[#edf2e7]">${nbSvg('beaker')} ${nbT("Công thức", "Recipe")}</button>
               <button onclick="printNutritionLabel(${p.id})" class="inline-flex min-h-[44px] items-center justify-center rounded-full border border-[#d8dfcf] px-4 py-2 text-xs font-medium text-[#234d38] hover:bg-[#edf2e7]">${nbSvg('tag')} ${nbT("In nhãn", "Print label")}</button>
@@ -9001,6 +9919,7 @@ const ZH_DICT = {
                   ₫ ${tr("Sửa giá nhanh", "Quick price", "快速改价", "가격 빠른 수정", "クイック価格変更")}
                 </button>
               ` : ""}
+              ${NB_AUTH_ROLE === "seller" ? `<button type="button" onclick="duplicateManagedProduct(${p.id})" class="inline-flex min-h-[44px] items-center justify-center rounded-full border border-[#d8dfcf] px-3.5 py-2 text-xs font-medium text-[#234d38] hover:bg-[#edf2e7] transition-colors">${nbSvg('copy', 'size-3.5 mr-1')} ${tr("Nhân bản", "Duplicate", "复制商品", "복제", "複製")}</button>` : ""}
               <button onclick="State.editorId=${p.id};State.editorOpen=true;renderAll();window.scrollTo({top:0,behavior:'smooth'})" class="inline-flex min-h-[44px] items-center justify-center rounded-full border border-[#d8dfcf] px-4 py-2 text-xs font-medium text-[#234d38] hover:bg-[#edf2e7] transition-colors">${nbT("Chỉnh sửa", "Edit")}</button>
               <button onclick="toggleArchiveProduct(${p.id})" class="inline-flex min-h-[44px] items-center justify-center rounded-full border border-[#d8dfcf] px-4 py-2 text-xs font-medium text-[#234d38] hover:bg-[#edf2e7] transition-colors">${p.is_active ? nbT("Ẩn", "Hide") : nbT("Hiện lại", "Show")}</button>
             </div>
@@ -9069,11 +9988,82 @@ const ZH_DICT = {
         });
         await Promise.all([nbLoadProducts(), nbLoadProductCosts()]);
         State.quickPriceEditId = 0;
+        State.lastUpdatedProductId = productId;
         renderAll();
+        setTimeout(() => {
+          if (State.lastUpdatedProductId === productId) {
+            State.lastUpdatedProductId = 0;
+            renderAll();
+          }
+        }, 2000);
         showNotice("Đã cập nhật giá bán & giá vốn!", "Price & cost updated successfully!");
       } catch (err) {
         nbFail(err);
       }
+    }
+
+        function duplicateManagedProduct(id) {
+      const src = State.products.find(x => x.id === id);
+      if (!src) return;
+      State.manageTab = "products";
+      State.editorId = 0;
+      State.editorOpen = true;
+      renderAll();
+      setTimeout(() => {
+        const setVal = (elId, v) => { const el = document.getElementById(elId); if (el) el.value = v ?? ""; };
+        const setChecked = (elId, v) => { const el = document.getElementById(elId); if (el) el.checked = !!v; };
+        setVal("ed_name_vi", src.name_vi + " (Bản sao)");
+        setVal("ed_name_en", (src.name_en || src.name_vi) + " (Copy)");
+        setVal("ed_name_zh", src.name_zh || "");
+        setVal("ed_name_ko", src.name_ko || "");
+        setVal("ed_name_ja", src.name_ja || "");
+        setVal("ed_cat", src.category || "meals");
+        setVal("ed_tag_badge", src.tag_badge || "");
+        setVal("ed_price", src.price_vnd);
+        setVal("ed_orig", src.original_price_vnd);
+        setVal("ed_stock", src.stock_quantity);
+        setVal("ed_cost", State.productCosts[String(src.id)] ?? 0);
+        setVal("ed_img", src.image_url);
+        setVal("ed_desc_vi", src.description_vi);
+        setVal("ed_desc_en", src.description_en);
+        setVal("ed_desc_zh", src.description_zh);
+        setVal("ed_desc_ko", src.description_ko || "");
+        setVal("ed_desc_ja", src.description_ja || "");
+        setVal("ed_ing_vi", src.ingredients_vi);
+        setVal("ed_ing_en", src.ingredients_en);
+        setVal("ed_ing_zh", src.ingredients_zh);
+        setVal("ed_ing_ko", src.ingredients_ko || "");
+        setVal("ed_ing_ja", src.ingredients_ja || "");
+        setVal("ed_vit_vi", src.vitamins_vi);
+        setVal("ed_vit_en", src.vitamins_en);
+        setVal("ed_notes_vi", src.nutrition_notes_vi || "");
+        setVal("ed_notes_en", src.nutrition_notes_en || "");
+        setVal("ed_origin_vi", src.origin_vi || "");
+        setVal("ed_origin_en", src.origin_en || "");
+        setVal("ed_shelf", src.shelf_life_days);
+        setVal("ed_mfg_date", src.manufactured_at || "");
+        setVal("ed_exp_date", src.expires_at || "");
+        setVal("ed_near_days", src.near_expiry_days ?? 2);
+        setVal("ed_near_pct", src.near_expiry_discount_pct ?? 20);
+        setVal("ed_stor_vi", src.storage_vi || "");
+        setVal("ed_stor_en", src.storage_en || "");
+        setVal("ed_serv", src.serving_size_g);
+        setVal("ed_kcal", src.calories_kcal);
+        setVal("ed_pro", src.protein_g);
+        setVal("ed_carb", src.carbohydrate_g);
+        setVal("ed_fat", src.fat_g);
+        setVal("ed_fib", src.fiber_g);
+        setVal("ed_sug", src.sugar_g);
+        setVal("ed_sod", src.sodium_mg);
+        setChecked("ed_near_enabled", src.near_expiry_discount_enabled !== false);
+        setChecked("ed_al_declared", Array.isArray(src.allergens_declared));
+        setChecked("ed_active", src.is_active !== false);
+        const declaredList = Array.isArray(src.allergens_declared) ? src.allergens_declared : nbAllergens(src);
+        document.querySelectorAll(".ed_allergen").forEach(cb => {
+          cb.checked = declaredList.includes(cb.value);
+        });
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }, 30);
     }
 
     async function saveManagedProduct(e) {
@@ -9101,6 +10091,7 @@ const ZH_DICT = {
       set("nutrition_notes_vi", val("ed_notes_vi")); set("nutrition_notes_en", val("ed_notes_en") || val("ed_notes_vi"));
       set("origin_vi", val("ed_origin_vi")); set("origin_en", val("ed_origin_en") || val("ed_origin_vi"));
       set("storage_vi", val("ed_stor_vi")); set("storage_en", val("ed_stor_en") || val("ed_stor_vi"));
+      set("tag_badge", val("ed_tag_badge") || null);
       set("serving_size_g", num("ed_serv")); set("calories_kcal", num("ed_kcal")); set("protein_g", num("ed_pro"));
       set("carbohydrate_g", num("ed_carb")); set("fat_g", num("ed_fat")); set("fiber_g", num("ed_fib"));
       set("sugar_g", num("ed_sug")); set("sodium_mg", num("ed_sod")); set("shelf_life_days", num("ed_shelf"));
@@ -9117,6 +10108,7 @@ const ZH_DICT = {
         near_expiry_days: num("ed_near_days") ?? 2,
         near_expiry_discount_pct: num("ed_near_pct") ?? 20,
         near_expiry_discount_enabled: document.getElementById("ed_near_enabled").checked,
+        tag_badge: val("ed_tag_badge") || null,
         data
       };
       try {
@@ -9209,6 +10201,7 @@ const ZH_DICT = {
       if (route === "detail" && param !== null) {
         State.selectedProductId = Number(param);
         State.detailQuantity = 1;
+        nbTrackRecentView(param);
       }
       const targetHash = route === "shop" ? "#/" : ("#/" + route + (param !== null ? "/" + param : ""));
       if (window.location.hash !== targetHash) {
@@ -9239,7 +10232,9 @@ const ZH_DICT = {
         localStorage.setItem("nourish_language", State.language);
         localStorage.setItem("nb_cart", JSON.stringify(State.cart));
         localStorage.setItem("nb_cart_sel", JSON.stringify(State.cartSelection));
+        localStorage.setItem("nb_cart_notes", JSON.stringify(State.cartNotes || {}));
         localStorage.setItem("nb_wish", JSON.stringify(State.wishlist));
+        localStorage.setItem("nb_recent_views", JSON.stringify(State.recentViews || []));
       } catch (e) { console.warn("localStorage unavailable", e); }
     }
 
@@ -9253,25 +10248,276 @@ const ZH_DICT = {
         setTimeout(() => btn.classList.remove("nb-cart-bump"), 450);
       }
       if (cnt) {
-        cnt.classList.remove("nb-cart-bump");
+        cnt.classList.remove("nb-cart-bump", "nb-badge-pop");
         void cnt.offsetWidth;
-        cnt.classList.add("nb-cart-bump");
-        setTimeout(() => cnt.classList.remove("nb-cart-bump"), 450);
+        cnt.classList.add("nb-badge-pop");
+        setTimeout(() => cnt.classList.remove("nb-badge-pop"), 450);
       }
+    }
+
+    /**
+     * Hiệu ứng Bay vào giỏ hàng (Fly-to-Cart)
+     * Tạo một ảnh thu nhỏ tròn 44x44px bay từ nút bấm tới icon giỏ hàng header
+     */
+    function nbFlyToCart(sourceEl, imgUrl) {
+      if (typeof window === "undefined" || !sourceEl) return;
+      if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        nbTriggerCartBump();
+        return;
+      }
+      const cartBtn = document.getElementById("headerCartButton");
+      if (!cartBtn) return;
+
+      const sourceRect = sourceEl.getBoundingClientRect();
+      const targetRect = cartBtn.getBoundingClientRect();
+
+      const flyer = document.createElement("img");
+      flyer.src = imgUrl || "";
+      flyer.alt = "";
+      flyer.className = "fixed pointer-events-none rounded-full object-cover border-2 border-white shadow-xl z-[9999]";
+      flyer.style.width = "44px";
+      flyer.style.height = "44px";
+
+      const startX = sourceRect.left + sourceRect.width / 2 - 22;
+      const startY = sourceRect.top + sourceRect.height / 2 - 22;
+      const targetX = targetRect.left + targetRect.width / 2 - 22;
+      const targetY = targetRect.top + targetRect.height / 2 - 22;
+
+      const dx = targetX - startX;
+      const dy = targetY - startY;
+
+      flyer.style.left = startX + "px";
+      flyer.style.top = startY + "px";
+      flyer.style.transform = "translate3d(0, 0, 0) scale(1)";
+      flyer.style.opacity = "1";
+      flyer.style.transition = "transform 0.55s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.55s ease";
+
+      document.body.appendChild(flyer);
+
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          flyer.style.transform = `translate3d(${dx}px, ${dy}px, 0) scale(0.2)`;
+          flyer.style.opacity = "0.15";
+        });
+      });
+
+      setTimeout(() => {
+        flyer.remove();
+        nbTriggerCartBump();
+      }, 560);
+    }
+
+    /**
+     * Thêm vào giỏ kèm hiệu ứng bay và phản hồi "✓" xanh trong ~800ms
+     */
+    function nbAddToCartWithFeedback(btn, id, imgUrl) {
+      if (imgUrl && typeof nbFlyToCart === "function") {
+        nbFlyToCart(btn, imgUrl);
+      }
+      addToCart(id, 1);
+      if (btn && !btn._nbAdding) {
+        btn._nbAdding = true;
+        const oldHtml = btn.innerHTML;
+        const oldCls = btn.className;
+        btn.innerHTML = `<svg class="size-4 text-emerald-300 inline-block animate-bounce" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg><span class="text-white font-bold ml-1">✓</span>`;
+        btn.classList.add("!bg-[#173a29]", "!border-emerald-600");
+        setTimeout(() => {
+          if (btn) {
+            btn.innerHTML = oldHtml;
+            btn.className = oldCls;
+            btn._nbAdding = false;
+          }
+        }, 800);
+      }
+    }
+
+    /**
+     * Theo dõi các món vừa xem gần nhất (lưu tối đa 6 sản phẩm)
+     */
+    function nbTrackRecentView(id) {
+      if (!id) return;
+      const numId = Number(id);
+      const cur = (State.recentViews || []).filter(x => Number(x) !== numId);
+      State.recentViews = [numId, ...cur].slice(0, 6);
+      try {
+        localStorage.setItem("nb_recent_views", JSON.stringify(State.recentViews));
+      } catch (e) {}
+    }
+
+    /**
+     * Chuyển đổi nhanh pill ghi chú chế biến từng món trong giỏ hàng
+     */
+    function nbToggleCartNote(id, noteText) {
+      if (!State.cartNotes) State.cartNotes = {};
+      let cur = State.cartNotes[id] || "";
+      let parts = cur ? cur.split(", ").filter(Boolean) : [];
+      if (parts.includes(noteText)) {
+        parts = parts.filter(p => p !== noteText);
+      } else {
+        parts.push(noteText);
+      }
+      if (parts.length > 0) {
+        State.cartNotes[id] = parts.join(", ");
+      } else {
+        delete State.cartNotes[id];
+      }
+      try {
+        localStorage.setItem("nb_cart_notes", JSON.stringify(State.cartNotes));
+      } catch (e) {}
+      renderAll();
+    }
+
+    /**
+     * Xuất dữ liệu nhật ký ăn uống ra file CSV (UTF-8 BOM)
+     */
+    function exportDiaryCsv() {
+      if (!State.diary || !State.diary.length) {
+        showNotice("Ngày này chưa có món ăn nào trong nhật ký để xuất CSV.", "No entries logged for this date to export.", true);
+        return;
+      }
+      const csvCell = v => {
+        let s = String(v ?? "").replace(/\r?\n/g, " ");
+        if (/^[=+\-@\t\r]/.test(s)) s = "'" + s;
+        return `"${s.replace(/"/g, '""')}"`;
+      };
+      const lines = [
+        ["Ngày", "Bữa ăn", "Tên món", "Số lượng", "Kcal", "Đạm (g)", "Carb (g)", "Béo (g)"].map(csvCell).join(",")
+      ];
+      const mealTypeLabels = {
+        breakfast: "Bữa sáng",
+        lunch: "Bữa trưa",
+        dinner: "Bữa tối",
+        snack: "Bữa phụ"
+      };
+      State.diary.forEach(r => {
+        const mealText = mealTypeLabels[r.meal_type] || r.meal_type || "";
+        lines.push([
+          csvCell(r.log_date || State.diaryDate),
+          csvCell(mealText),
+          csvCell(r.name || ""),
+          csvCell(r.quantity || 1),
+          csvCell(r.kcal || 0),
+          csvCell(r.protein_g || 0),
+          csvCell(r.carb_g || 0),
+          csvCell(r.fat_g || 0)
+        ].join(","));
+      });
+      const csvContent = "\uFEFF" + lines.join("\r\n");
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `nhat_ky_an_uong_${State.diaryDate || "data"}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+      showToast(tr("Đã xuất file CSV nhật ký thành công!", "Diary CSV exported successfully!", "饮食日记CSV导出成功！", "식단 일기 CSV 내보내기 완료!", "食事記録CSVのエクスポートが完了しました！"), "success");
+    }
+
+    /**
+     * Đánh dấu hết hàng trong ngày cho Seller ở Quản lý sản phẩm
+     */
+    async function markProductSoldOutToday(productId) {
+      const p = State.products.find(x => x.id === productId);
+      if (!p || p.stock_quantity <= 0) return;
+      const name = pname(p);
+      const ok = confirm(tr(
+        `Bạn có chắc chắn muốn đánh dấu hết hàng hôm nay cho "${name}" không? Toàn bộ số lượng tồn (${p.stock_quantity}) sẽ được điều chỉnh về 0.`,
+        `Mark "${name}" as sold out for today? Current stock (${p.stock_quantity}) will be reduced to 0.`,
+        `确定要将 "${name}" 标记为今日已售罄吗？当前库存（${p.stock_quantity}）将清零。`,
+        `"${name}" 메뉴를 오늘 품절 처리하시겠습니까? 현재 재고(${p.stock_quantity}개)가 0으로 조정됩니다.`,
+        `「${name}」を本日売切にしますか？現在の在庫（${p.stock_quantity}点）が0になります。`
+      ));
+      if (!ok) return;
+      try {
+        await nbRpc("nb2_adjust_stock", {
+          p_product_id: productId,
+          p_kind: "loss",
+          p_qty: p.stock_quantity,
+          p_reason: "Hết món trong ngày"
+        });
+        await Promise.all([nbLoadProducts(), nbLoadStockLogs()]);
+        State.lastUpdatedProductId = productId;
+        renderAll();
+        setTimeout(() => {
+          if (State.lastUpdatedProductId === productId) {
+            State.lastUpdatedProductId = 0;
+            renderAll();
+          }
+        }, 2000);
+        showToast(tr(`Đã đánh dấu "${name}" hết món hôm nay!`, `Marked "${name}" sold out today!`, `已将 "${name}" 标记为今日售罄！`, `"${name}" 오늘 품절 처리 완료!`, `「${name}」を本日売切に設定しました！`), "info");
+      } catch (err) {
+        console.error("Lỗi khi điều chỉnh hết món:", err);
+        showNotice("Không thể cập nhật trạng thái hết món.", "Could not mark as sold out.", true);
+      }
+    }
+
+    /**
+     * Hiệu ứng ăn mừng đạt Freeship (Sparkle Burst)
+     * Tạo 8-10 hạt chấm màu xanh lá/cam nhỏ bung nhẹ xung quanh banner trong 1s
+     */
+    function nbSparkleBurst(targetEl) {
+      if (!targetEl || (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) return;
+      const rect = targetEl.getBoundingClientRect();
+      const count = 10;
+      const colors = ['#234d38', '#4ade80', '#ea580c', '#f59e0b', '#10b981', '#16a34a'];
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      const container = document.createElement('div');
+      container.className = 'pointer-events-none fixed inset-0 z-[9999] overflow-hidden';
+      document.body.appendChild(container);
+
+      for (let i = 0; i < count; i++) {
+        const dot = document.createElement('span');
+        const size = Math.floor(Math.random() * 4) + 6;
+        const angle = (i / count) * 2 * Math.PI + (Math.random() * 0.4 - 0.2);
+        const dist = 50 + Math.random() * 40;
+        const endX = Math.cos(angle) * dist;
+        const endY = Math.sin(angle) * dist;
+        const color = colors[i % colors.length];
+
+        dot.style.position = 'fixed';
+        dot.style.left = centerX + 'px';
+        dot.style.top = centerY + 'px';
+        dot.style.width = size + 'px';
+        dot.style.height = size + 'px';
+        dot.style.borderRadius = '50%';
+        dot.style.backgroundColor = color;
+        dot.style.boxShadow = `0 0 8px ${color}88`;
+        dot.style.transform = 'translate(-50%, -50%) scale(0.5)';
+        dot.style.opacity = '1';
+        dot.style.transition = 'transform 0.85s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.85s ease';
+        dot.style.pointerEvents = 'none';
+
+        container.appendChild(dot);
+
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            dot.style.transform = `translate(calc(-50% + ${endX}px), calc(-50% + ${endY}px)) scale(1.2)`;
+            dot.style.opacity = '0';
+          });
+        });
+      }
+
+      setTimeout(() => {
+        container.remove();
+      }, 1000);
     }
 
     function addToCart(id, qty) {
       const p = State.products.find(x => x.id === id);
       if (State.demo) { showNotice("Cửa hàng đang ở chế độ xem thử, chưa đặt mua được.", "The shop is in preview mode; ordering is not available yet.", true); return; }
       if (NB_AUTH_ROLE === "seller" || NB_AUTH_ROLE === "staff") { showNotice("Tài khoản chủ cửa hàng không đặt mua được. Hãy dùng tài khoản khách để thử mua hàng.", "Seller accounts cannot place orders. Use a buyer account to test purchasing.", true); return; }
-      if (!p || isSample(p) || p.stock_quantity <= 0) {
-        showNotice("Sản phẩm này không thể đặt mua (mẫu hoặc hết hàng).", "This item cannot be purchased (sample or out of stock).", true);
+      if (!p || !p.is_active || isSample(p) || p.stock_quantity <= 0 || nbExpiryInfo(p).status === "expired") {
+        showNotice("Sản phẩm này không thể đặt mua (mẫu, hết hạn hoặc hết hàng).", "This item cannot be purchased (sample, expired or out of stock).", true);
         return;
       }
       const cur = State.cart[id] || 0;
       if (cur >= p.stock_quantity) { showNotice("Bạn đã chọn hết số lượng còn trong kho.", "You already have all remaining stock in your bag.", true); return; }
+      const isNewInCart = !(id in State.cart) || !State.cart[id];
       State.cart[id] = Math.min(p.stock_quantity, cur + qty);
-      if (State.cartSelection[id] === undefined) State.cartSelection[id] = true;
+      if (isNewInCart || State.cartSelection[id] === undefined) State.cartSelection[id] = true;
       saveStorage();
       renderAll();
       showNotice(`Đã thêm "${p.name_vi}" vào giỏ hàng.`, `Added "${p.name_en}" to your bag.`);
@@ -9283,7 +10529,7 @@ const ZH_DICT = {
       const p = State.products.find(x => x.id === Number(id));
       let next = (State.cart[id] || 0) + delta;
       if (p) next = Math.min(next, p.stock_quantity);
-      if (next <= 0) delete State.cart[id];
+      if (next <= 0) { delete State.cart[id]; delete State.cartSelection[id]; }
       else State.cart[id] = next;
       saveStorage();
       renderAll();
@@ -9293,10 +10539,19 @@ const ZH_DICT = {
     async function nbLoadDiary() {
       if (!NB_SUPABASE_READY || !NB_AUTH_USER) return;
       if (!State.diaryDate) State.diaryDate = nbTodayVN();
+      const dEnd = State.diaryDate;
+      const dObj = new Date(dEnd + "T00:00:00Z");
+      dObj.setUTCDate(dObj.getUTCDate() - 6);
+      const dStart = dObj.toISOString().slice(0, 10);
+
       const { data, error } = await NB_SUPABASE.from("nb2_food_log").select("*")
-        .eq("log_date", State.diaryDate).order("id", { ascending: true });
+        .gte("log_date", dStart)
+        .lte("log_date", dEnd)
+        .order("id", { ascending: true });
       if (error) { console.error("Không tải được nhật ký:", error); return; }
-      State.diary = data || [];
+      const allLogs = data || [];
+      State.diary7Days = allLogs;
+      State.diary = allLogs.filter(r => r.log_date === State.diaryDate);
       if (State.route === "diary") renderAll();
     }
 
@@ -9309,11 +10564,23 @@ const ZH_DICT = {
       showNotice("Đã thêm vào nhật ký.", "Added to your diary.");
     }
 
+    function nbDefaultMealByHour() {
+      const d = new Date();
+      const utc = d.getTime() + (d.getTimezoneOffset() * 60000);
+      const vnDate = new Date(utc + (7 * 3600000));
+      const h = vnDate.getHours();
+      if (h < 10) return "breakfast";
+      if (h < 14) return "lunch";
+      if (h < 17) return "snack";
+      return "dinner";
+    }
+
     function diaryFromProduct(id) {
       const p = State.products.find(x => x.id === Number(id));
       if (!p) return;
       if (p.calories_kcal === null) { showNotice("Món này chưa có dữ liệu dinh dưỡng; hãy nhập tay ở form bên dưới.", "This item has no nutrition data; please enter it manually below.", true); return; }
       nbAddDiary({
+        meal_type: nbDefaultMealByHour(),
         name: trf(p.name_vi, p.name_en, p.name_zh, p.name_ko, p.name_ja) || p.name_vi, product_id: p.id, quantity: 1,
         kcal: Number(p.calories_kcal) || 0, protein_g: Number(p.protein_g) || 0,
         carb_g: Number(p.carbohydrate_g) || 0, fat_g: Number(p.fat_g) || 0
@@ -9326,7 +10593,8 @@ const ZH_DICT = {
       const n = id => Math.max(0, Number(v(id)) || 0);
       const name = v("dy_name");
       if (!name) return;
-      nbAddDiary({ name: name.slice(0, 200), product_id: null, quantity: Math.min(99, Math.max(0.25, Number(v("dy_qty")) || 1)), kcal: n("dy_kcal"), protein_g: n("dy_pro"), carb_g: n("dy_carb"), fat_g: n("dy_fat") });
+      const mealType = (document.getElementById("dy_meal") || {}).value || "lunch";
+      nbAddDiary({ meal_type: mealType,  name: name.slice(0, 200), product_id: null, quantity: Math.min(99, Math.max(0.25, Number(v("dy_qty")) || 1)), kcal: n("dy_kcal"), protein_g: n("dy_pro"), carb_g: n("dy_carb"), fat_g: n("dy_fat") });
     }
 
     async function deleteDiary(id) {
@@ -9434,8 +10702,8 @@ const ZH_DICT = {
       const bar = (label, cur, goal, unit) => {
         const pct = goal ? Math.min(100, Math.round(cur / goal * 100)) : 0;
         const over = goal && cur > goal * 1.1;
-        return `<div><div class="flex justify-between text-xs"><span class="font-semibold text-[#234d38]">${label}</span><span class="text-[#526348]">${Math.round(cur)}${goal ? " / " + goal : ""} ${unit}</span></div>
-          <div class="mt-1 h-2.5 overflow-hidden rounded-full bg-[#e3e7da]"><div class="h-full rounded-full ${over ? "bg-amber-500" : "bg-[#4f8a5b]"}" style="width:${goal ? pct : 0}%"></div></div></div>`;
+        return `<div><div class="flex justify-between text-xs"><span class="font-semibold text-[#234d38]">${label}</span><span class="text-[#526348] font-medium tabular-nums">${Math.round(cur)}${goal ? " / " + goal : ""} ${unit}</span></div>
+          <div class="mt-1.5 h-2.5 overflow-hidden rounded-full bg-[#e3e7da]"><div class="h-full rounded-full ${over ? "bg-amber-500" : "bg-[#234d38]"} transition-all duration-500 nb-bar-grow" style="width:${goal ? pct : 0}%; transition-timing-function: var(--nb-ease, cubic-bezier(0.22, 1, 0.36, 1));"></div></div></div>`;
       };
       // Món trong các đơn đã giao gần đây: thêm vào nhật ký bằng một lần bấm
       const recent = [];
@@ -9456,18 +10724,18 @@ const ZH_DICT = {
         const dayKcal = tot.kcal;
         const targetPct = target ? Math.round(dayKcal / target * 100) : null;
         return `
-          <div class="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-3 rounded-2xl border border-[#dce2d4] bg-[#f4f7ef] p-4 sm:p-5">
-            <div class="rounded-xl border border-[#dce2d4] bg-white p-3.5">
-              <p class="text-xs text-[#526348]">${nbT("Số món đã ghi", "Items logged", "已记录菜品")}</p>
-              <p class="mt-1 text-2xl font-bold text-[#234d38]">${dayCount} <span class="text-xs font-normal text-[#526348]">${nbT("món", "items", "道")}</span></p>
+          <div class="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-3 rounded-3xl border border-[#234d38]/10 bg-[#fafaf5] p-4 sm:p-5 shadow-xs">
+            <div class="rounded-2xl border border-[#234d38]/10 bg-white p-4 shadow-xs hover:border-[#234d38]/30 transition-all">
+              <p class="text-xs font-medium text-[#526348]">${nbT("Số món đã ghi", "Items logged", "已记录菜品")}</p>
+              <p class="mt-1.5 text-2xl font-bold text-[#234d38] font-heading tabular-nums">${dayCount} <span class="text-xs font-normal text-[#526348]">${nbT("món", "items", "道")}</span></p>
             </div>
-            <div class="rounded-xl border border-[#dce2d4] bg-white p-3.5">
-              <p class="text-xs text-[#526348]">${nbT("% Đạt mục tiêu Kcal", "% Calorie target met", "% 卡路里达标率")}</p>
-              <p class="mt-1 text-2xl font-bold text-[#234d38]">${targetPct !== null ? `${targetPct}%` : "—"} <span class="text-xs font-normal text-[#526348]">${target ? `(${Math.round(dayKcal)}/${target} kcal)` : nbT("Chưa đặt mục tiêu", "No goal set", "未设目标")}</span></p>
+            <div class="rounded-2xl border border-[#234d38]/10 bg-white p-4 shadow-xs hover:border-[#234d38]/30 transition-all">
+              <p class="text-xs font-medium text-[#526348]">${nbT("% Đạt mục tiêu Kcal", "% Calorie target met", "% 卡路里达标率")}</p>
+              <p class="mt-1.5 text-2xl font-bold text-[#234d38] font-heading tabular-nums">${targetPct !== null ? `${targetPct}%` : "—"} <span class="text-xs font-normal text-[#526348] tabular-nums">${target ? `(${Math.round(dayKcal)}/${target} kcal)` : nbT("Chưa đặt mục tiêu", "No goal set", "未设目标")}</span></p>
             </div>
-            <div class="flex flex-col justify-center rounded-xl border border-[#dce2d4] bg-white p-3.5">
-              <p class="text-xs text-[#526348]">${nbT("Chỉ số dinh dưỡng", "Health profile", "健康画像")}</p>
-              <button onclick="navigate('health')" class="mt-1.5 inline-flex min-h-[38px] items-center justify-center gap-1.5 rounded-full bg-[#234d38] px-3.5 py-1.5 text-xs font-semibold text-white hover:bg-[#193c2a] transition-colors">
+            <div class="flex flex-col justify-center rounded-2xl border border-[#234d38]/10 bg-white p-4 shadow-xs hover:border-[#234d38]/30 transition-all">
+              <p class="text-xs font-medium text-[#526348]">${nbT("Chỉ số dinh dưỡng", "Health profile", "健康画像")}</p>
+              <button onclick="navigate('health')" class="mt-2 inline-flex min-h-[38px] items-center justify-center gap-1.5 rounded-full bg-[#234d38] px-3.5 py-1.5 text-xs font-semibold text-white hover:bg-[#193c2a] active:scale-95 transition-all shadow-xs cursor-pointer">
                 ${nbSvg('scale', 'size-3.5')} ${nbT("Tính lại BMI/TDEE", "Recalculate BMI/TDEE", "重新测算 BMI/TDEE")}
               </button>
             </div>
@@ -9482,7 +10750,66 @@ const ZH_DICT = {
         <button type="button" onclick="copyYesterdayDiary()" class="inline-flex min-h-[44px] items-center gap-1.5 rounded-full border border-[#234d38] bg-white px-4 py-2 text-xs font-semibold text-[#234d38] hover:bg-[#edf2e7] transition-colors cursor-pointer">
           ${nbSvg("copy", "size-3.5")} ${tr("Sao chép từ hôm qua", "Copy from yesterday", "复制昨日饮食", "어제 식단 복사", "昨日の記録をコピー")}
         </button>
+        <button type="button" onclick="exportDiaryCsv()" class="inline-flex min-h-[44px] items-center gap-1.5 rounded-full border border-[#234d38] bg-white px-4 py-2 text-xs font-semibold text-[#234d38] hover:bg-[#edf2e7] transition-colors cursor-pointer">
+          ${nbSvg("printer", "size-3.5")} ${tr("Xuất CSV", "Export CSV", "导出CSV", "CSV 내보내기", "CSVエクスポート")}
+        </button>
       </div>
+      <!-- Biểu đồ cột mini 7 ngày gần nhất so sánh với mục tiêu TDEE -->
+      ${(() => {
+        const curDateStr = State.diaryDate || nbTodayVN();
+        const days = [];
+        const dObj = new Date(curDateStr + "T00:00:00Z");
+        for (let i = 6; i >= 0; i--) {
+          const d = new Date(dObj);
+          d.setUTCDate(d.getUTCDate() - i);
+          const iso = d.toISOString().slice(0, 10);
+          const label = `${d.getUTCDate()}/${d.getUTCMonth() + 1}`;
+          const dayRows = (State.diary7Days || []).filter(r => r.log_date === iso);
+          const sumKcal = (dayRows.length ? dayRows : (iso === State.diaryDate ? State.diary : [])).reduce((acc, r) => acc + (Number(r.kcal) || 0) * (Number(r.quantity) || 1), 0);
+          days.push({ iso, label, kcal: Math.round(sumKcal), isCur: iso === State.diaryDate });
+        }
+        const maxVal = Math.max(target || 2000, ...days.map(d => d.kcal), 1000);
+        const targetPct = target ? Math.min(95, Math.round((target / maxVal) * 100)) : null;
+
+        return `
+          <div class="mt-5 rounded-2xl border border-[#dce2d4] bg-white p-5 shadow-xs">
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+              <div>
+                <h3 class="text-sm font-bold text-[#234d38] flex items-center gap-1.5 font-heading">
+                  ${nbSvg("chart", "size-4 text-[#234d38]")}
+                  <span>${tr("Xu hướng năng lượng 7 ngày gần nhất", "7-Day Calorie Trend", "近7天卡路里摄入趋势", "최근 7일 칼로리 추이", "直近7日間の摂取カロリー推移")}</span>
+                </h3>
+                <p class="text-xs text-[#526348] mt-0.5">${target ? tr(`Đường nét đứt màu cam là mục tiêu ${target} kcal/ngày`, `Dashed orange line is your ${target} kcal/day target`, `橙色虚线为您设定的 ${target} kcal/日 目标`) : tr("Chưa lưu mục tiêu TDEE hàng ngày", "No daily TDEE target set")}</p>
+              </div>
+              <span class="text-xs font-semibold text-[#526348]">${tr("Bấm cột để xem ngày đó", "Click a bar to view date", "点击柱状图切换日期")}</span>
+            </div>
+
+            <div class="relative h-44 pt-6 pb-6 flex items-end justify-between gap-2 border-b border-[#e3e7da]">
+              ${targetPct !== null ? `
+                <div class="absolute left-0 right-0 border-b-2 border-dashed border-[#ea580c]/60 pointer-events-none z-10" style="bottom: calc(24px + ${targetPct * 0.9}%);">
+                  <span class="absolute right-0 -top-4 text-[10px] font-bold text-[#ea580c] bg-white/90 px-1 rounded shadow-2xs">${target} kcal</span>
+                </div>
+              ` : ""}
+
+              ${days.map(d => {
+                const hPct = Math.min(100, Math.round((d.kcal / maxVal) * 100));
+                const isOver = target && d.kcal > target * 1.1;
+                const barColor = d.isCur 
+                  ? (isOver ? 'bg-[#ea580c]' : 'bg-[#234d38]') 
+                  : (isOver ? 'bg-amber-400 hover:bg-amber-500' : (d.kcal > 0 ? 'bg-[#557448] hover:bg-[#234d38]' : 'bg-[#e5eadf]'));
+                return `
+                  <div class="flex-1 flex flex-col items-center h-full justify-end cursor-pointer group" onclick="setDiaryDate('${d.iso}')" title="${d.iso}: ${d.kcal} kcal">
+                    <span class="text-[10px] font-semibold text-[#526348] mb-1 group-hover:text-[#234d38] transition-colors">${d.kcal > 0 ? d.kcal : ""}</span>
+                    <div class="w-full max-w-[28px] rounded-t-lg transition-all duration-300 ${barColor} ${d.isCur ? 'ring-2 ring-offset-1 ring-[#234d38]' : ''}" style="height: ${Math.max(6, hPct * 0.9)}%"></div>
+                    <span class="absolute bottom-0 text-[11px] ${d.isCur ? 'font-bold text-[#234d38]' : 'text-[#8c9488]'} mt-1.5">${d.label}</span>
+                  </div>
+                `;
+              }).join("")}
+            </div>
+          </div>
+        `;
+      })()}
+
       <div class="mt-5 grid grid-cols-1 gap-4 rounded-2xl border border-[#dce2d4] bg-white p-6 sm:grid-cols-2">
         ${bar(nbT("Năng lượng", "Energy"), tot.kcal, target, "kcal")}
         ${bar(nbT("Chất đạm", "Protein"), tot.pro, proTarget, "g")}
@@ -9510,15 +10837,15 @@ const ZH_DICT = {
                 </div>
               </div>
               <div class="text-right">
-                <span class="text-base font-extrabold text-sky-700">${curWater}</span>
-                <span class="text-xs font-semibold text-[#526348]"> / ${waterGoalMl} ml (${cups} ${tr("cốc", "cups", "杯", "잔", "杯")})</span>
-                <span class="ml-2 rounded-full bg-sky-100 px-2 py-0.5 text-xs font-bold text-sky-800">${waterPct}%</span>
+                <span class="text-base font-extrabold text-sky-700 tabular-nums">${curWater}</span>
+                <span class="text-xs font-semibold text-[#526348] tabular-nums"> / ${waterGoalMl} ml (${cups} ${tr("cốc", "cups", "杯", "잔", "杯")})</span>
+                <span class="ml-2 rounded-full bg-sky-100 px-2 py-0.5 text-xs font-bold text-sky-800 tabular-nums">${waterPct}%</span>
               </div>
             </div>
 
             <!-- Thanh tiến trình nước -->
-            <div class="h-3 w-full overflow-hidden rounded-full bg-sky-100/80 border border-sky-200">
-              <div class="h-full rounded-full bg-sky-500 transition-all duration-300" style="width: ${waterPct}%"></div>
+            <div class="h-3 w-full overflow-hidden rounded-full bg-sky-100/80 border border-sky-200/50">
+              <div class="h-full rounded-full bg-gradient-to-r from-sky-400 to-sky-600 transition-all duration-500 nb-bar-grow shadow-2xs" style="width: ${waterPct}%; transition-timing-function: var(--nb-ease, cubic-bezier(0.22, 1, 0.36, 1));"></div>
             </div>
 
             <!-- Nút cộng trừ nước nhanh -->
@@ -9605,27 +10932,77 @@ const ZH_DICT = {
       })()}
 
       <h2 class="mt-8 text-lg font-semibold text-[#234d38]">${nbT("Đã ăn hôm nay", "Eaten")}</h2>
-      ${rows.length ? `<ul class="mt-3 space-y-2">${rows.map(r => `
-          <li class="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[#dce2d4] bg-white px-4 py-3 text-sm">
-            <div>
-              <b>${esc(r.name)}</b> <span class="text-xs font-semibold text-[#ea580c]">× ${Number(r.quantity)}</span>
-              <span class="block text-xs text-[#526348]">${Math.round(Number(r.kcal) * Number(r.quantity))} kcal · ${Math.round(Number(r.protein_g) * Number(r.quantity))}g ${nbT("đạm", "protein")} · ${Math.round(Number(r.carb_g) * Number(r.quantity))}g carb · ${Math.round(Number(r.fat_g) * Number(r.quantity))}g ${nbT("béo", "fat")}</span>
-            </div>
-            <div class="flex items-center gap-1.5">
-              <button type="button" onclick="updateDiaryEntryQty(${Number(r.id)}, -0.5)" class="inline-flex size-8 items-center justify-center rounded-lg border border-[#dce2d4] bg-[#f4f6f0] text-xs font-bold text-[#234d38] hover:bg-[#e8f5e9] cursor-pointer" title="-0.5">−0.5</button>
-              <button type="button" onclick="updateDiaryEntryQty(${Number(r.id)}, 0.5)" class="inline-flex size-8 items-center justify-center rounded-lg border border-[#dce2d4] bg-[#f4f6f0] text-xs font-bold text-[#234d38] hover:bg-[#e8f5e9] cursor-pointer" title="+0.5">+0.5</button>
-              <button type="button" onclick="deleteDiary(${Number(r.id)})" class="inline-flex min-h-[36px] items-center px-2.5 text-xs text-red-700 hover:underline cursor-pointer">${nbSvg('trash')} ${nbT("Xóa", "Remove")}</button>
-            </div>
-          </li>
-        `).join("")}</ul>`
-          : `<p class="mt-3 text-sm text-[#526348]">${nbT("Chưa ghi món nào cho ngày này.", "Nothing logged for this day.")}</p>`}
+      ${(() => {
+        if (!rows.length) {
+          return `<p class="mt-3 text-sm text-[#526348]">${nbT("Chưa ghi món nào cho ngày này.", "Nothing logged for this day.")}</p>`;
+        }
+        const mealGroups = [
+          { id: "breakfast", label: tr("Bữa sáng", "Breakfast", "早餐", "아침", "朝食"), badgeCls: "bg-amber-100 text-amber-800" },
+          { id: "lunch", label: tr("Bữa trưa", "Lunch", "午餐", "점심", "昼食"), badgeCls: "bg-emerald-100 text-emerald-800" },
+          { id: "snack", label: tr("Bữa xế / Bữa phụ", "Snack", "加餐", "간식", "間食"), badgeCls: "bg-purple-100 text-purple-800" },
+          { id: "dinner", label: tr("Bữa tối", "Dinner", "晚餐", "저녁", "夕食"), badgeCls: "bg-blue-100 text-blue-800" },
+          { id: "other", label: tr("Bữa khác", "Other meal", "其他", "기타", "その他"), badgeCls: "bg-gray-100 text-gray-800" }
+        ];
+
+        return `
+          <div class="mt-4 space-y-4">
+            ${mealGroups.map(g => {
+              const gRows = rows.filter(r => (r.meal_type || "other") === g.id || (g.id === "other" && !["breakfast", "lunch", "snack", "dinner"].includes(r.meal_type)));
+              if (!gRows.length) return "";
+              const gKcal = gRows.reduce((sum, r) => sum + Math.round((Number(r.kcal) || 0) * (Number(r.quantity) || 1)), 0);
+              const gPro = gRows.reduce((sum, r) => sum + ((Number(r.protein_g) || 0) * (Number(r.quantity) || 1)), 0);
+              const gCarb = gRows.reduce((sum, r) => sum + ((Number(r.carb_g) || 0) * (Number(r.quantity) || 1)), 0);
+              const gFat = gRows.reduce((sum, r) => sum + ((Number(r.fat_g) || 0) * (Number(r.quantity) || 1)), 0);
+
+              return `
+                <div class="rounded-2xl border border-[#dce2d4] bg-[#fafbf7] p-3.5 sm:p-4 shadow-2xs">
+                  <div class="flex items-center justify-between border-b border-[#e5eadd] pb-2.5 mb-2.5">
+                    <div class="flex items-center gap-2">
+                      <span class="rounded-lg px-2.5 py-1 text-xs font-bold ${g.badgeCls}">${g.label}</span>
+                      <span class="text-xs text-[#526348]">(${gRows.length} ${tr("món", "items", "道")})</span>
+                    </div>
+                    <div class="text-right">
+                      <span class="text-sm font-bold text-[#ea580c]">${gKcal} kcal</span>
+                      <span class="hidden sm:inline-block ml-2 text-xs text-[#526348]">(${Math.round(gPro)}g P · ${Math.round(gCarb)}g C · ${Math.round(gFat)}g F)</span>
+                    </div>
+                  </div>
+                  <ul class="space-y-2">
+                    ${gRows.map(r => `
+                      <li class="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[#e3e7da] bg-white px-3.5 py-2.5 text-sm">
+                        <div>
+                          <b>${esc(r.name)}</b> <span class="text-xs font-semibold text-[#ea580c]">× ${Number(r.quantity)}</span>
+                          <span class="block text-xs text-[#526348]">${Math.round(Number(r.kcal) * Number(r.quantity))} kcal · ${Math.round(Number(r.protein_g) * Number(r.quantity))}g ${nbT("đạm", "protein")} · ${Math.round(Number(r.carb_g) * Number(r.quantity))}g carb · ${Math.round(Number(r.fat_g) * Number(r.quantity))}g ${nbT("béo", "fat")}</span>
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                          <button type="button" onclick="updateDiaryEntryQty(${Number(r.id)}, -0.5)" class="inline-flex size-8 items-center justify-center rounded-lg border border-[#dce2d4] bg-[#f4f6f0] text-xs font-bold text-[#234d38] hover:bg-[#e8f5e9] cursor-pointer" title="-0.5">−0.5</button>
+                          <button type="button" onclick="updateDiaryEntryQty(${Number(r.id)}, 0.5)" class="inline-flex size-8 items-center justify-center rounded-lg border border-[#dce2d4] bg-[#f4f6f0] text-xs font-bold text-[#234d38] hover:bg-[#e8f5e9] cursor-pointer" title="+0.5">+0.5</button>
+                          <button type="button" onclick="deleteDiary(${Number(r.id)})" class="inline-flex min-h-[36px] items-center px-2.5 text-xs text-red-700 hover:underline cursor-pointer">${nbSvg('trash')} ${nbT("Xóa", "Remove")}</button>
+                        </div>
+                      </li>
+                    `).join("")}
+                  </ul>
+                </div>
+              `;
+            }).join("")}
+          </div>
+        `;
+      })()}
 
       ${recent.length ? `<h2 class="mt-8 text-lg font-semibold text-[#234d38]">${nbSvg('bag')} ${nbT("Từ các đơn đã giao của bạn", "From your delivered orders")}</h2>
         <div class="mt-3 flex flex-wrap gap-2">${recent.slice(0, 12).map(p => `<button onclick="diaryFromProduct(${p.id})" class="inline-flex min-h-[44px] items-center rounded-full border border-[#b9c9aa] bg-white px-4 py-2 text-xs font-medium text-[#234d38] hover:bg-[#edf2e7] transition-colors">+ ${pname(p)} (${fmtNum(p.calories_kcal)} kcal)</button>`).join("")}</div>` : ""}
 
       <h2 class="mt-8 text-lg font-semibold text-[#234d38]">${nbT("Thêm món khác", "Add something else")}</h2>
-      <form onsubmit="diaryCustom(event)" class="mt-3 grid grid-cols-2 items-end gap-3 rounded-2xl border border-[#dce2d4] bg-white p-5 sm:grid-cols-6">
+      <form onsubmit="diaryCustom(event)" class="mt-3 grid grid-cols-2 items-end gap-3 rounded-2xl border border-[#dce2d4] bg-white p-5 sm:grid-cols-7">
         <div class="col-span-2">${inp("dy_name", nbT("Tên món *", "Food name *"), "required maxlength=200")}</div>
+        <div>
+          <label class="mb-1 block text-xs font-medium">${tr("Bữa ăn", "Meal", "餐别", "식사", "食事")}</label>
+          <select id="dy_meal" class="min-h-[44px] w-full rounded-xl border border-[#d8dfcf] bg-white px-2.5 py-2 text-xs text-[#234d38] focus:outline-none focus:border-[#234d38]">
+            <option value="breakfast">${tr("Bữa sáng", "Breakfast", "早餐", "아침", "朝食")}</option>
+            <option value="lunch" selected>${tr("Bữa trưa", "Lunch", "午餐", "점심", "昼食")}</option>
+            <option value="dinner">${tr("Bữa tối", "Dinner", "晚餐", "저녁", "夕食")}</option>
+            <option value="snack">${tr("Bữa phụ", "Snack", "加餐", "간식", "間食")}</option>
+          </select>
+        </div>
         ${inp("dy_qty", nbT("Số phần", "Portions"), 'type="number" min="0.25" max="99" step="0.25" value="1"')}
         ${inp("dy_kcal", "kcal", 'type="number" min="0" max="10000" step="any" required')}
         ${inp("dy_pro", nbT("Đạm (g)", "Protein (g)"), 'type="number" min="0" max="1000" step="any"')}
@@ -9820,7 +11197,7 @@ const ZH_DICT = {
                       class="w-full rounded-xl border border-[#dce2d4] bg-white p-4 text-sm text-[#232d20] focus:border-[#234d38] focus:ring-1 focus:ring-[#234d38]"></textarea>
           </div>
           <div class="text-center pt-2">
-            <button type="submit" class="inline-flex min-h-[46px] items-center justify-center gap-2 rounded-xl bg-[#234d38] px-8 py-3 text-sm font-bold text-white shadow-md hover:bg-[#173727] active:scale-98 transition-all">
+            <button type="submit" class="inline-flex min-h-[46px] items-center justify-center gap-2 rounded-xl bg-[#234d38] px-8 py-3 text-sm font-bold text-white shadow-md hover:bg-[#173727] active:scale-[0.98] transition-all">
               <span>${tr("Gửi tin nhắn liên hệ", "Send Message", "提交并发送留言")}</span>
               <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" x2="11" y1="2" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
             </button>
@@ -10019,8 +11396,9 @@ const ZH_DICT = {
       const hasCompareBar = State.compare && State.compare.length > 0 && !["compare", "cart", "checkout"].includes(State.route);
       const popupBottom = hasCompareBar ? "bottom-[152px] sm:bottom-20" : "bottom-[88px] sm:bottom-20";
       const btnBottom = hasCompareBar ? "bottom-36 sm:bottom-6" : "bottom-20 sm:bottom-6";
-      const bttBottom = hasCompareBar ? "bottom-52 sm:bottom-22" : "bottom-34 sm:bottom-22";
+      const bttBottom = hasCompareBar ? "bottom-52 sm:bottom-24" : "bottom-36 sm:bottom-24";
       box.innerHTML = `
+        ${isOpen ? `<div onclick="toggleSupportMenu()" class="fixed inset-0 z-30 bg-black/15 backdrop-blur-[1px]"></div>` : ""}
         <!-- Nút cuộn lên đầu trang -->
         <button id="nbBackToTop" type="button" onclick="window.scrollTo({ top: 0, behavior: 'smooth' })" class="fixed right-4 ${bttBottom} z-30 inline-flex size-10 sm:size-11 items-center justify-center rounded-full border border-[#dce2d4] bg-white text-[#234d38] shadow-md hover:bg-[#edf4e7] hover:scale-105 active:scale-95 transition-all duration-300 opacity-0 pointer-events-none translate-y-2 focus:outline-hidden" title="${tr("Cuộn lên đầu trang", "Back to top", "返回顶部", "맨 위로", "トップに戻る")}" aria-label="Back to top">
           <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m18 15-6-6-6 6"/></svg>
@@ -10112,16 +11490,16 @@ const ZH_DICT = {
       }
 
       box.innerHTML = `
-        <nav aria-label="Mobile Navigation" class="fixed bottom-0 left-0 right-0 z-40 flex sm:hidden items-center justify-around border-t border-[#dce2d4] bg-white/95 backdrop-blur-md px-1 py-1.5 shadow-lg pb-[calc(0.5rem+env(safe-area-inset-bottom,0px))]">
+        <nav aria-label="Mobile Navigation" class="fixed bottom-0 left-0 right-0 z-40 flex sm:hidden items-center justify-around border-t border-[#234d38]/10 bg-[#fafaf5]/90 backdrop-blur-md px-1.5 py-1.5 shadow-lg pb-[calc(0.5rem+env(safe-area-inset-bottom,0px))]">
           ${navItems.map(item => {
             const active = r === item.route;
             return `
-              <button onclick="navigate('${item.route}')" class="relative flex flex-col items-center justify-center flex-1 py-1 text-center transition-colors ${active ? "text-[#234d38] font-bold" : "text-[#526348] hover:text-[#234d38]"}">
-                <span class="relative">
+              <button onclick="navigate('${item.route}')" class="relative flex flex-col items-center justify-center flex-1 py-1 text-center transition-all duration-200 ${active ? "text-[#234d38] font-bold" : "text-[#526348] hover:text-[#234d38]"}">
+                <span class="relative inline-flex items-center justify-center ${active ? 'bg-[#e8f5e9] px-3 py-1 rounded-full shadow-2xs' : 'p-1'} transition-all duration-200">
                   ${nbSvg(item.icon, "size-5 " + (active ? "text-[#234d38]" : "text-[#526348]"))}
-                  ${item.badge ? `<span class="absolute -top-1.5 -right-2 flex size-4 items-center justify-center rounded-full bg-[#ea580c] text-[10px] font-bold text-white">${item.badge}</span>` : ""}
+                  ${item.badge ? `<span class="absolute -top-1 -right-1.5 flex size-4 items-center justify-center rounded-full bg-[#ea580c] text-[10px] font-bold text-white shadow-xs nb-badge-pop">${item.badge}</span>` : ""}
                 </span>
-                <span class="text-[10px] sm:text-[11px] mt-0.5 tracking-tight truncate max-w-[60px]">${tr(item.vi, item.en, item.zh, item.ko, item.ja)}</span>
+                <span class="text-[10px] sm:text-[11px] mt-0.5 tracking-tight truncate max-w-[62px] ${active ? 'font-bold text-[#234d38]' : 'font-medium text-[#526348]'}">${tr(item.vi, item.en, item.zh, item.ko, item.ja)}</span>
               </button>
             `;
           }).join("")}
@@ -10182,6 +11560,12 @@ const ZH_DICT = {
         root.innerHTML = `<div class="mx-auto max-w-xl px-5 py-20 text-center"><h1 class="text-2xl font-medium text-[#234d38]">${nbT("Rất tiếc, trang này gặp lỗi", "Sorry, this page hit an error")}</h1><button onclick="navigate('shop')" class="mt-6 rounded-full bg-[#234d38] px-6 py-3 text-sm font-semibold text-white">${nbT("Về cửa hàng", "Back to the shop")}</button></div>`;
       }
       renderCompareBar();
+
+      // Xử lý ảnh cached đã tải xong để kích hoạt hiệu ứng blur-up reveal ngay lập tức
+      document.querySelectorAll("img.nb-img-reveal").forEach(img => {
+        if (img.complete) img.classList.add("nb-img-loaded");
+      });
+
       if (activeId) {
         const nextEl = document.getElementById(activeId);
         if (nextEl && document.activeElement !== nextEl) {
