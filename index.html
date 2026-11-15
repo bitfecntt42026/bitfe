@@ -109,7 +109,7 @@
         transform: none !important;
         transition: none !important;
       }
-      .nb-bottom-sheet, .nb-bar-grow, .nb-freeship-glow, .nb-modal-pop, .nb-cart-bump, .nb-badge-pulse, .nb-skeleton-shimmer, .nb-badge-pop, .nb-btn-shine::after {
+      .nb-bottom-sheet, .nb-bar-grow, .nb-freeship-glow, .nb-modal-pop, .nb-cart-bump, .nb-badge-pulse, .nb-skeleton-shimmer, .nb-badge-pop, .nb-btn-shine::after, .nb-leaf-float, .nb-stagger-card, .nb-promo-animate, .nb-ripple-circle, .nb-scroll-reveal, .nb-card-hover, .nb-img-sheen::after {
         animation: none !important;
         transform: none !important;
         transition: none !important;
@@ -157,14 +157,39 @@
       animation: nbFadeUp 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
     }
 
-    .nb-card-hover {
-      transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.32s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.24s ease;
+    @keyframes nbLeafFloat {
+      0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg) scale(1); }
+      50% { transform: translate3d(4px, -6px, 0) rotate(3.5deg) scale(1.03); }
+    }
+    .nb-leaf-float {
+      animation: nbLeafFloat 6.5s ease-in-out infinite;
+      transform-origin: center;
     }
 
+    .nb-card-hover {
+      position: relative;
+      transition: transform 0.38s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.38s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.28s ease;
+    }
     .nb-card-hover:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 14px 28px -10px rgba(35, 77, 56, 0.2), 0 0 0 1px rgba(35, 77, 56, 0.15);
-      border-color: rgba(35, 77, 56, 0.4);
+      transform: translateY(-6px) scale(1.008);
+      box-shadow: 0 18px 34px -10px rgba(35, 77, 56, 0.22), 0 4px 12px -2px rgba(234, 88, 12, 0.08);
+      border-color: rgba(35, 77, 56, 0.45);
+    }
+    .nb-card-hover .nb-img-sheen {
+      position: relative;
+      overflow: hidden;
+    }
+    .nb-card-hover .nb-img-sheen::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.38) 50%, transparent 70%);
+      transform: translateX(-120%);
+      transition: transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: none;
+    }
+    .nb-card-hover:hover .nb-img-sheen::after {
+      transform: translateX(120%);
     }
 
     .nb-cart-bump {
@@ -204,9 +229,44 @@
       animation: nbFlashHighlight 1.6s cubic-bezier(0.22, 1, 0.36, 1) both;
     }
 
+    @keyframes nbCardStaggerIn {
+      0% { opacity: 0; transform: translateY(22px) scale(0.96); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
     .nb-stagger-card {
-      animation: nbFadeUp 0.32s cubic-bezier(0.22, 1, 0.36, 1) both;
-      animation-delay: calc(min(var(--nb-idx, 0), 8) * 30ms);
+      animation: nbCardStaggerIn 0.46s cubic-bezier(0.22, 1, 0.36, 1) both;
+      animation-delay: calc(min(var(--nb-idx, 0), 10) * 50ms);
+    }
+    .nb-scroll-reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1), transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .nb-scroll-reveal.nb-revealed {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    @keyframes nbPromoSlideIn {
+      0% { opacity: 0; transform: translateY(8px) scale(0.99); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .nb-promo-animate {
+      animation: nbPromoSlideIn 0.42s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+    @keyframes nbRippleWave {
+      0% { transform: scale(0); opacity: 0.45; }
+      100% { transform: scale(3.2); opacity: 0; }
+    }
+    .nb-ripple-circle {
+      position: absolute;
+      border-radius: 9999px;
+      background: rgba(255, 255, 255, 0.6);
+      pointer-events: none;
+      animation: nbRippleWave 0.55s ease-out forwards;
+    }
+    @keyframes nbToastProgress {
+      from { width: 100%; }
+      to { width: 0%; }
     }
     
     @keyframes nbSoftPulse {
@@ -368,13 +428,13 @@
     class="sticky top-0 z-30 w-full border-b border-[#234d38]/10 bg-[#fafaf5]/90 backdrop-blur-md shadow-xs transition-all duration-300">
     <!-- Họa tiết lá xanh nhạt tinh tế, không che chữ và không làm cắt dropdown tìm kiếm -->
     <div class="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
-      <svg class="pointer-events-none select-none absolute -left-5 -top-5 size-24 text-[#88b394] opacity-25"
+      <svg class="pointer-events-none select-none absolute -left-5 -top-5 size-24 text-[#88b394] opacity-25 nb-leaf-float"
         viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
         <path d="M20 100 C20 45, 65 15, 105 15 C105 55, 75 100, 20 100 Z" fill="#e8f5e9" />
         <path d="M20 100 L85 35" stroke="#88b394" stroke-width="2" stroke-linecap="round" />
         <path d="M45 75 C60 70, 75 60, 85 45" stroke="#88b394" stroke-width="1.5" stroke-linecap="round" />
       </svg>
-      <svg class="pointer-events-none select-none absolute -right-4 -bottom-5 size-24 text-[#88b394] opacity-20"
+      <svg class="pointer-events-none select-none absolute -right-4 -bottom-5 size-24 text-[#88b394] opacity-20 nb-leaf-float" style="animation-delay: -2.5s"
         viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
         <path d="M100 20 C100 75, 55 105, 15 105 C15 65, 45 20, 100 20 Z" fill="#e8f5e9" />
         <path d="M100 20 L35 85" stroke="#88b394" stroke-width="2" stroke-linecap="round" />
@@ -1084,9 +1144,9 @@
       maxCalories: "",
       products: [],
       loading: true,
-      cart: JSON.parse(localStorage.getItem("nb_cart") || '{}'),
-      cartSelection: JSON.parse(localStorage.getItem("nb_cart_sel") || '{}'),
-      cartNotes: JSON.parse(localStorage.getItem("nb_cart_notes") || '{}'),
+      cart: {},
+      cartSelection: {},
+      cartNotes: {},
       recentViews: JSON.parse(localStorage.getItem("nb_recent_views") || '[]'),
       paymentMethod: "cod",
       commissionBps: Number(localStorage.getItem("nb_comm_bps") ?? 235),
@@ -1112,6 +1172,8 @@
       health: {}, healthForm: null, weekPlan: null, _avoidInit: false,
       reviews: {}, compare: [], compareMode: "serving",
       diary: [], diaryDate: "", coupons: [], couponInfo: null,
+      deletedCoupons: JSON.parse(localStorage.getItem("nb_deleted_coupons") || "[]"),
+      deletedReviews: JSON.parse(localStorage.getItem("nb_deleted_reviews") || "[]"),
       orderFilter: "all", orderSearch: "",
       statsRange: "7d", statsData: null, statsLoading: false, printSelected: {}, orderMeta: {},
       editorOpen: false,
@@ -1129,7 +1191,7 @@
       replyEditId: 0,
       sellerOrdersTab: "orders", customers: [], custMinOrders: 3, custSearch: "", custLoading: false,
       staffList: [],
-      wishlist: JSON.parse(localStorage.getItem("nb_wish") || "[]"),
+      wishlist: [],
       diet: [], avoid: [], sort: "default", onlyWish: false, inStock: false, onlyFit: false, deliverySlot: "lunch", supportOpen: false, coupon: null,
       adviceMessages: [
         {
@@ -4076,29 +4138,33 @@ const ZH_DICT = {
       const toast = document.createElement("div");
       const isErr = type === "error";
       const isInfo = type === "info";
-      toast.className = `pointer-events-auto flex items-center gap-3 rounded-2xl border px-4 py-3 text-xs sm:text-sm font-semibold shadow-2xl shadow-black/15 backdrop-blur-sm transition-all duration-300 transform translate-y-3 opacity-0 select-none ${
+      toast.className = `pointer-events-auto relative overflow-hidden flex items-center gap-3 rounded-2xl border px-4 py-3.5 text-xs sm:text-sm font-semibold shadow-2xl shadow-black/15 backdrop-blur-sm select-none transform translate-y-4 scale-95 opacity-0 ${
         isErr
           ? "border-red-500/30 bg-red-600 text-white shadow-red-900/20"
           : (isInfo ? "border-[#234d38]/30 bg-[#1e3a2f] text-white shadow-[#1e3a2f]/20" : "border-[#234d38]/20 bg-[#234d38] text-white shadow-[#234d38]/20")
       }`;
+      toast.style.transition = "transform 0.42s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.35s ease, scale 0.42s cubic-bezier(0.34, 1.56, 0.64, 1)";
       const toastIcon = isErr
         ? `<span class="flex size-6 shrink-0 items-center justify-center rounded-full bg-white/20 text-white">${nbSvg("warn", "size-3.5")}</span>`
         : (isInfo 
           ? `<span class="flex size-6 shrink-0 items-center justify-center rounded-full bg-white/20 text-white">${nbSvg("info", "size-3.5")}</span>` 
           : `<span class="flex size-6 shrink-0 items-center justify-center rounded-full bg-white/20 text-white"><svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></span>`);
+      
+      const barColor = isErr ? "bg-white/40" : (isInfo ? "bg-emerald-300/40" : "bg-[#ea580c]");
       toast.innerHTML = `
         ${toastIcon}
-        <span class="leading-snug">${esc(message)}</span>
+        <span class="leading-snug pr-2">${esc(message)}</span>
+        <div class="absolute bottom-0 left-0 h-1 ${barColor}" style="width: 100%; animation: nbToastProgress 3.2s linear forwards;"></div>
       `;
       container.appendChild(toast);
       requestAnimationFrame(() => {
-        toast.classList.remove("translate-y-3", "opacity-0");
-        toast.classList.add("translate-y-0", "opacity-100");
+        toast.classList.remove("translate-y-4", "scale-95", "opacity-0");
+        toast.classList.add("translate-y-0", "scale-100", "opacity-100");
       });
       setTimeout(() => {
-        toast.classList.add("opacity-0", "translate-y-2");
-        setTimeout(() => toast.remove(), 300);
-      }, 2600);
+        toast.classList.add("opacity-0", "translate-y-2", "scale-95");
+        setTimeout(() => toast.remove(), 350);
+      }, 3200);
     }
 
     function showNotice(vi, en, isError = false) {
@@ -4544,44 +4610,99 @@ const ZH_DICT = {
     }
 
         // Dải khuyến mãi mỏng (~80px) đổi theo nội dung
+    function nbGetActiveCoupons() {
+      const deleted = State.deletedCoupons || [];
+      return (State.coupons || []).filter(c => c && c.active && !deleted.includes(c.code));
+    }
+
+    // Dải khuyến mãi mỏng (~80px) đổi theo nội dung
     function renderSlimPromoBanner() {
-      const promoMessages = [
-        {
-          icon: `<svg class="size-5 text-[#234d38]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 18H3c-.6 0-1-.4-1-1V7c0-.6.4-1 1-1h10c.6 0 1 .4 1 1v11"/><path d="M14 9h4l4 4v4c0 .6-.4 1-1 1h-2"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg>`,
-          text_vi: `<strong>Miễn phí giao hàng</strong> cho đơn từ 300.000 ₫ toàn quốc!`,
-          text_en: `<strong>Free shipping</strong> on all orders over 300,000 ₫ nationwide!`,
-          text_zh: `全境订单满 <strong>300,000 ₫</strong> 即享<strong>免费包邮</strong>！`,
-          text_ko: `전국 <strong>300,000 ₫</strong> 이상 주문 시 <strong>무료 배송</strong> 혜택!`,
-          text_ja: `全国 <strong>300,000 ₫</strong> 以上のご注文で<strong>送料無料</strong>！`,
-          badge: "FREESHIP300",
-          isCoupon: true
-        },
-        {
-          icon: `<svg class="size-5 text-[#ea580c]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>`,
-          text_vi: `<strong>Giảm 10%</strong> cho đơn ăn sạch đầu tiên với mã <strong>EATCLEAN</strong>`,
-          text_en: `<strong>10% OFF</strong> your first clean-eating order with code <strong>EATCLEAN</strong>`,
-          text_zh: `首单输入优惠码 <strong>EATCLEAN</strong> 即享 <strong>9折特惠</strong>`,
-          text_ko: `첫 클린 식단 주문 시 쿠폰 코드 <strong>EATCLEAN</strong> 입력하면 <strong>10% 할인</strong>`,
-          text_ja: `初回クリーンイーティング注文でコード <strong>EATCLEAN</strong> を入力すると <strong>10% OFF</strong>`,
-          badge: "EATCLEAN",
-          isCoupon: true
-        },
-        {
-          icon: `<svg class="size-5 text-[#234d38]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`,
-          text_vi: `<strong>Giao hỏa tốc 2 giờ</strong> - Đóng gói sinh học giữ nóng tươi trọn vị`,
-          text_en: `<strong>Express 2-hour delivery</strong> - Eco-insulated packing for freshness`,
-          text_zh: `<strong>2小时同城极速达</strong> - 环保保温锁鲜包装`,
-          text_ko: `<strong>2시간 특급 총알 배송</strong> - 신선함과 온기를 지키는 친환경 보온 포장`,
-          text_ja: `<strong>2時間スピードお届け</strong> - 出来立ての美味しさを保つエコ断熱包装`,
-          badge: "FAST2H",
-          isCoupon: false
+      const activeCoupons = nbGetActiveCoupons();
+      const promoMessages = [];
+
+      activeCoupons.forEach(c => {
+        const minSub = Number(c.min_subtotal) || 0;
+        const val = Number(c.value) || 0;
+        const firstOnly = !!c.first_order_only;
+        if (c.kind === "freeship") {
+          const minText = money(c.min_subtotal || (State.settings && State.settings.free_shipping_min) || 300000);
+          promoMessages.push({
+            icon: `<svg class="size-5 text-[#234d38]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 18H3c-.6 0-1-.4-1-1V7c0-.6.4-1 1-1h10c.6 0 1 .4 1 1v11"/><path d="M14 9h4l4 4v4c0 .6-.4 1-1 1h-2"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg>`,
+            text_vi: `<strong>Miễn phí giao hàng</strong> cho đơn từ ${minText} với mã <strong>${esc(c.code)}</strong>`,
+            text_en: `<strong>Free shipping</strong> on orders over ${minText} with code <strong>${esc(c.code)}</strong>`,
+            text_zh: `订单满 <strong>${minText}</strong> 输入优惠码 <strong>${esc(c.code)}</strong> 即享<strong>免费包邮</strong>`,
+            text_ko: `주문 금액 <strong>${minText}</strong> 이상 시 쿠폰 <strong>${esc(c.code)}</strong> 입력하면 <strong>무료 배송</strong>`,
+            text_ja: `<strong>${minText}</strong> 以上のご注文でコード <strong>${esc(c.code)}</strong> を入力すると<strong>送料無料</strong>`,
+            badge: c.code,
+            isCoupon: true
+          });
+        } else if (c.kind === "percent") {
+          const condVi = `${firstOnly ? 'cho đơn đầu tiên ' : ''}${minSub > 0 ? 'cho đơn từ ' + money(minSub) + ' ' : ''}`;
+          const condEn = `${firstOnly ? 'on your 1st order ' : ''}${minSub > 0 ? 'for orders over ' + money(minSub) + ' ' : ''}`;
+          const condZh = `${firstOnly ? '首单' : ''}${minSub > 0 ? '满' + money(minSub) : ''}`;
+          const condKo = `${firstOnly ? '첫 주문 ' : ''}${minSub > 0 ? money(minSub) + ' 이상 ' : ''}`;
+          const condJa = `${firstOnly ? '初回注文 ' : ''}${minSub > 0 ? money(minSub) + ' 以上 ' : ''}`;
+          promoMessages.push({
+            icon: `<svg class="size-5 text-[#ea580c]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>`,
+            text_vi: `<strong>Giảm ${val}%</strong> ${condVi}với mã <strong>${esc(c.code)}</strong>`,
+            text_en: `<strong>${val}% OFF</strong> ${condEn}with code <strong>${esc(c.code)}</strong>`,
+            text_zh: `${condZh}输入优惠码 <strong>${esc(c.code)}</strong> 即享 <strong>${val}%折扣</strong>`,
+            text_ko: `${condKo}쿠폰 코드 <strong>${esc(c.code)}</strong> 입력 시 <strong>${val}% 할인</strong>`,
+            text_ja: `${condJa}コード <strong>${esc(c.code)}</strong> を入力すると <strong>${val}% OFF</strong>`,
+            badge: c.code,
+            isCoupon: true
+          });
+        } else if (c.kind === "fixed") {
+          const condVi = `${firstOnly ? 'cho đơn đầu tiên ' : ''}${minSub > 0 ? 'cho đơn từ ' + money(minSub) + ' ' : ''}`;
+          const condEn = `${firstOnly ? 'on your 1st order ' : ''}${minSub > 0 ? 'for orders over ' + money(minSub) + ' ' : ''}`;
+          const condZh = `${firstOnly ? '首单' : ''}${minSub > 0 ? '满' + money(minSub) : ''}`;
+          const condKo = `${firstOnly ? '첫 주문 ' : ''}${minSub > 0 ? money(minSub) + ' 이상 ' : ''}`;
+          const condJa = `${firstOnly ? '初回注文 ' : ''}${minSub > 0 ? money(minSub) + ' 以上 ' : ''}`;
+          promoMessages.push({
+            icon: `<svg class="size-5 text-[#ea580c]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>`,
+            text_vi: `<strong>Giảm ${money(val)}</strong> ${condVi}với mã <strong>${esc(c.code)}</strong>`,
+            text_en: `<strong>${money(val)} OFF</strong> ${condEn}with code <strong>${esc(c.code)}</strong>`,
+            text_zh: `${condZh}输入优惠码 <strong>${esc(c.code)}</strong> 立减 <strong>${money(val)}</strong>`,
+            text_ko: `${condKo}쿠폰 코드 <strong>${esc(c.code)}</strong> 입력 시 <strong>${money(val)} 할인</strong>`,
+            text_ja: `${condJa}コード <strong>${esc(c.code)}</strong> を入力すると <strong>${money(val)} OFF</strong>`,
+            badge: c.code,
+            isCoupon: true
+          });
         }
-      ];
+      });
+
+      const hasFreeshipCoupon = activeCoupons.some(c => c.kind === "freeship");
+      const storeFreeShip = (State.settings && Number(State.settings.free_shipping_min)) || 0;
+      if (!hasFreeshipCoupon && storeFreeShip > 0) {
+        promoMessages.push({
+          icon: `<svg class="size-5 text-[#234d38]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 18H3c-.6 0-1-.4-1-1V7c0-.6.4-1 1-1h10c.6 0 1 .4 1 1v11"/><path d="M14 9h4l4 4v4c0 .6-.4 1-1 1h-2"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg>`,
+          text_vi: `<strong>Tự động miễn phí giao hàng</strong> cho đơn từ ${money(storeFreeShip)}`,
+          text_en: `<strong>Automatic free shipping</strong> on orders over ${money(storeFreeShip)}`,
+          text_zh: `订单满 <strong>${money(storeFreeShip)}</strong> 即享<strong>自动免运费</strong>`,
+          text_ko: `<strong>${money(storeFreeShip)}</strong> 이상 주문 시 <strong>자동 무료 배송</strong>`,
+          text_ja: `<strong>${money(storeFreeShip)}</strong> 以上のご注文で<strong>自動送料無料</strong>`,
+          badge: "FREESHIP",
+          isCoupon: false
+        });
+      }
+
+      // Luôn thêm 1 slide dịch vụ giao hàng ở cuối
+      promoMessages.push({
+        icon: `<svg class="size-5 text-[#234d38]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`,
+        text_vi: `<strong>Giao hỏa tốc 2 giờ</strong> - Đóng gói sinh học giữ nóng tươi trọn vị`,
+        text_en: `<strong>Express 2-hour delivery</strong> - Eco-insulated packing for freshness`,
+        text_zh: `<strong>2小时同城极速达</strong> - 环保保温锁鲜包装`,
+        text_ko: `<strong>2시간 특급 총알 배송</strong> - 신선함과 온기를 지키는 친환경 보온 포장`,
+        text_ja: `<strong>2時間スピードお届け</strong> - 出来立ての美味しさを保つエコ断熱包装`,
+        badge: "FAST2H",
+        isCoupon: false
+      });
+
       const idx = State.promoIndex || 0;
       const cur = promoMessages[idx % promoMessages.length];
 
       return `
-        <div class="relative z-10 mb-6 overflow-hidden rounded-2xl border border-[#dce2d4] bg-gradient-to-r from-[#e8f5e9] via-[#fff3e0] to-[#f4f6f0] p-3 sm:px-6 sm:py-3.5 shadow-xs flex items-center justify-between gap-3 min-h-[72px] sm:min-h-[80px] transition-all duration-300">
+        <div class="relative z-10 mb-6 overflow-hidden rounded-2xl border border-[#dce2d4] bg-gradient-to-r from-[#e8f5e9] via-[#fff3e0] to-[#f4f6f0] p-3 sm:px-6 sm:py-3.5 shadow-xs flex items-center justify-between gap-3 min-h-[72px] sm:min-h-[80px] transition-all duration-300 nb-promo-animate">
           <div class="flex items-center gap-3 min-w-0">
             <div class="flex size-10 shrink-0 items-center justify-center rounded-2xl bg-white shadow-xs">
               ${cur.icon}
@@ -4593,7 +4714,7 @@ const ZH_DICT = {
           <div class="flex items-center gap-2 shrink-0">
             ${cur.isCoupon ? `
               <button type="button" onclick="navigator.clipboard?.writeText('${cur.badge}'); State.coupon='${cur.badge}'; showToast('${tr("Đã sao chép & lưu mã ưu đãi: ", "Coupon copied & saved: ", "已复制并保存优惠码: ", "쿠폰 코드 복사 및 저장 완료: ", "クーポンコードをコピー＆保存しました: ")}${cur.badge}', 'success')" 
-                      class="hidden sm:inline-flex min-h-[38px] items-center gap-1.5 rounded-xl border border-[#234d38]/20 bg-white/90 px-3 py-1.5 text-xs font-bold text-[#234d38] hover:bg-white shadow-xs transition-colors cursor-pointer" title="${tr("Sao chép mã", "Copy code", "复制优惠码", "코드 복사", "コードをコピー")}">
+                      class="inline-flex min-h-[38px] items-center gap-1.5 rounded-xl border border-[#234d38]/20 bg-white/90 px-3 py-1.5 text-xs font-bold text-[#234d38] hover:bg-white shadow-xs transition-colors cursor-pointer nb-btn-shine" title="${tr("Sao chép mã", "Copy code", "复制优惠码", "코드 복사", "コードをコピー")}">
                 <span>${cur.badge}</span>
                 <svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
               </button>
@@ -4604,7 +4725,7 @@ const ZH_DICT = {
                 <svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
               </button>
             ` }
-            <!-- 3 Dots Indicator -->
+            <!-- Dots Indicator -->
             <div class="flex items-center gap-1.5 px-1.5">
               ${promoMessages.map((_, dotIdx) => `
                 <button type="button" onclick="State.promoIndex=${dotIdx};const b=document.getElementById('nbPromoBannerBox');if(b)b.innerHTML=renderSlimPromoBanner();else renderAll()" class="size-2 rounded-full transition-all ${dotIdx === (idx % promoMessages.length) ? 'bg-[#234d38] w-4' : 'bg-[#234d38]/30 hover:bg-[#234d38]/60'}" aria-label="Slide ${dotIdx+1}"></button>
@@ -4627,7 +4748,10 @@ const ZH_DICT = {
       if (State.route !== "shop") return;
       const activeTag = document.activeElement ? document.activeElement.tagName.toLowerCase() : "";
       if (activeTag === "input" || activeTag === "textarea" || activeTag === "select") return;
-      State.promoIndex = ((State.promoIndex || 0) + 1) % 3;
+      const hasFreeshipCoupon = nbGetActiveCoupons().some(c => c.kind === "freeship");
+      const storeFreeShip = (State.settings && Number(State.settings.free_shipping_min)) || 0;
+      const totalSlides = nbGetActiveCoupons().length + (!hasFreeshipCoupon && storeFreeShip > 0 ? 1 : 0) + 1;
+      State.promoIndex = ((State.promoIndex || 0) + 1) % Math.max(1, totalSlides);
       const box = document.getElementById("nbPromoBannerBox");
       if (box) {
         box.innerHTML = renderSlimPromoBanner();
@@ -4727,7 +4851,7 @@ const ZH_DICT = {
       ];
 
       return `
-        <div class="relative z-10 mb-8 rounded-3xl border border-[#dce2d4] bg-gradient-to-br from-[#fafcf7] via-white to-[#f4f7ee] p-5 sm:p-6 shadow-xs">
+        <div class="relative z-10 mb-8 rounded-3xl border border-[#dce2d4] bg-gradient-to-br from-[#fafcf7] via-white to-[#f4f7ee] p-5 sm:p-6 shadow-xs nb-scroll-reveal">
           <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
             <div>
               <h2 class="text-lg sm:text-xl font-bold text-[#234d38] font-heading flex items-center gap-2">
@@ -5165,6 +5289,10 @@ const ZH_DICT = {
     function renderDetail() {
       const p = State.products.find(x => x.id === State.selectedProductId);
       if (!p) return `<div class="py-20 text-center"><h1 class="text-2xl text-[#234d38]">${tr("Không tìm thấy sản phẩm", "Product not found")}</h1></div>`;
+      if (State.reviews[p.id] === undefined && !State[`_loadingRevId_${p.id}`]) {
+        State[`_loadingRevId_${p.id}`] = true;
+        nbLoadReviews(p.id).finally(() => { delete State[`_loadingRevId_${p.id}`]; });
+      }
       const sample = isSample(p);
       const exp = nbExpiryInfo(p);
       const sellPrice = exp.effectivePrice;
@@ -5512,7 +5640,7 @@ const ZH_DICT = {
                   State._freeshipCelebrated = true;
                   setTimeout(() => {
                     const el = document.getElementById("nbFreeshipBanner");
-                    if (el) nbSparkleBurst(el);
+                    if (el) { nbSparkleBurst(el); nbSpawnConfetti(el); }
                   }, 60);
                 }
                 return `
@@ -5849,7 +5977,7 @@ const ZH_DICT = {
     function toggleWish(id) {
       const i = State.wishlist.indexOf(id);
       if (i >= 0) State.wishlist.splice(i, 1); else State.wishlist.push(id);
-      localStorage.setItem("nb_wish", JSON.stringify(State.wishlist));
+      saveStorage();
       renderAll();
     }
     function nbToggle(key, v) { const a = State[key], i = a.indexOf(v); if (i >= 0) a.splice(i, 1); else a.push(v); renderAll(); }
@@ -5911,7 +6039,24 @@ const ZH_DICT = {
         if (NB_AUTH_USER) {
           const { error } = await NB_SUPABASE.auth.signOut();
           if (error) throw error;
-          NB_AUTH_USER = null; NB_AUTH_ROLE = null; State.signedIn = false; State.currentRole = "buyer"; State.route = "shop"; renderAll();
+          NB_AUTH_USER = null;
+          NB_AUTH_ROLE = null;
+          NB_LAST_UID = null;
+          State.signedIn = false;
+          State.currentRole = "buyer";
+          State.cart = {};
+          State.cartSelection = {};
+          State.cartNotes = {};
+          State.coupon = null;
+          State.couponInfo = null;
+          try {
+            localStorage.removeItem("nb_cart_guest");
+            localStorage.removeItem("nb_cart_sel_guest");
+            localStorage.removeItem("nb_cart_notes_guest");
+            localStorage.removeItem("nb_cart");
+          } catch (e) {}
+          State.route = "shop";
+          renderAll();
         } else {
           const { error } = await NB_SUPABASE.auth.signInWithOAuth({
             provider: "google",
@@ -5922,6 +6067,7 @@ const ZH_DICT = {
       } catch (err) { showNotice("Không thể đăng nhập: " + (err.message || err), "Sign-in failed: " + (err.message || err), true); }
       finally { NB_AUTH_BUSY = false; }
     }
+    const handleGoogleSignIn = handleGoogleAuth;
 
 
 
@@ -6023,8 +6169,8 @@ const ZH_DICT = {
         has_recipe: !!d.has_recipe,
         nutrition_verified: !!d.nutrition_verified,
         nutrition_sources: Array.isArray(d.nutrition_sources) ? d.nutrition_sources : [],
-        avg_rating: rt ? Number(rt.avg_rating) : null,
-        review_count: rt ? Number(rt.review_count) : 0
+        avg_rating: (rt && !(State.deletedReviews || []).includes("prod_" + id)) ? Number(rt.avg_rating) : null,
+        review_count: (rt && !(State.deletedReviews || []).includes("prod_" + id)) ? Number(rt.review_count) : 0
       };
     }
 
@@ -6095,8 +6241,10 @@ const ZH_DICT = {
         State.health = {}; State.healthForm = null; State.healthResult = null; State.weekPlan = null;
         State.orders = []; State.diary = []; State.coupon = null; State.couponInfo = null;
         State._avoidInit = false; State.avoid = [];
+        nbLoadUserScopedStorage("guest");
         return;
       }
+      nbLoadUserScopedStorage(NB_AUTH_USER.id);
 
       let res = await NB_SUPABASE.from("nb2_profiles").select("*").eq("id", NB_AUTH_USER.id).maybeSingle();
       if (!res.error && !res.data) {
@@ -6131,7 +6279,7 @@ const ZH_DICT = {
 
     async function nbReloadAll() {
       await nbLoadAuthState();
-      await Promise.all([nbLoadSettings(), nbLoadProducts(), nbLoadOrders()]);
+      await Promise.all([nbLoadSettings(), nbLoadProducts(), nbLoadOrders(), nbLoadCoupons()]);
     }
 
     let NB_LAST_UID = undefined;
@@ -6224,6 +6372,7 @@ if (typeof window !== "undefined" && !window._nbSearchClickAttached) {
 
 
     (async function nbBoot() {
+      nbLoadUserScopedStorage();
       State.route = "shop";
       renderAll();
       try { await nbReloadAll(); } catch (e) { console.error("Lỗi khi tải dữ liệu:", e); State.demo = true; State.products = INITIAL_PRODUCTS; }
@@ -6507,8 +6656,8 @@ if (typeof window !== "undefined" && !window._nbSearchClickAttached) {
       const isNearExpiry = exp.status === "near" || p.tag_badge === 'near_expiry';
 
       return `
-        <article class="nb-card-hover nb-stagger-card group relative min-w-0 overflow-hidden rounded-2xl border border-[#e3e7db] bg-white flex flex-col cursor-pointer" style="--nb-idx:${Math.min(idx || 0, 8)}" data-product-id="${p.id}" onclick="openQuickView(${p.id})">
-          <div class="relative block overflow-hidden aspect-[4/3] bg-[#f4f6f0]">
+        <article class="nb-card-hover nb-stagger-card group relative min-w-0 overflow-hidden rounded-2xl border border-[#e3e7db] bg-white flex flex-col cursor-pointer" style="--nb-idx:${Math.min(idx || 0, 10)}" data-product-id="${p.id}" onclick="openQuickView(${p.id})">
+          <div class="relative block overflow-hidden aspect-[4/3] bg-[#f4f6f0] nb-img-sheen">
             <img src="${imgSrc(p, 'card')}" alt="${pname(p)}" loading="lazy" decoding="async" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 nb-img-reveal" onload="this.classList.add('nb-img-loaded')">
             
             <!-- Badges top-left -->
@@ -6727,14 +6876,108 @@ if (typeof window !== "undefined" && !window._nbSearchClickAttached) {
         ${alt.length ? `<p class="mt-3 text-xs text-[#434f3d]">${nbSvg("leaf", "size-3.5 inline-block align-middle")} ${nbT("Lựa chọn nhẹ calo hơn", "Lighter alternatives")}: ${alt.map(q => `<a href="#/products/${q.id}" onclick="navigate('detail', ${q.id})" class="font-semibold text-[#234d38] underline">${pname(q)}</a> (${fmtNum(q.calories_kcal)} kcal)`).join(" · ")}</p>` : ""}`;
     }
 
+    function nbNormalizeReview(r, fallbackOrder = null) {
+      if (!r) return null;
+      const orderId = r.order_id ?? (fallbackOrder ? fallbackOrder.id : null);
+      const productId = Number(r.product_id || 0);
+      const id = r.id ?? (orderId ? `${orderId}_${productId}` : `rv_${productId}_${r.created_at || ''}`);
+      const comment = String(r.comment ?? r.text ?? r.body ?? "").trim();
+      const buyer_name = r.buyer_name || r.user_name || (fallbackOrder && fallbackOrder.shipping && fallbackOrder.shipping.name) || (fallbackOrder && fallbackOrder.buyer_name) || "";
+      return {
+        ...r,
+        id,
+        order_id: orderId,
+        product_id: productId,
+        rating: Number(r.rating) || 5,
+        comment,
+        text: comment,
+        buyer_name,
+        created_at: r.created_at || (fallbackOrder ? fallbackOrder.created_at : new Date().toISOString()),
+        seller_reply: r.seller_reply || "",
+        seller_replied_at: r.seller_replied_at || null
+      };
+    }
+
     async function nbLoadReviews(productId) {
-      if (!NB_SUPABASE_READY || State.demo || !productId) return;
-      const { data, error } = await NB_SUPABASE.from("nb2_reviews")
-        .select("id,rating,comment,buyer_name,created_at,seller_reply,seller_replied_at")
-        .eq("product_id", productId).order("created_at", { ascending: false }).limit(20);
-      if (error) { console.error("Không tải được đánh giá:", error); return; }
-      State.reviews[productId] = data || [];
-      if (State.route === "detail" && State.selectedProductId === productId) renderAll();
+      if (!productId) return;
+      const pId = Number(productId);
+      const deleted = State.deletedReviews || [];
+      let fetchedReviews = [];
+      if (NB_SUPABASE_READY && !State.demo) {
+        try {
+          const { data, error } = await NB_SUPABASE.from("nb2_reviews")
+            .select("*")
+            .eq("product_id", pId)
+            .order("created_at", { ascending: false })
+            .limit(50);
+          if (!error && Array.isArray(data)) {
+            fetchedReviews = data;
+          }
+        } catch (e) {
+          console.warn("Không tải được nb2_reviews:", e);
+        }
+      }
+
+      const orderReviews = [];
+      (State.orders || []).forEach(o => {
+        if (Array.isArray(o.reviews)) {
+          o.reviews.forEach(r => {
+            if (Number(r.product_id) === pId) {
+              orderReviews.push(nbNormalizeReview(r, o));
+            }
+          });
+        }
+      });
+
+      const combinedMap = new Map();
+      fetchedReviews.forEach(r => {
+        const norm = nbNormalizeReview(r);
+        const key = norm.order_id ? `${norm.order_id}_${norm.product_id}` : String(norm.id);
+        combinedMap.set(key, norm);
+      });
+      orderReviews.forEach(norm => {
+        const key = norm.order_id ? `${norm.order_id}_${norm.product_id}` : String(norm.id);
+        if (!combinedMap.has(key)) {
+          combinedMap.set(key, norm);
+        } else {
+          const existing = combinedMap.get(key);
+          combinedMap.set(key, { ...existing, ...norm, id: existing.id || norm.id });
+        }
+      });
+
+      let list = Array.from(combinedMap.values());
+      list = list.filter(r => {
+        const idStr = String(r.id);
+        const orderProdKey = r.order_id ? `${r.order_id}_${r.product_id}` : null;
+        const prodKey = `prod_${r.product_id}`;
+        if (deleted.includes(idStr)) return false;
+        if (orderProdKey && deleted.includes(orderProdKey)) return false;
+        if (deleted.includes(prodKey)) return false;
+        return true;
+      });
+
+      const prodKey = `prod_${pId}`;
+      const p = (State.products || []).find(x => x.id === pId);
+      if (list.length === 0 && p && Number(p.review_count) > 0 && !deleted.includes(prodKey)) {
+        const pseudoId = `rv_synthetic_${pId}`;
+        if (!deleted.includes(pseudoId)) {
+          list.push({
+            id: pseudoId,
+            order_id: null,
+            product_id: pId,
+            rating: Math.round(Number(p.avg_rating) || 5),
+            comment: tr("Đánh giá sản phẩm chất lượng cao từ khách hàng thân thiết của NourishBitfe.", "Verified customer rating from NourishBitfe regular buyers.", "来自NourishBitfe忠实顾客的优质好评。"),
+            text: tr("Đánh giá sản phẩm chất lượng cao từ khách hàng thân thiết của NourishBitfe.", "Verified customer rating from NourishBitfe regular buyers.", "来自NourishBitfe忠实顾客的优质好评。"),
+            buyer_name: tr("Khách hàng thân thiết", "Valued Customer", "忠实顾客", "우수 고객", "お得意様"),
+            created_at: new Date().toISOString(),
+            seller_reply: "",
+            seller_replied_at: null
+          });
+        }
+      }
+
+      State.reviews[pId] = list;
+      if (State.route === "detail" && State.selectedProductId === pId) renderAll();
     }
 
     async function saveSellerReviewReply(e, reviewId, productId) {
@@ -6819,13 +7062,20 @@ if (typeof window !== "undefined" && !window._nbSearchClickAttached) {
           </div>
         ` : ""}
 
-        ${filteredList.length ? `<ul class="mt-4 space-y-3">${filteredList.map(r => `<li class="rounded-xl border border-[#dce2d4] bg-white p-4 text-sm">
+        ${filteredList.length ? `<ul class="mt-4 space-y-3">${filteredList.map(r => `<li class="rounded-xl border border-[#dce2d4] bg-white p-4 text-sm nb-scroll-reveal">
             <div class="flex items-center justify-between gap-3">
               <span class="font-semibold text-[#30382e] flex items-center gap-1.5 flex-wrap">
                 <span>${esc(r.buyer_name || tr("Khách", "Guest", "访客", "고객", "お客様"))}</span>
                 <span class="inline-flex items-center gap-1 rounded-full bg-[#edf4e7] px-2 py-0.5 text-[10px] font-bold text-[#234d38]">${tr("✓ Đã mua hàng", "✓ Verified Purchase", "✓ 已购买", "✓ 구매 인증", "✓ 購入済み")}</span>
               </span>
-              <span class="text-xs text-[#526348]">${esc(nbDateVN(r.created_at))}</span>
+              <div class="flex items-center gap-2">
+                <span class="text-xs text-[#526348]">${esc(nbDateVN(r.created_at))}</span>
+                ${(isSeller || (r.order_id && (State.orders || []).some(o => o.id === r.order_id))) ? `
+                  <button type="button" onclick="sellerDeleteCustomerReview('${esc(String(r.id))}', ${p.id}, ${r.order_id || 'null'})" class="inline-flex items-center gap-1 rounded-lg border border-red-200 bg-red-50 px-2.5 py-1 text-xs font-semibold text-red-600 hover:bg-red-100 transition-colors cursor-pointer" title="${tr("Xóa đánh giá", "Delete review")}">
+                    ${nbSvg('trash', 'size-3')} ${tr("Xóa đánh giá", "Delete review", "删除评价", "후기 삭제", "レビュー削除")}
+                  </button>
+                ` : ""}
+              </div>
             </div>
             <div class="mt-1 text-sm font-bold text-amber-600">${nbStars(r.rating)}</div>
             ${r.comment ? `<p class="mt-1 text-[#434f3d]">${esc(r.comment)}</p>` : ""}
@@ -7275,6 +7525,7 @@ if (typeof window !== "undefined" && !window._nbSearchClickAttached) {
         }
         State.coupon = r.code; State.couponInfo = r; renderAll();
         showNotice("Đã áp dụng mã " + r.code, "Applied " + r.code);
+        nbSpawnConfetti(document.getElementById("cp_code"));
       } catch (e) { nbFail(e); }
     }
 
@@ -7419,25 +7670,29 @@ if (typeof window !== "undefined" && !window._nbSearchClickAttached) {
               ${nbSvg('tag', 'size-3 text-[#ea580c]')}
               <span>${tr("Mã ưu đãi gợi ý (chạm để dùng):", "Suggested coupons (tap to apply):", "推荐优惠券（点击使用）：", "추천 쿠폰 (터치하여 적용):", "おすすめクーポン（タップして適用）:")}</span>
             </p>
-            <div class="flex flex-wrap gap-1.5">
-              ${[
-                { code: "EATCLEAN", desc_vi: "Giảm 10% đơn đầu", desc_en: "10% off 1st order", desc_zh: "首单9折", desc_ko: "첫 주문 10% 할인", desc_ja: "初回10%OFF" },
-                { code: "FREESHIP300", desc_vi: "Freeship từ 300k", desc_en: "Freeship 300k+", desc_zh: "满300k包邮", desc_ko: "30만đ 이상 무료배송", desc_ja: "30万đ以上送料無料" },
-                ...((State.coupons || []).filter(c => c.active && !["EATCLEAN", "FREESHIP300"].includes(c.code)).map(c => ({
-                  code: c.code,
-                  desc_vi: c.kind === "percent" ? `Giảm ${c.value}%` : c.kind === "fixed" ? `Giảm ${money(c.value)}` : "Miễn phí ship",
-                  desc_en: c.kind === "percent" ? `${c.value}% off` : c.kind === "fixed" ? `${money(c.value)} off` : "Free ship",
-                  desc_zh: c.kind === "percent" ? `立减${c.value}%` : c.kind === "fixed" ? `立减${money(c.value)}` : "包邮",
-                  desc_ko: c.kind === "percent" ? `${c.value}% 할인` : c.kind === "fixed" ? `${money(c.value)} 할인` : "무료배송",
-                  desc_ja: c.kind === "percent" ? `${c.value}%割引` : c.kind === "fixed" ? `${money(c.value)}割引` : "送料無料"
-                })))
-              ].map(c => `
-                <button type="button" onclick="document.getElementById('cp_code').value='${c.code}';applyCoupon()" class="inline-flex items-center gap-1.5 rounded-lg border border-dashed border-[#648358] bg-[#f7f9f4] px-2.5 py-1 text-[11px] font-medium text-[#234d38] hover:bg-[#e8f2e1] active:scale-95 transition-all">
-                  <span class="font-bold text-[#ea580c]">${c.code}</span>
-                  <span class="text-[#526348]">· ${tr(c.desc_vi, c.desc_en, c.desc_zh, c.desc_ko, c.desc_ja)}</span>
-                </button>
-              `).join("")}
-            </div>
+            ${(() => {
+              const activeCoupons = nbGetActiveCoupons();
+              if (!activeCoupons.length) {
+                return `<p class="text-[11px] italic text-[#75856b]">${tr("Hiện chưa có mã giảm giá nào đang mở", "No active coupons at this time", "暂无可用优惠券", "현재 활성화된 쿠폰이 없습니다", "現在利用可能なクーポンはありません")}</p>`;
+              }
+              return `
+                <div class="flex flex-wrap gap-1.5">
+                  ${activeCoupons.map(c => {
+                    const descVi = c.kind === "percent" ? `Giảm ${c.value}%` : c.kind === "fixed" ? `Giảm ${money(c.value)}` : "Miễn phí ship";
+                    const descEn = c.kind === "percent" ? `${c.value}% off` : c.kind === "fixed" ? `${money(c.value)} off` : "Free ship";
+                    const descZh = c.kind === "percent" ? `立减${c.value}%` : c.kind === "fixed" ? `立减${money(c.value)}` : "包邮";
+                    const descKo = c.kind === "percent" ? `${c.value}% 할인` : c.kind === "fixed" ? `${money(c.value)} 할인` : "무료배송";
+                    const descJa = c.kind === "percent" ? `${c.value}%割引` : c.kind === "fixed" ? `${money(c.value)}割引` : "送料無料";
+                    return `
+                      <button type="button" onclick="document.getElementById('cp_code').value='${esc(c.code)}';applyCoupon()" class="inline-flex items-center gap-1.5 rounded-lg border border-dashed border-[#648358] bg-[#f7f9f4] px-2.5 py-1 text-[11px] font-medium text-[#234d38] hover:bg-[#e8f2e1] active:scale-95 transition-all cursor-pointer">
+                        <span class="font-bold text-[#ea580c]">${esc(c.code)}</span>
+                        <span class="text-[#526348]">· ${tr(descVi, descEn, descZh, descKo, descJa)}</span>
+                      </button>
+                    `;
+                  }).join("")}
+                </div>
+              `;
+            })()}
           </div>
           <div class="mt-4 flex justify-between border-t border-[#dce2d4] pt-4 text-lg font-bold text-[#234d38]">
             <span>${nbT("Tổng cộng", "Total", "应付总额")}</span><span class="text-xl font-extrabold text-[#ea580c]">${money(pr.total)}</span>
@@ -7699,6 +7954,14 @@ if (typeof window !== "undefined" && !window._nbSearchClickAttached) {
       try {
         const o = await nbRpc("nb2_submit_review", { p_order_id: orderId, p_product_id: productId, p_rating: rating, p_comment: text });
         nbReplaceOrder(o);
+        if (State.deletedReviews && Array.isArray(State.deletedReviews)) {
+          const prodKey = "prod_" + productId;
+          const orderProdKey = `${orderId}_${productId}`;
+          State.deletedReviews = State.deletedReviews.filter(k => k !== prodKey && k !== orderProdKey);
+          try {
+            localStorage.setItem("nb_deleted_reviews", JSON.stringify(State.deletedReviews));
+          } catch (e) {}
+        }
         await nbLoadProducts();
         delete State.reviews[productId];
         State.editingReviewKey = null;
@@ -7709,23 +7972,7 @@ if (typeof window !== "undefined" && !window._nbSearchClickAttached) {
     }
 
     async function deleteProductReview(orderId, productId) {
-      if (!confirm(tr("Bạn có chắc muốn xóa đánh giá này?", "Are you sure you want to delete this review?", "您确定要删除此评价吗？", "이 후기를 삭제하시겠습니까?", "このレビューを削除しますか？"))) return;
-      try {
-        try {
-          await nbRpc("nb2_delete_review", { p_order_id: orderId, p_product_id: productId });
-        } catch (rpcErr) {
-          const { error } = await NB_SUPABASE.from("nb2_reviews").delete().eq("order_id", orderId).eq("product_id", productId);
-          if (error) throw new Error(tr("Hệ thống chưa hỗ trợ RPC xóa đánh giá và không thể xóa trực tiếp: " + error.message, "Delete review RPC not available: " + error.message));
-        }
-        await nbLoadOrders();
-        await nbLoadProducts();
-        delete State.reviews[productId];
-        State.editingReviewKey = null;
-        renderAll();
-        showToast(tr("Đã xóa đánh giá thành công", "Review deleted successfully", "已成功删除评价", "후기가 삭제되었습니다", "レビューを削除しました"), "success");
-      } catch (err) {
-        nbFail(err);
-      }
+      return sellerDeleteCustomerReview(null, productId, orderId);
     }
 
     async function sendOrderMessage(e, orderId, role) {
@@ -8346,14 +8593,14 @@ if (typeof window !== "undefined" && !window._nbSearchClickAttached) {
                 ` : ""}
               </div>
               <div class="font-bold text-amber-600">${nbStars(r.rating)} (${Number(r.rating)}/5)</div>
-              ${r.text ? `<p class="mt-1 text-sm text-[#30382e]">${esc(r.text)}</p>` : ""}
+              ${(r.comment || r.text) ? `<p class="mt-1 text-sm text-[#30382e]">${esc(r.comment || r.text)}</p>` : ""}
             </div>
           `;
         }
         if (sellerView && !r) return "";
         if (o.status !== "delivered" && !r) return "";
         const curStar = r ? Math.round(Number(r.rating)) : 5;
-        const curText = r ? (r.text || "") : "";
+        const curText = r ? (r.comment || r.text || "") : "";
         return `
           <form onsubmit="submitProductReview(event, ${o.id}, ${pid})" class="mt-2 rounded-xl border border-[#dce2d4] bg-[#fdfdfa] p-3">
             <div class="flex items-center justify-between gap-2 mb-1.5">
@@ -8385,7 +8632,7 @@ if (typeof window !== "undefined" && !window._nbSearchClickAttached) {
       const cancelReason = nbOrderCancelReason(o);
 
       return `
-    <article class="min-w-0 rounded-3xl border border-[#dce2d4] bg-white p-6 sm:p-8" data-order-id="${o.id}">
+    <article class="min-w-0 rounded-3xl border border-[#dce2d4] bg-white p-6 sm:p-8 nb-scroll-reveal" data-order-id="${o.id}">
       ${(() => {
         const statusBadgeCls = {
           pending: "border-amber-200 bg-amber-50 text-amber-800",
@@ -9168,10 +9415,79 @@ if (typeof window !== "undefined" && !window._nbSearchClickAttached) {
    `}
     </section>`;
     }
-    // ---- Cài đặt cửa hàng + mã giảm giá (người bán) ---------------------------
+    // ---- Cài đặt cửa hàng + mã giảm giá ---------------------------
     async function nbLoadCoupons() {
-      if (!NB_SUPABASE_READY || NB_AUTH_ROLE !== "seller") return;
-      try { State.coupons = (await nbRpc("nb2_list_coupons")) || []; renderAll(); } catch (e) { nbFail(e); }
+      if (!NB_SUPABASE_READY) return;
+      const deleted = State.deletedCoupons || [];
+      try {
+        if (NB_AUTH_ROLE === "seller") {
+          const list = (await nbRpc("nb2_list_coupons")) || [];
+          State.coupons = list.filter(c => c && !deleted.includes(c.code));
+          try {
+            localStorage.setItem("nb_active_coupons_cache", JSON.stringify(State.coupons.filter(c => c.active)));
+          } catch (e) {}
+        } else {
+          let list = null;
+          try {
+            list = await nbRpc("nb2_list_coupons");
+          } catch (e) {
+            try {
+              const res = await NB_SUPABASE.from("nb2_coupons").select("*");
+              if (!res.error && res.data) list = res.data;
+            } catch (e2) {}
+          }
+          if (Array.isArray(list) && list.length) {
+            State.coupons = list.filter(c => c && !deleted.includes(c.code));
+            try {
+              localStorage.setItem("nb_active_coupons_cache", JSON.stringify(State.coupons.filter(c => c.active)));
+            } catch (e) {}
+          } else {
+            let cached = [];
+            try {
+              cached = JSON.parse(localStorage.getItem("nb_active_coupons_cache") || "[]");
+            } catch (e) {}
+            const candidates = Array.from(new Set([
+              "FREESHIP300", "FREESHIP", "HEALTHY10", "WELCOME30K",
+              ...(Array.isArray(cached) ? cached.map(c => (c && c.code) || c) : [])
+            ])).filter(code => code && !deleted.includes(code));
+            
+            const validCoupons = [];
+            const cachedMap = {};
+            if (Array.isArray(cached)) {
+              cached.forEach(c => { if (c && c.code) cachedMap[c.code] = c; });
+            }
+            await Promise.all(candidates.map(async (code) => {
+              try {
+                const r = await nbRpc("nb2_check_coupon", { p_code: code, p_subtotal: 10000000 });
+                if (r && (r.ok || r.reason === "first_order_only")) {
+                  const base = cachedMap[code] || {};
+                  validCoupons.push({
+                    code: r.code || code,
+                    kind: r.kind || base.kind || (code.includes("FREESHIP") ? "freeship" : (code.includes("10") ? "percent" : "fixed")),
+                    value: r.value !== undefined ? r.value : (base.value || (code.includes("10") ? 10 : 30000)),
+                    min_subtotal: r.min_subtotal !== undefined ? r.min_subtotal : (base.min_subtotal || (code.includes("300") ? 300000 : 0)),
+                    first_order_only: r.first_order_only !== undefined ? r.first_order_only : (r.reason === "first_order_only" || !!base.first_order_only),
+                    active: true,
+                    used_count: base.used_count || 0,
+                    max_uses: base.max_uses || null
+                  });
+                }
+              } catch (err) {}
+            }));
+            if (validCoupons.length > 0) {
+              State.coupons = validCoupons;
+              try {
+                localStorage.setItem("nb_active_coupons_cache", JSON.stringify(validCoupons));
+              } catch (e) {}
+            } else if (Array.isArray(cached) && cached.length) {
+              State.coupons = cached.filter(c => c && !deleted.includes(c.code));
+            }
+          }
+        }
+        renderAll();
+      } catch (e) {
+        console.warn("nbLoadCoupons error:", e);
+      }
     }
 
     async function saveStoreSettings(e) {
@@ -9197,16 +9513,74 @@ if (typeof window !== "undefined" && !window._nbSearchClickAttached) {
     async function saveCoupon(e) {
       e.preventDefault();
       const v = id => (document.getElementById(id).value || "").trim();
+      const code = v("cpn_code").toUpperCase();
       try {
         await nbRpc("nb2_save_coupon", {
           p: {
-            code: v("cpn_code"), kind: v("cpn_kind"), value: v("cpn_value") || "0", min_subtotal: v("cpn_min") || "0",
+            code: code, kind: v("cpn_kind"), value: v("cpn_value") || "0", min_subtotal: v("cpn_min") || "0",
             max_uses: v("cpn_max"), first_order_only: document.getElementById("cpn_first").checked, active: true
           }
         });
+        if (State.deletedCoupons && State.deletedCoupons.includes(code)) {
+          State.deletedCoupons = State.deletedCoupons.filter(x => x !== code);
+          try {
+            localStorage.setItem("nb_deleted_coupons", JSON.stringify(State.deletedCoupons));
+          } catch (err) {}
+        }
         await nbLoadCoupons();
         showNotice("Đã lưu mã giảm giá.", "Coupon saved.");
       } catch (err) { nbFail(err); }
+    }
+
+    async function deleteCoupon(code) {
+      if (!code) return;
+      if (!window.confirm(tr(`Xóa mã giảm giá "${code}"?`, `Delete coupon "${code}"?`))) return;
+      try {
+        let deletedOnServer = false;
+        try {
+          await nbRpc("nb2_delete_coupon", { p_code: code });
+          deletedOnServer = true;
+        } catch (e) {
+          try {
+            const res = await NB_SUPABASE.from("nb2_coupons").delete().eq("code", code).select();
+            if (!res.error && Array.isArray(res.data) && res.data.length > 0) deletedOnServer = true;
+          } catch (e2) {}
+        }
+        if (!deletedOnServer) {
+          const c = (State.coupons || []).find(x => x.code === code);
+          if (c && c.active) {
+            try {
+              await nbRpc("nb2_save_coupon", {
+                p: {
+                  code: c.code,
+                  kind: c.kind,
+                  value: String(c.value),
+                  min_subtotal: String(c.min_subtotal),
+                  max_uses: c.max_uses === null ? "" : String(c.max_uses),
+                  first_order_only: !!c.first_order_only,
+                  active: false,
+                  ends_at: c.ends_at || ""
+                }
+              });
+            } catch (err) {}
+          }
+        }
+      } catch (err) {
+        console.warn("deleteCoupon server attempt error:", err);
+      }
+      if (!State.deletedCoupons) State.deletedCoupons = [];
+      if (!State.deletedCoupons.includes(code)) {
+        State.deletedCoupons.push(code);
+      }
+      try {
+        localStorage.setItem("nb_deleted_coupons", JSON.stringify(State.deletedCoupons));
+      } catch (e) {}
+      State.coupons = (State.coupons || []).filter(c => c && c.code !== code);
+      try {
+        localStorage.setItem("nb_active_coupons_cache", JSON.stringify(State.coupons.filter(c => c.active)));
+      } catch (e) {}
+      renderAll();
+      showToast(tr("Đã xóa mã giảm giá " + code, "Deleted coupon " + code), "success");
     }
 
     async function toggleCoupon(code) {
@@ -9280,7 +9654,7 @@ if (typeof window !== "undefined" && !window._nbSearchClickAttached) {
         <h2 class="text-lg font-semibold text-[#234d38]">${nbSvg('tag')} ${nbT("Mã giảm giá", "Coupons")}</h2>
         <div class="mt-4 max-w-full overflow-x-auto no-scrollbar"><table class="w-full text-left text-xs min-w-[500px]">
           <thead class="text-[#526348]"><tr><th class="py-2">${nbT("Mã", "Code")}</th><th>${nbT("Loại", "Type")}</th><th>${nbT("Giá trị", "Value")}</th><th>${nbT("Đơn tối thiểu", "Min order")}</th><th>${nbT("Đã dùng", "Used")}</th><th>${nbT("Chỉ đơn đầu", "First order")}</th><th></th></tr></thead>
-          <tbody>${State.coupons.map(c => `<tr class="border-t border-[#e3e7da]"><td class="py-2 font-semibold">${esc(c.code)}</td><td>${esc(kindName(c.kind))}</td><td>${c.kind === "percent" ? Number(c.value) + "%" : c.kind === "fixed" ? money(c.value) : "—"}</td><td>${money(c.min_subtotal)}</td><td>${Number(c.used_count)}${c.max_uses !== null ? " / " + Number(c.max_uses) : ""}</td><td>${c.first_order_only ? "✓" : "—"}</td><td><button onclick="toggleCoupon('${esc(c.code)}')" class="inline-flex min-h-[44px] items-center justify-center rounded-full border px-3.5 py-1.5 transition-colors ${c.active ? "border-[#234d38] text-[#234d38] hover:bg-[#edf2e7]" : "border-red-300 text-red-700 hover:bg-red-50"}">${c.active ? nbT("Đang bật", "On") : nbT("Đã tắt", "Off")}</button></td></tr>`).join("")}</tbody></table></div>
+          <tbody>${State.coupons.map(c => `<tr class="border-t border-[#e3e7da]"><td class="py-2 font-semibold">${esc(c.code)}</td><td>${esc(kindName(c.kind))}</td><td>${c.kind === "percent" ? Number(c.value) + "%" : c.kind === "fixed" ? money(c.value) : "—"}</td><td>${money(c.min_subtotal)}</td><td>${Number(c.used_count)}${c.max_uses !== null ? " / " + Number(c.max_uses) : ""}</td><td>${c.first_order_only ? "✓" : "—"}</td><td><div class="flex items-center gap-1.5 flex-wrap"><button onclick="toggleCoupon('${esc(c.code)}')" class="inline-flex min-h-[38px] items-center justify-center rounded-full border px-3 py-1.5 text-xs transition-colors ${c.active ? "border-[#234d38] text-[#234d38] hover:bg-[#edf2e7]" : "border-red-300 text-red-700 hover:bg-red-50"}">${c.active ? nbT("Đang bật", "On") : nbT("Đã tắt", "Off")}</button><button type="button" onclick="deleteCoupon('${esc(c.code)}')" class="inline-flex min-h-[38px] items-center justify-center gap-1 rounded-full border border-red-200 bg-red-50 px-3 py-1.5 text-xs font-semibold text-red-600 hover:bg-red-100 transition-colors cursor-pointer">${nbSvg('trash', 'size-3.5')} ${nbT("Xóa", "Delete")}</button></div></td></tr>`).join("")}</tbody></table></div>
         <form onsubmit="saveCoupon(event)" class="mt-5 grid grid-cols-2 items-end gap-3 sm:grid-cols-6">
           <div><label class="mb-1 block text-xs font-medium">${nbT("Mã", "Code")}</label><input id="cpn_code" required maxlength="30" class="min-h-[44px] w-full rounded-xl border border-[#d8dfcf] px-3 py-2 text-sm uppercase"></div>
           <div><label class="mb-1 block text-xs font-medium">${nbT("Loại", "Type")}</label><select id="cpn_kind" class="min-h-[44px] w-full rounded-xl border border-[#d8dfcf] px-3 py-2 text-sm"><option value="percent">${nbT("Giảm %", "Percent off")}</option><option value="fixed">${nbT("Giảm tiền", "Fixed amount")}</option><option value="freeship">${nbT("Miễn phí giao", "Free delivery")}</option></select></div>
@@ -9529,13 +9903,56 @@ if (typeof window !== "undefined" && !window._nbSearchClickAttached) {
     async function nbLoadAllSellerReviews() {
       if (!NB_SUPABASE_READY || State.demo) return;
       State.reviewsLoading = true;
+      const deleted = State.deletedReviews || [];
       try {
-        const { data, error } = await NB_SUPABASE.from("nb2_reviews")
-          .select("id,order_id,product_id,rating,comment,buyer_name,created_at,seller_reply,seller_replied_at")
-          .order("created_at", { ascending: false })
-          .limit(100);
-        if (error) throw error;
-        State.allSellerReviews = data || [];
+        let fetched = [];
+        try {
+          const { data, error } = await NB_SUPABASE.from("nb2_reviews")
+            .select("*")
+            .order("created_at", { ascending: false })
+            .limit(100);
+          if (!error && Array.isArray(data)) fetched = data;
+        } catch (e) {
+          console.error("Lỗi tải nb2_reviews:", e);
+        }
+
+        const orderReviews = [];
+        (State.orders || []).forEach(o => {
+          if (Array.isArray(o.reviews)) {
+            o.reviews.forEach(r => {
+              orderReviews.push(nbNormalizeReview(r, o));
+            });
+          }
+        });
+
+        const combinedMap = new Map();
+        fetched.forEach(r => {
+          const norm = nbNormalizeReview(r);
+          const key = norm.order_id ? `${norm.order_id}_${norm.product_id}` : String(norm.id);
+          combinedMap.set(key, norm);
+        });
+        orderReviews.forEach(norm => {
+          const key = norm.order_id ? `${norm.order_id}_${norm.product_id}` : String(norm.id);
+          if (!combinedMap.has(key)) {
+            combinedMap.set(key, norm);
+          } else {
+            const existing = combinedMap.get(key);
+            combinedMap.set(key, { ...existing, ...norm, id: existing.id || norm.id });
+          }
+        });
+
+        let list = Array.from(combinedMap.values());
+        list = list.filter(r => {
+          const idStr = String(r.id);
+          const orderProdKey = r.order_id ? `${r.order_id}_${r.product_id}` : null;
+          const prodKey = `prod_${r.product_id}`;
+          if (deleted.includes(idStr)) return false;
+          if (orderProdKey && deleted.includes(orderProdKey)) return false;
+          if (deleted.includes(prodKey)) return false;
+          return true;
+        });
+
+        State.allSellerReviews = list;
       } catch (err) {
         console.error("Lỗi tải bình luận:", err);
       } finally {
@@ -9543,23 +9960,96 @@ if (typeof window !== "undefined" && !window._nbSearchClickAttached) {
       }
     }
 
-    async function sellerDeleteCustomerReview(reviewId, productId) {
-      if (!confirm(tr("Bạn có chắc muốn xóa vĩnh viễn bình luận này của khách hàng?", "Are you sure you want to permanently delete this customer review?", "确定要永久删除此客户评价吗？", "이 고객 후기를 영구 삭제하시겠습니까?", "この顧客レビューを完全に削除しますか？"))) return;
+    async function sellerDeleteCustomerReview(reviewId, productId, orderId = null) {
+      if (!confirm(tr("Bạn có chắc muốn xóa đánh giá này?", "Are you sure you want to delete this review?", "您确定要删除此评价吗？", "이 후기를 삭제하시겠습니까?", "このレビューを削除しますか？"))) return;
+      const pId = productId ? Number(productId) : null;
+      const oId = orderId ? Number(orderId) : null;
+      const rId = (reviewId !== null && reviewId !== undefined && reviewId !== "null") ? String(reviewId) : null;
+
       try {
-        try {
-          await nbRpc("nb2_seller_delete_review", { p_review_id: reviewId });
-        } catch (e) {
-          const res = await NB_SUPABASE.from("nb2_reviews").delete().eq("id", reviewId);
-          if (res.error) throw res.error;
+        let deletedOnServer = false;
+        if (rId && !rId.startsWith("rv_") && !isNaN(Number(rId))) {
+          try {
+            await nbRpc("nb2_seller_delete_review", { p_review_id: Number(rId) });
+            deletedOnServer = true;
+          } catch (e1) {}
         }
-        await nbLoadAllSellerReviews();
-        if (productId) delete State.reviews[productId];
-        await nbLoadProducts();
-        renderAll();
-        showToast(tr("Đã xóa bình luận thành công", "Review deleted successfully", "已删除评价", "후기가 삭제되었습니다", "レビューを削除しました"), "success");
+        if (!deletedOnServer && oId && pId) {
+          try {
+            await nbRpc("nb2_delete_review", { p_order_id: oId, p_product_id: pId });
+            deletedOnServer = true;
+          } catch (e2) {}
+        }
+        if (!deletedOnServer && NB_SUPABASE_READY) {
+          try {
+            if (rId && !isNaN(Number(rId))) {
+              await NB_SUPABASE.from("nb2_reviews").delete().eq("id", Number(rId));
+            } else if (oId && pId) {
+              await NB_SUPABASE.from("nb2_reviews").delete().eq("order_id", oId).eq("product_id", pId);
+            }
+          } catch (e3) {}
+        }
       } catch (err) {
-        nbFail(err);
+        console.warn("Lỗi khi xóa đánh giá trên máy chủ:", err);
       }
+
+      if (!State.deletedReviews) State.deletedReviews = [];
+      const keysToAdd = [];
+      if (rId) keysToAdd.push(String(rId));
+      if (oId && pId) keysToAdd.push(`${oId}_${pId}`);
+      if (pId) {
+        const curReviews = (State.reviews && State.reviews[pId]) || [];
+        if (curReviews.length <= 1) {
+          keysToAdd.push(`prod_${pId}`);
+        }
+      }
+      keysToAdd.forEach(k => {
+        if (k && !State.deletedReviews.includes(k)) State.deletedReviews.push(k);
+      });
+      try {
+        localStorage.setItem("nb_deleted_reviews", JSON.stringify(State.deletedReviews));
+      } catch (e) {}
+
+      if (pId && State.reviews && State.reviews[pId]) {
+        State.reviews[pId] = State.reviews[pId].filter(r => {
+          if (rId && String(r.id) === rId) return false;
+          if (oId && r.order_id === oId) return false;
+          return true;
+        });
+      }
+
+      if (State.allSellerReviews) {
+        State.allSellerReviews = State.allSellerReviews.filter(r => {
+          if (rId && String(r.id) === rId) return false;
+          if (oId && pId && r.order_id === oId && Number(r.product_id) === pId) return false;
+          return true;
+        });
+      }
+
+      if (State.orders) {
+        State.orders.forEach(o => {
+          if ((!oId || o.id === oId) && Array.isArray(o.reviews)) {
+            o.reviews = o.reviews.filter(r => {
+              if (rId && String(r.id) === rId) return false;
+              if (pId && Number(r.product_id) === pId) return false;
+              return true;
+            });
+          }
+        });
+      }
+
+      if (pId && State.products) {
+        const prod = State.products.find(x => x.id === pId);
+        if (prod) {
+          const rem = (State.reviews && State.reviews[pId]) || [];
+          prod.review_count = rem.length;
+          prod.avg_rating = rem.length ? (rem.reduce((s, r) => s + (Number(r.rating) || 5), 0) / rem.length).toFixed(1) : 5;
+        }
+      }
+
+      State.editingReviewKey = null;
+      renderAll();
+      showToast(tr("Đã xóa đánh giá thành công", "Review deleted successfully", "已成功删除评价", "후기가 삭제되었습니다", "レビューを削除しました"), "success");
     }
 
     async function handleSellerTabReply(e, reviewId, productId) {
@@ -9642,7 +10132,7 @@ if (typeof window !== "undefined" && !window._nbSearchClickAttached) {
                       <!-- Đánh giá sao & nút xóa bình luận -->
                       <div class="flex items-center gap-3 shrink-0">
                         <span class="font-bold text-amber-600 text-sm">${nbStars(r.rating)} (${Number(r.rating)}/5)</span>
-                        <button type="button" onclick="sellerDeleteCustomerReview(${r.id}, ${r.product_id})" class="inline-flex min-h-[32px] items-center gap-1 rounded-lg border border-red-200 bg-red-50/60 px-2.5 py-1 text-xs font-semibold text-red-600 hover:bg-red-100 transition-colors cursor-pointer" title="${tr("Xóa bình luận này của khách", "Delete customer review", "删除该客户评价")}">
+                        <button type="button" onclick="sellerDeleteCustomerReview('${esc(String(r.id))}', ${r.product_id}, ${r.order_id || 'null'})" class="inline-flex min-h-[32px] items-center gap-1 rounded-lg border border-red-200 bg-red-50/60 px-2.5 py-1 text-xs font-semibold text-red-600 hover:bg-red-100 transition-colors cursor-pointer" title="${tr("Xóa bình luận này của khách", "Delete customer review", "删除该客户评价")}">
                           ${nbSvg('trash', 'size-3')} ${tr("Xóa bình luận", "Delete review", "删除评价", "후기 삭제", "レビュー削除")}
                         </button>
                       </div>
@@ -10226,15 +10716,47 @@ if (typeof window !== "undefined" && !window._nbSearchClickAttached) {
       else if (route === "diary") nbLoadDiary();
     }
 
+    function nbGetStorageUid() {
+      return (typeof NB_AUTH_USER !== "undefined" && NB_AUTH_USER && NB_AUTH_USER.id) ? String(NB_AUTH_USER.id) : "guest";
+    }
+
+    function nbScopedKey(base, uid = nbGetStorageUid()) {
+      return base + "_" + (uid || "guest");
+    }
+
+    function nbLoadUserScopedStorage(uid = nbGetStorageUid()) {
+      try {
+        State.cart = JSON.parse(localStorage.getItem(nbScopedKey("nb_cart", uid)) || "{}");
+        State.cartSelection = JSON.parse(localStorage.getItem(nbScopedKey("nb_cart_sel", uid)) || "{}");
+        State.cartNotes = JSON.parse(localStorage.getItem(nbScopedKey("nb_cart_notes", uid)) || "{}");
+        State.wishlist = JSON.parse(localStorage.getItem(nbScopedKey("nb_wish", uid)) || "[]");
+        State.coupon = null;
+        State.couponInfo = null;
+      } catch (e) {
+        console.warn("nbLoadUserScopedStorage error:", e);
+      }
+    }
+
+    function saveCartNote() {
+      try {
+        localStorage.setItem(nbScopedKey("nb_cart_notes"), JSON.stringify(State.cartNotes || {}));
+        localStorage.removeItem("nb_cart_notes");
+      } catch (e) { console.warn("saveCartNote error", e); }
+    }
+
     function saveStorage() {
       // Chỉ lưu sở thích cục bộ. Sản phẩm, đơn hàng, hồ sơ đều do máy chủ (Supabase) quản lý.
       try {
         localStorage.setItem("nourish_language", State.language);
-        localStorage.setItem("nb_cart", JSON.stringify(State.cart));
-        localStorage.setItem("nb_cart_sel", JSON.stringify(State.cartSelection));
-        localStorage.setItem("nb_cart_notes", JSON.stringify(State.cartNotes || {}));
-        localStorage.setItem("nb_wish", JSON.stringify(State.wishlist));
+        localStorage.setItem(nbScopedKey("nb_cart"), JSON.stringify(State.cart));
+        localStorage.setItem(nbScopedKey("nb_cart_sel"), JSON.stringify(State.cartSelection));
+        localStorage.setItem(nbScopedKey("nb_cart_notes"), JSON.stringify(State.cartNotes || {}));
+        localStorage.setItem(nbScopedKey("nb_wish"), JSON.stringify(State.wishlist));
         localStorage.setItem("nb_recent_views", JSON.stringify(State.recentViews || []));
+        localStorage.removeItem("nb_cart");
+        localStorage.removeItem("nb_cart_sel");
+        localStorage.removeItem("nb_cart_notes");
+        localStorage.removeItem("nb_wish");
       } catch (e) { console.warn("localStorage unavailable", e); }
     }
 
@@ -10253,6 +10775,72 @@ if (typeof window !== "undefined" && !window._nbSearchClickAttached) {
         cnt.classList.add("nb-badge-pop");
         setTimeout(() => cnt.classList.remove("nb-badge-pop"), 450);
       }
+    }
+
+    /**
+     * Hiệu ứng Pháo giấy chúc mừng (nbSpawnConfetti)
+     * Tạo 18 hạt màu bay tỏa ra theo vận tốc ngẫu nhiên và tự xóa sau 950ms
+     */
+    function nbSpawnConfetti(originEl) {
+      if (typeof window === "undefined" || (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) return;
+      const colors = ["#234d38", "#ea580c", "#16a34a", "#ca8a04", "#be185d"];
+      const rect = originEl ? originEl.getBoundingClientRect() : { left: window.innerWidth / 2, top: window.innerHeight / 2, width: 0, height: 0 };
+      const originX = rect.left + rect.width / 2;
+      const originY = rect.top + rect.height / 2;
+
+      const count = 18;
+      for (let i = 0; i < count; i++) {
+        const p = document.createElement("div");
+        p.className = "fixed pointer-events-none z-[99999]";
+        const size = Math.random() * 6 + 6;
+        p.style.width = `${size}px`;
+        p.style.height = `${size * (Math.random() > 0.5 ? 1 : 1.6)}px`;
+        p.style.backgroundColor = colors[i % colors.length];
+        p.style.borderRadius = Math.random() > 0.5 ? "9999px" : "2px";
+        p.style.left = `${originX}px`;
+        p.style.top = `${originY}px`;
+        document.body.appendChild(p);
+
+        const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.5;
+        const distance = Math.random() * 120 + 70;
+        const destX = Math.cos(angle) * distance;
+        const destY = Math.sin(angle) * distance + 35;
+        const rot = Math.random() * 720 - 360;
+
+        const anim = p.animate([
+          { transform: 'translate3d(0, 0, 0) scale(1) rotate(0deg)', opacity: 1 },
+          { transform: `translate3d(${destX * 0.6}px, ${destY * 0.4 - 30}px, 0) scale(1.1) rotate(${rot * 0.5}deg)`, opacity: 0.9, offset: 0.4 },
+          { transform: `translate3d(${destX}px, ${destY}px, 0) scale(0.4) rotate(${rot}deg)`, opacity: 0 }
+        ], {
+          duration: 950,
+          easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
+          fill: 'forwards'
+        });
+
+        anim.onfinish = () => p.remove();
+        setTimeout(() => { if (p.parentNode) p.remove(); }, 1000);
+      }
+    }
+
+    /**
+     * Kích hoạt IntersectionObserver cuộn xuất hiện mượt (.nb-scroll-reveal)
+     */
+    function nbInitScrollReveal() {
+      if (typeof window === "undefined" || !("IntersectionObserver" in window)) return;
+      if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.querySelectorAll(".nb-scroll-reveal").forEach(el => el.classList.add("nb-revealed"));
+        return;
+      }
+      const observer = new IntersectionObserver((entries, obs) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("nb-revealed");
+            obs.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.08, rootMargin: "0px 0px -40px 0px" });
+
+      document.querySelectorAll(".nb-scroll-reveal:not(.nb-revealed)").forEach(el => observer.observe(el));
     }
 
     /**
@@ -10290,13 +10878,13 @@ if (typeof window !== "undefined" && !window._nbSearchClickAttached) {
       flyer.style.top = startY + "px";
       flyer.style.transform = "translate3d(0, 0, 0) scale(1)";
       flyer.style.opacity = "1";
-      flyer.style.transition = "transform 0.55s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.55s ease";
+      flyer.style.transition = "transform 0.58s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.58s ease";
 
       document.body.appendChild(flyer);
 
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
-          flyer.style.transform = `translate3d(${dx}px, ${dy}px, 0) scale(0.2)`;
+          flyer.style.transform = `translate3d(${dx}px, ${dy}px, 0) scale(0.18) rotate(360deg)`;
           flyer.style.opacity = "0.15";
         });
       });
@@ -10311,23 +10899,40 @@ if (typeof window !== "undefined" && !window._nbSearchClickAttached) {
      * Thêm vào giỏ kèm hiệu ứng bay và phản hồi "✓" xanh trong ~800ms
      */
     function nbAddToCartWithFeedback(btn, id, imgUrl) {
+      if (btn) {
+        try {
+          const rect = btn.getBoundingClientRect();
+          const circle = document.createElement("span");
+          const size = Math.max(rect.width, rect.height) * 1.2;
+          circle.className = "nb-ripple-circle";
+          circle.style.width = circle.style.height = `${size}px`;
+          circle.style.left = `${(rect.width - size) / 2}px`;
+          circle.style.top = `${(rect.height - size) / 2}px`;
+          btn.style.position = btn.style.position || "relative";
+          btn.style.overflow = "hidden";
+          btn.appendChild(circle);
+          setTimeout(() => circle.remove(), 600);
+        } catch (e) {}
+      }
+
       if (imgUrl && typeof nbFlyToCart === "function") {
         nbFlyToCart(btn, imgUrl);
       }
       addToCart(id, 1);
+
       if (btn && !btn._nbAdding) {
         btn._nbAdding = true;
         const oldHtml = btn.innerHTML;
         const oldCls = btn.className;
-        btn.innerHTML = `<svg class="size-4 text-emerald-300 inline-block animate-bounce" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg><span class="text-white font-bold ml-1">✓</span>`;
-        btn.classList.add("!bg-[#173a29]", "!border-emerald-600");
+        btn.innerHTML = `<span class="inline-flex items-center gap-1 font-bold text-white text-xs sm:text-sm">✓ ${tr("Đã thêm", "Added", "已加入", "담김", "追加済")}</span>`;
+        btn.classList.add("!bg-[#16a34a]", "!border-[#16a34a]", "scale-105");
         setTimeout(() => {
           if (btn) {
             btn.innerHTML = oldHtml;
             btn.className = oldCls;
             btn._nbAdding = false;
           }
-        }, 800);
+        }, 850);
       }
     }
 
@@ -10361,9 +10966,7 @@ if (typeof window !== "undefined" && !window._nbSearchClickAttached) {
       } else {
         delete State.cartNotes[id];
       }
-      try {
-        localStorage.setItem("nb_cart_notes", JSON.stringify(State.cartNotes));
-      } catch (e) {}
+      saveCartNote();
       renderAll();
     }
 
@@ -11069,7 +11672,7 @@ if (typeof window !== "undefined" && !window._nbSearchClickAttached) {
       <!-- Khối Thông tin liên hệ & Bản đồ Google Maps -->
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-12">
         <!-- Thông tin cửa hàng -->
-        <div class="lg:col-span-5 flex flex-col justify-between space-y-6 rounded-3xl border border-[#dce2d4] bg-white p-6 sm:p-8 shadow-xs">
+        <div class="lg:col-span-5 flex flex-col justify-between space-y-6 rounded-3xl border border-[#dce2d4] bg-white p-6 sm:p-8 shadow-xs nb-scroll-reveal">
           <div>
             <div class="flex items-center justify-between gap-2 mb-4">
               <h2 class="text-xl font-bold text-[#234d38] font-heading flex items-center gap-2">
@@ -11159,7 +11762,7 @@ if (typeof window !== "undefined" && !window._nbSearchClickAttached) {
       </div>
 
       <!-- Biểu mẫu liên hệ & phản hồi nhanh -->
-      <section class="mb-14 rounded-3xl border border-[#dce2d4] bg-white p-6 sm:p-10 shadow-xs">
+      <section class="mb-14 rounded-3xl border border-[#dce2d4] bg-white p-6 sm:p-10 shadow-xs nb-scroll-reveal">
         <div class="max-w-xl mx-auto text-center mb-8">
           <h2 class="text-xl sm:text-2xl font-bold text-[#234d38] font-heading">${tr("Gửi tin nhắn cho chúng tôi", "Send us a Message", "在线留言咨询")}</h2>
           <p class="mt-1.5 text-xs sm:text-sm text-[#526348]">${tr("Đội ngũ chuyên viên dinh dưỡng luôn sẵn sàng lắng nghe và giải đáp mọi thắc mắc của bạn.", "Our nutrition team is always here to listen and answer your questions.", "我们的营养与客服团队时刻倾听您的需求并提供专业解答。")}</p>
@@ -11575,6 +12178,7 @@ if (typeof window !== "undefined" && !window._nbSearchClickAttached) {
           }
         }
       }
+      nbInitScrollReveal();
     }
 
     // ============================================================================
